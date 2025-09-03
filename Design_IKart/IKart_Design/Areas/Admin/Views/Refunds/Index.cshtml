@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Refunds";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Adjust if you're using a different layout
+}
+
+<h2>Refunds</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Refund ID</th>
+            <th>Payment ID</th>
+            <th>Amount</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Refund Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>101</td>
+            <td>₹500.00</td>
+            <td>Product damaged</td>
+            <td>Processed</td>
+            <td>01-09-2025</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>102</td>
+            <td>₹1200.00</td>
+            <td>Wrong item delivered</td>
+            <td>Pending</td>
+            <td>02-09-2025</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>103</td>
+            <td>₹750.00</td>
+            <td>Customer cancelled</td>
+            <td>Processed</td>
+            <td>03-09-2025</td>
+        </tr>
+    </tbody>
+</table>
