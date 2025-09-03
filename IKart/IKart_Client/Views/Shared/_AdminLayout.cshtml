@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "_AdminLayout";
+}
+
+
+﻿@{ var appRoot = Url.Content("~"); }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title - Admin</title>
+
+    <!-- Use CDN for quick paste-preview. For production you can host locally. -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/admin.css")" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div id="admin-root" class="d-flex">
+        <!-- SIDEBAR -->
+        @Html.Partial("~/Views/Shared/_AdminSidebar.cshtml")
+
+        <!-- CONTENT -->
+        <div id="admin-content" class="flex-grow-1">
+            @Html.Partial("~/Views/Shared/_AdminTopbar.cshtml")
+
+            <div class="container-fluid mt-2">
+                @RenderBody()
+            </div>
+
+            <!-- Updated Footer -->
+            <footer class="footer bg-white text-dark text-center border-top" style="padding: 6px 0;">
+                <p class="mb-0">&copy; @DateTime.Now.Year - IKart Admin</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="@Url.Content("~/Scripts/admin.js")"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
