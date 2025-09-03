@@ -88,7 +88,6 @@ html, body {
     }
 
 
-
 /* DataTables small adjustments */
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     padding: 0.25rem 0.5rem
@@ -100,5 +99,17 @@ html, body {
     font-size: 0.75rem
 }
 
+/* Add transition and margin-left to admin-content */
+#admin-content {
+    background: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: 0; /* default when sidebar is hidden */
+}
 
-
+/* When sidebar is shown, shift content to the right */
+#admin-sidebar.show ~ #admin-content {
+    margin-left: 240px; /* same as sidebar width */
+}

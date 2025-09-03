@@ -7,8 +7,6 @@ $(function () {
 
 
 
-
-
     // Generic modal confirm (used by delete buttons etc.)
     window.confirmAction = function (message, callback) {
         if (confirm(message)) callback();

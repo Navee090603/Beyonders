@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "SupportTicket";
+}
+
+
+<div class="container mt-4">
+    <h2>Support Tickets</h2>
+
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Ticket ID</th>
+                <th>User ID</th>
+                <th>Subject</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Created Date</th>
+                <th>Closed Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>101</td>
+                <td>Login Issue</td>
+                <td>User unable to login with correct credentials.</td>
+                <td>Open</td>
+                <td>01-09-2025</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>102</td>
+                <td>Payment Failure</td>
+                <td>Payment failed during checkout.</td>
+                <td>Closed</td>
+                <td>30-08-2025</td>
+                <td>31-08-2025</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>103</td>
+                <td>Refund Request</td>
+                <td>Customer requesting refund for damaged product.</td>
+                <td>Pending</td>
+                <td>02-09-2025</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
