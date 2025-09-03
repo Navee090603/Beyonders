@@ -1,211 +1,276 @@
 1. Users
-
+ 
 PK: UserId
-
-Unique: Email, Username, PhoneNo
-
-Not Null: FullName, Email, PhoneNo, Username, Password, CreatedDate
-
+ 
+Unique: Email, Username, PhoneNo, OTP
+ 
+Not Null: FullName, Email, PhoneNo, Username, Password, Status (Active/Deactive), CreatedDate
+ 
 Relationships:
-
+ 
 1 → Many Addresses
-
+ 
 1 → 1 EMI_Card
-
+ 
 1 → Many Payments
-
+ 
 1 → Many SupportTickets
 
+------------------------------------------------------------
+
 2. Admin
-
+ 
 PK: AdminId
-
+ 
 Unique: Username
-
+ 
 Not Null: Username, Password
-
+ 
 Responsibilities:
-
+ 
 Can activate users/cards
-
+ 
 Can manage products, payments, refunds
+-------------------------------------------------------------
+ 
+3. Stocks
+ 
+PK:Stock_Id
 
-3. Products
+Unique: CategoryName
 
+Not_Null : CategoryName, Total_Stocks, Available_Stocks, Last_Updated
+ 
+Relationships:
+ 
+1 -> Many Products
+ 
+-------------------------------------------------------------
+ 
+4. Products
+ 
 PK: ProductId
 
+FK: Stock_Id -> Stocks.Stock_Id
+ 
 Not Null: ProductName, Cost, CreatedDate
-
+ 
 Relationships:
-
+ 
 1 → Many Payments
-
+ 
 1 → Many Offers
-
+ 
 1 → Many FAQs
 
-4. Payment_Methods
+------------------------------------------------
 
-PK: PaymentMethodId
-
-Unique: MethodName (Credit, Debit, Cash, EMI)
-
-Not Null: MethodName
-
-Relationships:
-
-1 → Many Payments
-
-1 → 1 mapping with Credit/Debit/FullCash/EMI_Card
-
-5. Credit_Table
-
-PK: CreditId
-
-FK: PaymentMethodId → Payment_Methods.PaymentMethodId
-
-Unique: CardNumber
-
-Not Null: CardNumber, BankName, ExpiryDate, CVV
-
-Relationships:
-
-1 → Many Monthly_EMI_Calc
-
-6. Debit_Table
-
-PK: DebitId
-
-FK: PaymentMethodId → Payment_Methods.PaymentMethodId
-
-Unique: CardNumber
-
-Not Null: CardNumber, BankName, ExpiryDate, CVV
-
-7. Full_Cash
-
-PK: CashId
-
-FK: PaymentMethodId → Payment_Methods.PaymentMethodId
-
-Not Null: TransactionDetails
-
-8. EMI_Card
-
-PK: EMICardId
-
-FK1: UserId → Users.UserId
-
-FK2: PaymentMethodId → Payment_Methods.PaymentMethodId
-
-Unique: CardNumber
-
-Not Null: CardType, CardNumber, TotalLimit, Balance, ValidTill, IsActive
-
-Relationships:
-
-1 → Many CardTransactions
-
-1 → Many Monthly_EMI_Calc
-
-9. Address
-
-PK: AddressId
-
-FK: UserId → Users.UserId
-
-Not Null: Street, City, State, ZipCode, Country
-
-10. Payments
-
-PK: PaymentId
-
-FK1: UserId → Users.UserId
-
-FK2: ProductId → Products.ProductId
-
-FK3: PaymentMethodId → Payment_Methods.PaymentMethodId
-
-Not Null: Amount, PaymentDate, Status
-
-Relationships:
-
-1 → Many Refunds
-
-1 → 1/Many Monthly_EMI_Calc
-
-11. Monthly_EMI_Calc
-
-PK: EMIId
-
-FK1: PaymentId → Payments.PaymentId
-
-FK2: EMICardId → EMI_Card.EMICardId (nullable)
-
-FK3: CreditId → Credit_Table.CreditId (nullable)
-
-FK4: UserId → Users.UserId
-
-Not Null: EMIOption, TotalAmount, EMIAmount, RemainingAmount, Status
-
-Relationships:
-
-1 → Many Installment_Payments
-
-12. Installment_Payments
-
-PK: InstallmentId
-
-FK: EMIId → Monthly_EMI_Calc.EMIId
-
-Not Null: DueDate, Amount, IsPaid
-
-13. Refunds
-
-PK: RefundId
-
-FK: PaymentId → Payments.PaymentId
-
-Not Null: Amount, Reason, Status, Date
-
-14. Offers
-
+5. Offers
+ 
 PK: OfferId
-
+ 
 FK: ProductId → Products.ProductId
-
+ 
 Not Null: DiscountPercent, ValidFrom, ValidTo, Terms
 
-15. Support_Tickets
+------------------------------------------------
 
-PK: TicketId
-
-FK: UserId → Users.UserId
-
-Not Null: Subject, Description, Status, CreatedDate
-
-16. Fees_Charges
-
-PK: FeeId
-
-Not Null: FeeType, Amount, ApplicableFor
-
-17. Card_Transactions
-
-PK: TxnId
-
-FK: EMICardId → EMI_Card.EMICardId
-
-Not Null: Amount, Type, Date, Remarks
-
-18. FAQ
+6. FAQ
 
 PK: FAQId
-
+ 
 FK: ProductId → Products.ProductId
-
+ 
 Not Null: Question, Answer, CreatedDate
-
+ 
 Relationships:
-
+ 
 Products (1) → (Many) FAQs
+
+------------------------------------------------
+
+7. Card_Request
+
+PK: Card_Id
+
+FK: UserId -> Users.UserId
+
+Not Null: Card_Type, BankName, AccountNumber,IFSC_Code, AadharNumber, Aadhar_Image
+
+------------------------------------------------
+
+8. Payment_Methods
+ 
+PK: PaymentMethodId
+ 
+Unique: MethodName (Credit, Debit, Cash, EMI)
+ 
+Not Null: MethodName
+ 
+Relationships:
+ 
+1 → Many Payments
+ 
+1 → 1 mapping with Credit/Debit/FullCash/EMI_Card
+
+------------------------------------------------
+
+9. Joining_Fee
+
+PK: Fee_Id
+
+FK1: Card_Id: Card_Request.Card_Id
+
+Not Null: Amount, Status, PaidAt
+
+------------------------------------------------
+
+10. EMI_Card
+ 
+PK: EMICardId
+ 
+FK1: UserId → Users.UserId
+ 
+FK2: PaymentMethodId → Payment_Methods.PaymentMethodId
+ 
+Unique: CardNumber
+ 
+Not Null: CardType, CardNumber, TotalLimit, Balance, ValidTill, IsActive
+ 
+Relationships:
+ 
+1 → Many CardTransactions
+ 
+1 → Many Monthly_EMI_Calc
+
+------------------------------------------------
+
+11. Card_Transactions
+ 
+PK: TxnId
+ 
+FK: EMICardId → EMI_Card.EMICardId
+ 
+Not Null: Amount, Type, Date, Remarks
+
+------------------------------------------------
+
+12. Payment_Details
+ 
+PK: PaymentId
+ 
+FK: PaymentMethodId → Payment_Methods.PaymentMethodId
+ 
+Unique: CardNumber
+ 
+Not Null: CardNumber, BankName, ExpiryDate, CVV
+ 
+Relationships:
+ 
+1 → Many Monthly_EMI_Calc
+
+------------------------------------------------
+
+13. Full_Cash
+ 
+PK: CashId
+ 
+FK: PaymentMethodId → Payment_Methods.PaymentMethodId
+ 
+Not Null: TransactionDetails
+
+------------------------------------------------
+  
+14. Address
+ 
+PK: AddressId
+ 
+FK: UserId → Users.UserId
+ 
+Not Null: Street, City, State, ZipCode, Country
+
+------------------------------------------------
+ 
+15. Payments
+ 
+PK: PaymentId
+ 
+FK1: UserId → Users.UserId
+ 
+FK2: ProductId → Products.ProductId
+ 
+FK3: PaymentMethodId → Payment_Methods.PaymentMethodId
+ 
+Not Null: Amount, PaymentDate, Status
+ 
+Relationships:
+ 
+1 → Many Refunds
+ 
+1 → 1/Many Monthly_EMI_Calc
+
+------------------------------------------------
+
+ 
+16. Monthly_EMI_Calc
+ 
+PK: EMIId
+ 
+FK1: PaymentId → Payments.PaymentId
+ 
+FK2: EMICardId → EMI_Card.EMICardId (nullable)
+ 
+FK3: Payment_Details → Payment_Details.PaymentId (nullable)
+ 
+FK4: UserId → Users.UserId
+ 
+Not Null: EMIOption, TotalAmount, EMIAmount, RemainingAmount, Status
+ 
+Relationships:
+ 
+1 → Many Installment_Payments
+
+------------------------------------------------
+
+17. Installment_Payments
+ 
+PK: InstallmentId
+ 
+FK: EMIId → Monthly_EMI_Calc.EMIId
+ 
+Not Null: DueDate, Amount, IsPaid
+ 
+13. Refunds
+ 
+PK: RefundId
+ 
+FK: PaymentId → Payments.PaymentId
+ 
+Not Null: Amount, Reason, Status, Date
+
+------------------------------------------------
+ 
+18. Support_Tickets
+ 
+PK: TicketId
+ 
+FK: UserId → Users.UserId
+ 
+Not Null: Subject, Description, Status, CreatedDate
+
+------------------------------------------------
+
+19. Orders
+
+PK: Order_Id
+
+FK1: Products -> Products.ProductId
+
+FK2: Users -> Users.UsersId
+
+FK3: Payments -> Payments.PaymentId
+
+Not Null: OrderPlacedDate
+
+------------------------------------------------
+ 

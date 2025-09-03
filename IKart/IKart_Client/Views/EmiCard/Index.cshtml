@@ -1,0 +1,86 @@
+﻿﻿@{
+    ViewBag.Title = "EMI Card Approval - Admin";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4 d-flex flex-column min-vh-100">
+    <h2 class="mb-4">EMI Card Applications</h2>
+
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Fee Paid</th>
+                <th>Status</th>
+                <th>Documents</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Static Example Row -->
+            <tr>
+                <td>John Doe</td>
+                <td>john.doe@example.com</td>
+                <td>₹499</td>
+                <td class="status-cell">Pending</td>
+                <td>
+                    <button class="btn btn-info btn-sm" onclick="showDocuments('John Doe')">
+                        <i class="fa fa-file-alt"></i> View
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-success btn-sm me-1" onclick="setStatus(this, 'Approved')">
+                        <i class="fa fa-check"></i> Approve
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="setStatus(this, 'Rejected')">
+                        <i class="fa fa-times"></i> Reject
+                    </button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Jane Smith</td>
+                <td>jane.smith@example.com</td>
+                <td>₹499</td>
+                <td class="status-cell">Pending</td>
+                <td>
+                    <button class="btn btn-info btn-sm" onclick="showDocuments('Jane Smith')">
+                        <i class="fa fa-file-alt"></i> View
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-success btn-sm me-1" onclick="setStatus(this, 'Approved')">
+                        <i class="fa fa-check"></i> Approve
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="setStatus(this, 'Rejected')">
+                        <i class="fa fa-times"></i> Reject
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Document Preview Section -->
+    <div id="documentPreview" class="mt-4" style="display:none;">
+        <h4>Uploaded Documents for <span id="docUser"></span></h4>
+        <ul>
+            <li><a href="~/Content/uploads/idproof.pdf" target="_blank">ID Proof</a></li>
+            <li><a href="~/Content/uploads/addressproof.pdf" target="_blank">Address Proof</a></li>
+            <li><a href="~/Content/uploads/receipt.pdf" target="_blank">Fee Receipt</a></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function setStatus(button, status) {
+        const row = button.closest('tr');
+        const statusCell = row.querySelector('.status-cell');
+        statusCell.textContent = status;
+    }
+
+    function showDocuments(userName) {
+        document.getElementById("docUser").textContent = userName;
+        document.getElementById("documentPreview").style.display = "block";
+    }
+</script>

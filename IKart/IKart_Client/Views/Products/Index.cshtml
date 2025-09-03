@@ -1,0 +1,86 @@
+﻿﻿@{
+    ViewBag.Title = "Products - Admin";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4 d-flex flex-column min-vh-100">
+    <h2 class="mb-4">Manage Products</h2>
+
+    <!-- Action Buttons -->
+    <div class="mb-3 d-flex justify-content-between">
+        <a href="@Url.Action("Create", "Products", new { area = "Admin" })" class="btn btn-primary flex-fill mx-1 text-white">
+            + Add Product
+        </a>
+        <a href="@Url.Action("Offers", "Products", new { area = "Admin" })" class="btn btn-primary flex-fill mx-1 text-white">
+            + Offers
+        </a>
+        <a href="@Url.Action("Stocks", "Products", new { area = "Admin" })" class="btn btn-primary flex-fill mx-1 text-white">
+            Stocks
+        </a>
+        <a href="@Url.Action("Reports", "Products", new { area = "Admin" })" class="btn btn-primary flex-fill mx-1 text-white">
+            Reports
+        </a>
+    </div>
+
+    <!-- Products Table -->
+    <div class="flex-grow-1">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Product ID</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price (₹)</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example Static Data -->
+                <tr>
+                    <td>101</td>
+                    <td>
+                        <img src="~/Content/images/products/iphone15pro.jpg" alt="iPhone 15 Pro" width="60" class="img-thumbnail" />
+                    </td>
+                    <td>iPhone 15 Pro</td>
+                    <td>Mobiles</td>
+                    <td>1,29,999</td>
+                    <td>50</td>
+                    <td>Active</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Products", new { id = 101, area = "Admin" })" class="btn btn-outline-primary btn-sm me-1">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <a href="@Url.Action("Delete", "Products", new { id = 101, area = "Admin" })" class="btn btn-outline-danger btn-sm">
+                            <i class="fa fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>102</td>
+                    <td>
+                        <img src="~/Content/images/products/samsungqled.jpg" alt="Samsung QLED TV" width="60" class="img-thumbnail" />
+                    </td>
+                    <td>Samsung QLED TV</td>
+                    <td>Electronics</td>
+                    <td>89,999</td>
+                    <td>20</td>
+                    <td>Active</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Products", new { id = 102, area = "Admin" })" class="btn btn-outline-primary btn-sm me-1">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <a href="@Url.Action("Delete", "Products", new { id = 102, area = "Admin" })" class="btn btn-outline-danger btn-sm">
+                            <i class="fa fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
