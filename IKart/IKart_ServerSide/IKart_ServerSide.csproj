@@ -141,7 +141,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Admin\ProductsController.cs" />
     <Compile Include="Controllers\Admin\StocksController.cs" />
-    <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\User\AuthController.cs" />
+    <Compile Include="Controllers\User\AccountController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -241,7 +242,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\User\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Stocks\" />
   </ItemGroup>

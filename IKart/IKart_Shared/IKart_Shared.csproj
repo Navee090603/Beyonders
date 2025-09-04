@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTOs\Account\AddressDto.cs" />
+    <Compile Include="DTOs\Account\UserDto.cs" />
     <Compile Include="DTOs\Authentication\AdminLoginDto.cs" />
     <Compile Include="DTOs\Authentication\UserLoginDto.cs" />
     <Compile Include="DTOs\Authentication\UserRegisterDto.cs" />

@@ -15,7 +15,7 @@ namespace IKart_ServerSide.Controllers.Users
         // ✅ Register
         [HttpPost]
         [Route("register")]
-        public IHttpActionResult Register(UserRegisterDto dto)
+        public IHttpActionResult Register([FromBody] UserRegisterDto dto)
         {
             // --- Basic Required Fields ---
             if (string.IsNullOrWhiteSpace(dto.FullName))
@@ -82,9 +82,8 @@ namespace IKart_ServerSide.Controllers.Users
         // ✅ Login
         [HttpPost]
         [Route("login")]
-        public IHttpActionResult Login(UserLoginDto dto)
+        public IHttpActionResult Login([FromBody] UserLoginDto dto)
         {
-            // --- Basic Validation ---
             if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
                 return BadRequest("Username and Password are required");
 

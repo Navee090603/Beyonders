@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace IKart_ClientSide.Controllers.User
 {
-    public class UserAuthController : Controller
+    public class AuthController : Controller
     {
         private readonly string apiBase = "https://localhost:44365/api/user/auth/";
 
@@ -18,14 +18,19 @@ namespace IKart_ClientSide.Controllers.User
         {
             if (!ModelState.IsValid) return View(dto);
 
-            using (var client = new HttpClient())
+            using (var handler = new HttpClientHandler())
             {
-                var res = await client.PostAsJsonAsync(apiBase + "register", dto);
-                if (res.IsSuccessStatusCode)
-                    return RedirectToAction("Login");
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
 
-                ModelState.AddModelError("", await res.Content.ReadAsStringAsync());
-                return View(dto);
+                using (var client = new HttpClient(handler))
+                {
+                    var res = await client.PostAsJsonAsync(apiBase + "register", dto);
+                    if (res.IsSuccessStatusCode)
+                        return RedirectToAction("Login");
+
+                    ModelState.AddModelError("", await res.Content.ReadAsStringAsync());
+                    return View(dto);
+                }
             }
         }
 
@@ -35,23 +40,32 @@ namespace IKart_ClientSide.Controllers.User
         [HttpPost]
         public async Task<ActionResult> Login(UserLoginDto dto)
         {
-            if (!ModelState.IsValid) return View(dto);
-
-            using (var client = new HttpClient())
-            {
-                var res = await client.PostAsJsonAsync(apiBase + "login", dto);
-                if (res.IsSuccessStatusCode)
-                {
-                    var result = await res.Content.ReadAsAsync<dynamic>();
-                    Session["UserId"] = result.UserId;
-                    Session["FullName"] = result.FullName;
-                    Session["Username"] = result.Username;
-                    return RedirectToAction("Index", "Dashboard");
-                }
-
-                ModelState.AddModelError("", "Invalid username or password");
+            if (!ModelState.IsValid)
                 return View(dto);
+
+            using (var handler = new HttpClientHandler())
+            {
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+
+                using (var client = new HttpClient(handler))
+                {
+                    var res = await client.PostAsJsonAsync(apiBase + "login", dto);
+
+                    if (res.IsSuccessStatusCode)
+                    {
+                        var result = await res.Content.ReadAsAsync<dynamic>();
+                        Session["UserId"] = result.UserId;
+                        Session["FullName"] = result.FullName;
+                        Session["Username"] = result.Username;
+
+                        return RedirectToAction("Index", "Dashboard");
+                    }
+
+                    ModelState.AddModelError("", "Invalid username or password");
+                    return View(dto); // 👈 must return view with error
+                }
             }
         }
+
     }
 }

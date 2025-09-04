@@ -228,6 +228,13 @@
     <Content Include="Views\Stocks\Create.cshtml" />
     <Content Include="Views\Products\Reports.cshtml" />
     <Content Include="Views\Stocks\Remove.cshtml" />
+    <Content Include="Views\UserAuth\Register.cshtml" />
+    <Content Include="Views\Auth\Register.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
+    <Content Include="Views\Account\Addresses.cshtml" />
+    <Content Include="Views\Account\User.cshtml" />
+    <Content Include="Views\Account\EditAddress.cshtml" />
+    <Content Include="Views\Account\AddAddress.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -238,8 +245,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Upload\ProductImages\" />
-    <Folder Include="Views\Account\" />
-    <Folder Include="Views\Auth\" />
     <Folder Include="Views\EMICards\" />
     <Folder Include="Views\Payments\" />
     <Folder Include="Views\Support\" />
