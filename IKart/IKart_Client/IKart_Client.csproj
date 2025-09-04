@@ -198,6 +198,7 @@
     <Compile Include="Controllers\User\EMICardsController.cs" />
     <Compile Include="Controllers\User\OrdersController.cs" />
     <Compile Include="Controllers\User\PaymentsController.cs" />
+    <Compile Include="Controllers\User\ProductController.cs" />
     <Compile Include="Controllers\User\SupportController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -210,7 +211,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\EmiCard\Index.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\Refunds\Index.cshtml" />
@@ -235,6 +235,12 @@
     <Content Include="Views\Account\User.cshtml" />
     <Content Include="Views\Account\EditAddress.cshtml" />
     <Content Include="Views\Account\AddAddress.cshtml" />
+    <Content Include="Views\EmiCard\AddCard.cshtml" />
+    <Content Include="Views\EmiCard\Index.cshtml" />
+    <Content Include="Views\EMICards\Index.cshtml" />
+    <Content Include="Views\EMICards\AddCard.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -245,7 +251,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Upload\ProductImages\" />
-    <Folder Include="Views\EMICards\" />
     <Folder Include="Views\Payments\" />
     <Folder Include="Views\Support\" />
   </ItemGroup>

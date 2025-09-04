@@ -49,6 +49,8 @@
     <Compile Include="DTOs\Authentication\AdminLoginDto.cs" />
     <Compile Include="DTOs\Authentication\UserLoginDto.cs" />
     <Compile Include="DTOs\Authentication\UserRegisterDto.cs" />
+    <Compile Include="DTOs\EMI_Card\CardRequestDto.cs" />
+    <Compile Include="DTOs\EMI_Card\EMICardDto.cs" />
     <Compile Include="DTOs\Products\ProductDto.cs" />
     <Compile Include="DTOs\Products\StocksDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

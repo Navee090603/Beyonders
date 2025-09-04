@@ -1,0 +1,34 @@
+﻿@model List<IKart_Shared.DTOs.ProductDto>
+
+<h2>Latest Products</h2>
+<div class="product-grid">
+    @foreach (var item in Model)
+    {
+<div class="product-box">
+    <img src="@item.ProductImage" alt="@item.ProductName" class="product-img" />
+    <h4>@item.ProductName</h4>
+    <p>₹@item.Cost</p>
+    <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">View Details</a>
+</div>}
+</div>
+
+<style>
+    .product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .product-box {
+        width: 200px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .product-img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+</style>
