@@ -11,3 +11,11 @@ C:\Users\naveent\OneDrive - Infinite Computer Solutions (India) Limited\Desktop\
 C:\Users\naveent\OneDrive - Infinite Computer Solutions (India) Limited\Desktop\Ikart_Project\IKart\IKart_Shared\obj\Debug\IKart_Shared.pdb
 C:\Users\naveent\OneDrive - Infinite Computer Solutions (India) Limited\Desktop\Ikart_Project\IKart\IKart_Shared\bin\Debug\Newtonsoft.Json.dll
 C:\Users\naveent\OneDrive - Infinite Computer Solutions (India) Limited\Desktop\Ikart_Project\IKart\IKart_Shared\obj\Debug\IKart_Shared.csproj.CopyComplete
+C:\Training\FinalProject\Beyonders\IKart\IKart_Shared\bin\Debug\IKart_Shared.dll
+C:\Training\FinalProject\Beyonders\IKart\IKart_Shared\bin\Debug\IKart_Shared.pdb
+C:\Training\FinalProject\Beyonders\IKart\IKart_Shared\bin\Debug\Newtonsoft.Json.dll
+C:\Training\FinalProject\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.csproj.AssemblyReference.cache
+C:\Training\FinalProject\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.csproj.CoreCompileInputs.cache
+C:\Training\FinalProject\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.csproj.CopyComplete
+C:\Training\FinalProject\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.dll
+C:\Training\FinalProject\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.pdb

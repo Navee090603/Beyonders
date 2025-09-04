@@ -43,8 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTOs\ProductDto.cs" />
-    <Compile Include="DTOs\StocksDto.cs" />
+    <Compile Include="DTOs\Authentication\AdminLoginDto.cs" />
+    <Compile Include="DTOs\Authentication\UserLoginDto.cs" />
+    <Compile Include="DTOs\Authentication\UserRegisterDto.cs" />
+    <Compile Include="DTOs\Products\ProductDto.cs" />
+    <Compile Include="DTOs\Products\StocksDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
