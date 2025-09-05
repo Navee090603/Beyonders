@@ -18,6 +18,7 @@ namespace IKart_ServerSide.Models
         public Card_Request()
         {
             this.Joining_Fee = new HashSet<Joining_Fee>();
+            this.EmiCard_Documents = new HashSet<EmiCard_Documents>();
         }
     
         public int Card_Id { get; set; }
@@ -34,5 +35,7 @@ namespace IKart_ServerSide.Models
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Joining_Fee> Joining_Fee { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EmiCard_Documents> EmiCard_Documents { get; set; }
     }
 }

@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IKart_Shared.DTOs
+{
+    public class EmiCardDto
+    {
+        public int CardId { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public decimal FeePaid { get; set; }
+        public string Status { get; set; }   // Pending / Approved / Rejected
+        public List<EmiCardDocumentDto> Documents { get; set; }
+    }
+
+    public class EmiCardDocumentDto
+    {
+        public int DocumentId { get; set; }
+        public int CardId { get; set; }
+        public string DocumentType { get; set; } // Aadhaar, AddressProof, FeeReceipt
+        public string FileName { get; set; }
+        public string FilePath { get; set; }
+    }
+}
