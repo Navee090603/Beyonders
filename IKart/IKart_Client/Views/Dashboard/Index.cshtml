@@ -1,4 +1,8 @@
-﻿﻿@{
+﻿@model IEnumerable<IKart_Shared.DTOs.OrderDto>
+@using Newtonsoft.Json
+
+
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewBag.Title = "Dashboard";
 }
@@ -13,9 +17,13 @@
                 <div class="card-header">Tokens Raised</div>
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        <li>Token #TKN-101 <span class="float-end">Open</span></li>
-                        <li>Token #TKN-102 <span class="float-end">In Progress</span></li>
-                        <li>Token #TKN-103 <span class="float-end">Resolved</span></li>
+                        @foreach (var token in ViewBag.Tokens)
+                        {
+                            <li>
+                                Token ID:@token.TicketId - @token.Subject
+                                <span class="float-end">@token.Status</span>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -66,27 +74,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>#1001</td>
-                                <td>John Doe</td>
-                                <td>₹1999.99</td>
-                                <td>Completed</td>
-                                <td>02-Sep-2025</td>
-                            </tr>
-                            <tr>
-                                <td>#1002</td>
-                                <td>Jane Smith</td>
-                                <td>₹899.99</td>
-                                <td>Pending</td>
-                                <td>01-Sep-2025</td>
-                            </tr>
-                            <tr>
-                                <td>#1003</td>
-                                <td>Rahul Mehta</td>
-                                <td>₹4599.00</td>
-                                <td>Shipped</td>
-                                <td>31-Aug-2025</td>
-                            </tr>
+                            @foreach (var order in Model)
+                            {
+                                <tr>
+                                    <td>#@order.Order_Id</td>
+                                    <td>@order.UserName</td>
+                                    <td>₹@order.TotalAmount</td>
+                                    <td>@order.Status</td>
+                                    <td>@order.OrderDate.ToString("dd-MMM-yyyy")</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -98,15 +95,19 @@
 @section Scripts {
     <script>
         $(function () {
-            // Chart.js Revenue Line Chart
+            //Chart.js Revenue Line Chart
+            var revenueData = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Revenue));
+            var labels = revenueData.map(r => moment(r.Date).format("DD-MMM"));
+            var data = revenueData.map(r => r.Total);
+
             var ctx = document.getElementById('revenueChart').getContext('2d');
             var revenueChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Day -6', 'Day -5', 'Day -4', 'Day -3', 'Day -2', 'Day -1', 'Today'],
+                    labels: labels,
                     datasets: [{
                         label: 'Revenue',
-                        data: [1200, 1500, 900, 2000, 1700, 2200, 1900],
+                        data: data,
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         fill: true,

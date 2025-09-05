@@ -238,8 +238,18 @@
           <ScalarProperty Name="OTP" ColumnName="OTP" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-          <ScalarProperty Name="OtpExpiry" ColumnName="OtpExpiry" />
-          <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmiCard_Documents">
+      <EntityTypeMapping TypeName="IKartModel.EmiCard_Documents">
+        <MappingFragment StoreEntitySet="EmiCard_Documents">
+          <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+          <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
+          <ScalarProperty Name="Card_Id" ColumnName="Card_Id" />
+          <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

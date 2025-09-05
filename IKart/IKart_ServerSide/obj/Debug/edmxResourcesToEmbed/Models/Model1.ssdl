@@ -51,6 +51,17 @@
     <Property Name="ExpireDate" Type="date" />
     <Property Name="CardImage" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="EmiCard_Documents">
+    <Key>
+      <PropertyRef Name="DocumentId" />
+    </Key>
+    <Property Name="DocumentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Card_Id" Type="int" />
+    <Property Name="DocumentType" Type="nvarchar" MaxLength="50" />
+    <Property Name="FileName" Type="nvarchar" MaxLength="255" />
+    <Property Name="FilePath" Type="nvarchar(max)" />
+    <Property Name="UploadedDate" Type="datetime" />
+  </EntityType>
   <EntityType Name="FAQ">
     <Key>
       <PropertyRef Name="FaqId" />
@@ -220,8 +231,6 @@
     <Property Name="OTP" Type="nvarchar" MaxLength="10" />
     <Property Name="Status" Type="nvarchar" MaxLength="20" />
     <Property Name="CreatedDate" Type="datetime" />
-    <Property Name="OtpExpiry" Type="datetime" />
-    <Property Name="IsVerified" Type="bit" />
   </EntityType>
   <Association Name="FK__Address__UserId__3F466844">
     <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
@@ -292,6 +301,18 @@
       </Principal>
       <Dependent Role="EMI_Card">
         <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__EmiCard_D__Card___07C12930">
+    <End Role="Card_Request" Type="Self.Card_Request" Multiplicity="0..1" />
+    <End Role="EmiCard_Documents" Type="Self.EmiCard_Documents" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Card_Request">
+        <PropertyRef Name="Card_Id" />
+      </Principal>
+      <Dependent Role="EmiCard_Documents">
+        <PropertyRef Name="Card_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -540,6 +561,7 @@
     <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Card_Request" EntityType="Self.Card_Request" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="EMI_Card" EntityType="Self.EMI_Card" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EmiCard_Documents" EntityType="Self.EmiCard_Documents" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FAQ" EntityType="Self.FAQ" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Installment_Payments" EntityType="Self.Installment_Payments" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Joining_Fee" EntityType="Self.Joining_Fee" Schema="dbo" store:Type="Tables" />
@@ -578,6 +600,10 @@
     <AssociationSet Name="FK__EMI_Card__UserId__4F7CD00D" Association="Self.FK__EMI_Card__UserId__4F7CD00D">
       <End Role="Users" EntitySet="Users" />
       <End Role="EMI_Card" EntitySet="EMI_Card" />
+    </AssociationSet>
+    <AssociationSet Name="FK__EmiCard_D__Card___07C12930" Association="Self.FK__EmiCard_D__Card___07C12930">
+      <End Role="Card_Request" EntitySet="Card_Request" />
+      <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
     </AssociationSet>
     <AssociationSet Name="FK__FAQ__ProductId__787EE5A0" Association="Self.FK__FAQ__ProductId__787EE5A0">
       <End Role="Products" EntitySet="Products" />
