@@ -238,6 +238,8 @@
           <ScalarProperty Name="OTP" ColumnName="OTP" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="OtpExpiry" ColumnName="OtpExpiry" />
+          <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

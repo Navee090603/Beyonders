@@ -220,6 +220,8 @@
     <Property Name="OTP" Type="nvarchar" MaxLength="10" />
     <Property Name="Status" Type="nvarchar" MaxLength="20" />
     <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="OtpExpiry" Type="datetime" />
+    <Property Name="IsVerified" Type="bit" />
   </EntityType>
   <Association Name="FK__Address__UserId__3F466844">
     <End Role="Users" Type="Self.Users" Multiplicity="0..1" />

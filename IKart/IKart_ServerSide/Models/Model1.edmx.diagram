@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ede74f7b0c66465281153fc157db848d" Name="Diagram1" ZoomLevel="42">
+      <Diagram DiagramId="df587f15256b4caebcc71224dc04d9a4" Name="Diagram1">
         <EntityTypeShape EntityType="IKartModel.Address" Width="1.5" PointX="3" PointY="9.125" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Admin" Width="1.5" PointX="3.75" PointY="5.625" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Card_Request" Width="1.5" PointX="3" PointY="13.375" IsExpanded="true" />
@@ -18,12 +18,12 @@
         <EntityTypeShape EntityType="IKartModel.Payment_Details" Width="1.5" PointX="6" PointY="18.25" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Payment_Methods" Width="1.5" PointX="3.75" PointY="18.375" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Payment" Width="1.5" PointX="8.25" PointY="10" IsExpanded="true" />
-        <EntityTypeShape EntityType="IKartModel.Penalty" Width="1.5" PointX="16" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="IKartModel.Penalty" Width="1.5" PointX="16" PointY="11.875" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Product" Width="1.5" PointX="6" PointY="1.375" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Refund" Width="1.5" PointX="10.5" PointY="18.125" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Stock" Width="1.5" PointX="3.75" PointY="1.875" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Support_Tickets" Width="1.5" PointX="3" PointY="21.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="IKartModel.User" Width="1.5" PointX="0.75" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="IKartModel.User" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
         <AssociationConnector Association="IKartModel.FK__Address__UserId__3F466844" ManuallyRouted="false" />
         <AssociationConnector Association="IKartModel.FK__Card_Requ__Verif__6477ECF3" ManuallyRouted="false" />
         <AssociationConnector Association="IKartModel.FK__EMI_Card__Activa__5165187F" ManuallyRouted="false" />

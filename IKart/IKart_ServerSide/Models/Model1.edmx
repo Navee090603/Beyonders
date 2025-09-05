@@ -225,6 +225,8 @@
           <Property Name="OTP" Type="nvarchar" MaxLength="10" />
           <Property Name="Status" Type="nvarchar" MaxLength="20" />
           <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="OtpExpiry" Type="datetime" />
+          <Property Name="IsVerified" Type="bit" />
         </EntityType>
         <Association Name="FK__Address__UserId__3F466844">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
@@ -932,6 +934,8 @@
           <Property Name="OTP" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="OtpExpiry" Type="DateTime" Precision="3" />
+          <Property Name="IsVerified" Type="Boolean" />
           <NavigationProperty Name="Addresses" Relationship="Self.FK__Address__UserId__3F466844" FromRole="Users" ToRole="Address" />
           <NavigationProperty Name="Card_Request" Relationship="Self.FK__Card_Requ__UserI__628FA481" FromRole="Users" ToRole="Card_Request" />
           <NavigationProperty Name="EMI_Card" Relationship="Self.FK__EMI_Card__UserId__4F7CD00D" FromRole="Users" ToRole="EMI_Card" />
@@ -1621,6 +1625,8 @@
                 <ScalarProperty Name="OTP" ColumnName="OTP" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="OtpExpiry" ColumnName="OtpExpiry" />
+                <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
