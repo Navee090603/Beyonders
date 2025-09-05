@@ -3,40 +3,75 @@
     ViewBag.Title = "Order Details - Admin Dashboard";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<div class="container mt-4">
-    <h2 class="mb-4">Order #@Model.Order_Id Details</h2>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5>User: @Model.UserName</h5>
-            <p>Product: <strong>@Model.ProductName</strong></p>
-            <p>Cost: ₹@Model.ProductCost.ToString("N2")</p>
-            <p>Payment Type: @Model.PaymentType</p>
-            <p>Paid: ₹@Model.PaidAmount.ToString("N2")</p>
-            <p>Remaining: ₹@Model.RemainingAmount.ToString("N2")</p>
-            <p>Tenure: @Model.TenureMonths months</p>
-            <p>Months Remaining: @Model.MonthsRemaining</p>
-            <p>Order Date: @Model.OrderDate.ToString("dd-MMM-yyyy")</p>
-            <p>Delivery Date: @(Model.DeliveryDate?.ToString("dd-MMM-yyyy") ?? "Not Delivered")</p>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="heading-title">Order #@Model.Order_Id Details</h2>
+        <a href="@Url.Action("Index", "Orders", new { area = "Admin" })" class="btn btn-outline-secondary btn-sm">
+            <i class="fa fa-arrow-left me-1"></i> Back
+        </a>
+    </div>
+
+    <!-- Order Info Card -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Customer & Order Information</h5>
+        </div>
+        <div class="card-body row">
+            <div class="col-md-6">
+                <p><strong>User:</strong> @Model.UserName</p>
+                <p><strong>Product:</strong> @Model.ProductName</p>
+                <p><strong>Cost:</strong> ₹@Model.ProductCost.ToString("N2")</p>
+                <p><strong>Payment Type:</strong> @Model.PaymentType</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Paid:</strong> <span class="text-success fw-bold">₹@Model.PaidAmount.ToString("N2")</span></p>
+                <p><strong>Remaining:</strong> <span class="text-danger fw-bold">₹@Model.RemainingAmount.ToString("N2")</span></p>
+                <p><strong>Tenure:</strong> @Model.TenureMonths months</p>
+                <p><strong>Months Remaining:</strong> @Model.MonthsRemaining</p>
+            </div>
+            <div class="col-md-12 mt-3">
+                <p><strong>Order Date:</strong> @Model.OrderDate.ToString("dd-MMM-yyyy")</p>
+                <p>
+                    <strong>Delivery Date:</strong>
+                    @Html.Raw(Model.DeliveryDate?.ToString("dd-MMM-yyyy") ?? "<span class='text-muted'>Not Delivered</span>")
+                </p>
+            </div>
         </div>
     </div>
-    <h4>Payment History</h4>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Payment Date</th>
-                <th>Amount</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var p in Model.Payments)
-            {
-                <tr>
-                    <td>@p.PaymentDate.ToString("dd-MMM-yyyy")</td>
-                    <td>₹@p.Amount.ToString("N2")</td>
-                    <td>@p.Status</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+    <!-- Payment History -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Payment History</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark text-white">
+                    <tr>
+                        <th>Payment Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Payments)
+                    {
+                        <tr>
+                            <td>@p.PaymentDate.ToString("dd-MMM-yyyy")</td>
+                            <td>₹@p.Amount.ToString("N2")</td>
+                            <td>
+                                <span class="badge rounded-pill
+                                    @(p.Status == "Paid" ? "bg-success" :
+                                      p.Status == "Pending" ? "bg-warning text-dark" :
+                                      "bg-danger")">
+                                    @p.Status
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

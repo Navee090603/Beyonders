@@ -1,5 +1,5 @@
-﻿﻿ /* Admin theme based on Amazon aesthetic: clean, wide content area, orange accent */
-html, body {
+﻿/*﻿*/ /* Admin theme based on Amazon aesthetic: clean, wide content area, orange accent */
+/*html, body {
     height: 100%;
 }
 
@@ -43,16 +43,16 @@ html, body {
     min-height: 100vh;
     display: flex;
     flex-direction: column
-}
+}*/
 
 /*.admin-topbar {
     height: 56px
 }*/
 
-.admin-topbar {
+/*.admin-topbar {
     position: relative;
-    z-index: 1050; /* Higher than sidebar (sidebar is 1040) */
-}
+    z-index: 1050;*/ /* Higher than sidebar (sidebar is 1040) */
+/*}
 
 
 .admin-footer {
@@ -71,45 +71,188 @@ html, body {
 
 .display-4 {
     font-size: 1.7rem
-}
+}*/
 
 
 /* Responsive adjustments */
-#admin-sidebar {
+/*#admin-sidebar {
     position: fixed;
     left: -260px;
     top: 0;
     z-index: 1040;
-    transition: left 0.3s ease-in-out; /* Smooth animation */
+    transition: left 0.3s ease-in-out;*/ /* Smooth animation */
+/*}
+
+    #admin-sidebar.show {
+        left: 0;
+    }*/
+
+
+/* DataTables small adjustments */
+/*.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.25rem 0.5rem
+}*/
+
+
+/* small helpers */
+/*.badge {
+    font-size: 0.75rem
+}*/
+
+/* Add transition and margin-left to admin-content */
+/*#admin-content {
+    background: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: 0;*/ /* default when sidebar is hidden */
+/*}*/
+
+/* When sidebar is shown, shift content to the right */
+/*#admin-sidebar.show ~ #admin-content {
+    margin-left: 240px;*/ /* same as sidebar width */
+/*}*/
+
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 15px;
+    color: #2c2c2c;
+    background-color: #f7f9fc; /* soft pastel background */
+}
+
+#admin-root {
+    min-height: 100vh;
+}
+
+/* Sidebar */
+#admin-sidebar {
+    width: 240px;
+    min-height: 100vh;
+    background: #2e3b4e; /* muted navy */
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: -260px;
+    top: 0;
+    z-index: 1040;
+    transition: left 0.3s ease-in-out;
 }
 
     #admin-sidebar.show {
         left: 0;
     }
 
+    #admin-sidebar .sidebar-brand {
+        background: #243142;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 16px;
+        font-size: 1rem;
+        text-align: center;
+    }
 
-/* DataTables small adjustments */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    padding: 0.25rem 0.5rem
-}
+    #admin-sidebar .sidebar-nav {
+        padding-left: 0;
+        margin-top: 8px;
+    }
 
+    #admin-sidebar .nav-link {
+        padding: 12px 18px;
+        color: #dbe2ea;
+        font-size: 14px;
+        transition: background 0.2s ease;
+    }
 
-/* small helpers */
-.badge {
-    font-size: 0.75rem
-}
+        #admin-sidebar .nav-link:hover {
+            background: #3a4a5a;
+            text-decoration: none;
+        }
 
-/* Add transition and margin-left to admin-content */
+        #admin-sidebar .nav-link .fa {
+            width: 18px;
+            margin-right: 6px;
+        }
+
+/* Content */
 #admin-content {
-    background: #f8f9fa;
+    background: #f7f9fc;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     transition: margin-left 0.3s ease-in-out;
-    margin-left: 0; /* default when sidebar is hidden */
+    margin-left: 0;
+    padding: 24px;
 }
 
-/* When sidebar is shown, shift content to the right */
 #admin-sidebar.show ~ #admin-content {
-    margin-left: 240px; /* same as sidebar width */
+    margin-left: 240px;
+}
+
+/* Topbar */
+.admin-topbar {
+    position: relative;
+    z-index: 1050;
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 24px;
+}
+
+/* Footer */
+.admin-footer {
+    background: #f7f9fc;
+    border-top: 1px solid #e0e0e0;
+    padding: 12px 24px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Cards */
+.admin-card {
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    padding: 16px;
+    margin-bottom: 24px;
+    border: 1px solid #e3e3e3;
+}
+
+/* Accent */
+.text-orange {
+    color: #f4a261; /* pastel peach-orange */
+}
+
+.display-4 {
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+/* DataTables */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    background-color: #eaeff3;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+/* Helpers */
+.badge {
+    font-size: 0.75rem;
+    background-color: #f4a261;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+
+.heading-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700; /* bold */
+    font-size: 1.75rem;
+    color: #5a6f8c; /* soft pastel slate blue */
+    margin-bottom: 1rem;
 }

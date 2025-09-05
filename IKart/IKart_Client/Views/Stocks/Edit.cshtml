@@ -5,38 +5,55 @@
     ViewBag.Title = "Edit Stock";
 }
 
-<div class="container mt-4">
-    <h2>@ViewBag.Title</h2>
-
-    @using (Html.BeginForm("Edit", "Stocks", FormMethod.Post))
-    {
-        @Html.HiddenFor(m => m.StockId)
-
-        <div class="form-group mb-3">
-            @Html.LabelFor(m => m.Category)
-            @Html.TextBoxFor(m => m.Category, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Category)
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 heading-title">@ViewBag.Title</h4>
+            <a href="@Url.Action("Index", "Stocks")" class="btn btn-outline-secondary btn-sm">
+                <i class="fa fa-arrow-left me-1"></i> Back
+            </a>
         </div>
 
-        <div class="form-group mb-3">
-            @Html.LabelFor(m => m.SubCategory)
-            @Html.TextBoxFor(m => m.SubCategory, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.SubCategory)
-        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Edit", "Stocks", FormMethod.Post))
+            {
+                @Html.HiddenFor(m => m.StockId)
 
-        <div class="form-group mb-3">
-            @Html.LabelFor(m => m.TotalStocks)
-            @Html.TextBoxFor(m => m.TotalStocks, new { @class = "form-control", type = "number", min = "0" })
-            @Html.ValidationMessageFor(m => m.TotalStocks)
-        </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Category, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.Category, new { @class = "form-control", placeholder = "Enter category" })
+                    @Html.ValidationMessageFor(m => m.Category, "", new { @class = "text-danger" })
+                </div>
 
-        <div class="form-group mb-3">
-            @Html.LabelFor(m => m.AvailableStocks)
-            @Html.TextBoxFor(m => m.AvailableStocks, new { @class = "form-control", type = "number", min = "0" })
-            @Html.ValidationMessageFor(m => m.AvailableStocks)
-        </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.SubCategory, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.SubCategory, new { @class = "form-control", placeholder = "Enter sub-category" })
+                    @Html.ValidationMessageFor(m => m.SubCategory, "", new { @class = "text-danger" })
+                </div>
 
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a href="@Url.Action("Index", "Stocks")" class="btn btn-secondary">Cancel</a>
-    }
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.TotalStocks, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.TotalStocks, new { @class = "form-control", type = "number", min = "0", placeholder = "Enter total stocks" })
+                    @Html.ValidationMessageFor(m => m.TotalStocks, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.AvailableStocks, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(m => m.AvailableStocks, new { @class = "form-control", type = "number", min = "0", placeholder = "Enter available stocks" })
+                    @Html.ValidationMessageFor(m => m.AvailableStocks, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="d-flex justify-content-center gap-4 mt-4">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="fa fa-save me-1"></i> Update
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+                    <a href="@Url.Action("Index", "Stocks")" class="btn btn-outline-secondary px-4">
+                        <i class="fa fa-times me-1"></i> Cancel
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
 </div>
