@@ -119,22 +119,18 @@ namespace IKart_ServerSide.Controllers
             return Ok(dto);
         }
 
-        [HttpDelete, Route("{id:int}")]
+        // Delete product
+        [HttpDelete]
+        [Route("{id}")]
         public IHttpActionResult Delete(int id)
         {
-            var stock = db.Stocks.Find(id);
-            if (stock == null) return NotFound();
+            var p = db.Products.Find(id);
+            if (p == null) return NotFound();
 
-            // check if stock has related products/payments
-            bool hasPayments = db.Payments.Any(p => p.ProductId == id);
-            if (hasPayments)
-            {
-                return BadRequest("Cannot delete this stock. It has related payments.");
-            }
-
-            db.Stocks.Remove(stock);
+            db.Products.Remove(p);
             db.SaveChanges();
-            return Ok("Stock deleted successfully");
+
+            return Ok("Deleted");
         }
     }
 }

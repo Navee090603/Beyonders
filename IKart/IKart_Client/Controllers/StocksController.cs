@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Mvc;
@@ -96,23 +97,64 @@ namespace IKart_Client.Controllers
             return View(dto);
         }
 
-        [HttpPost]
-        public ActionResult Delete(StocksDto dto)
+        // DELETE GET - Show confirmation page
+        public ActionResult Delete(int id)
+        {
+            StocksDto stock = null;
+            using (var handler = new HttpClientHandler())
+            {
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, errors) => true;
+                using (var client = new HttpClient(handler))
+                {
+                    var res = client.GetAsync(apiUrl + "/" + id).Result;
+                    if (res.IsSuccessStatusCode)
+                    {
+                        var json = res.Content.ReadAsStringAsync().Result;
+                        stock = JsonConvert.DeserializeObject<StocksDto>(json);
+                    }
+                }
+            }
+
+            if (stock == null) return HttpNotFound();
+            return View(stock);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
             using (var handler = new HttpClientHandler())
             {
                 handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, errors) => true;
                 using (var client = new HttpClient(handler))
                 {
-                    var res = client.DeleteAsync(apiUrl + "/" + dto.StockId).Result;
+                    var res = client.DeleteAsync(apiUrl + "/" + id).Result;
+
                     if (res.IsSuccessStatusCode)
                     {
                         return RedirectToAction("Index");
                     }
+                    else if (res.StatusCode == HttpStatusCode.Conflict)
+                    {
+                        // Read API error message
+                        var errorMsg = res.Content.ReadAsStringAsync().Result;
+                        ViewBag.Error = errorMsg;
+
+                        // Reload stock details so view can render again
+                        var stockRes = client.GetAsync(apiUrl + "/" + id).Result;
+                        if (stockRes.IsSuccessStatusCode)
+                        {
+                            var json = stockRes.Content.ReadAsStringAsync().Result;
+                            var stock = JsonConvert.DeserializeObject<StocksDto>(json);
+                            return View("Delete", stock);
+                        }
+                        return View("Delete");
+                    }
                 }
             }
-            return View(dto);
-        }
 
+            // fallback
+            return RedirectToAction("Index");
+        }
     }
 }

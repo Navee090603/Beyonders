@@ -39,6 +39,7 @@
     <NavigationProperty Name="Admin" Relationship="Self.FK__Card_Requ__Verif__6477ECF3" FromRole="Card_Request" ToRole="Admins" />
     <NavigationProperty Name="User" Relationship="Self.FK__Card_Requ__UserI__628FA481" FromRole="Card_Request" ToRole="Users" />
     <NavigationProperty Name="Joining_Fee" Relationship="Self.FK__Joining_F__Card___6754599E" FromRole="Card_Request" ToRole="Joining_Fee" />
+    <NavigationProperty Name="EmiCard_Documents" Relationship="IKartModel.FK__EmiCard_D__Card___07C12930" FromRole="Card_Request" ToRole="EmiCard_Documents" />
   </EntityType>
   <EntityType Name="EMI_Card">
     <Key>
@@ -709,5 +710,34 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="Support_Tickets" EntitySet="Support_Tickets" />
     </AssociationSet>
+    <EntitySet Name="EmiCard_Documents" EntityType="IKartModel.EmiCard_Documents" />
+    <AssociationSet Name="FK__EmiCard_D__Card___07C12930" Association="IKartModel.FK__EmiCard_D__Card___07C12930">
+      <End Role="Card_Request" EntitySet="Card_Request" />
+      <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
+    </AssociationSet>
   </EntityContainer>
+  <EntityType Name="EmiCard_Documents">
+    <Key>
+      <PropertyRef Name="DocumentId" />
+    </Key>
+    <Property Name="DocumentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Card_Id" Type="Int32" />
+    <Property Name="DocumentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="FileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UploadedDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Card_Request" Relationship="IKartModel.FK__EmiCard_D__Card___07C12930" FromRole="EmiCard_Documents" ToRole="Card_Request" />
+  </EntityType>
+  <Association Name="FK__EmiCard_D__Card___07C12930">
+    <End Type="IKartModel.Card_Request" Role="Card_Request" Multiplicity="0..1" />
+    <End Type="IKartModel.EmiCard_Documents" Role="EmiCard_Documents" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Card_Request">
+        <PropertyRef Name="Card_Id" />
+      </Principal>
+      <Dependent Role="EmiCard_Documents">
+        <PropertyRef Name="Card_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ede74f7b0c66465281153fc157db848d" Name="Diagram1" ZoomLevel="42">
+      <Diagram DiagramId="ede74f7b0c66465281153fc157db848d" Name="Diagram1" ZoomLevel="63">
         <EntityTypeShape EntityType="IKartModel.Address" Width="1.5" PointX="3" PointY="9.125" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Admin" Width="1.5" PointX="3.75" PointY="5.625" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Card_Request" Width="1.5" PointX="3" PointY="13.375" IsExpanded="true" />
@@ -50,6 +50,8 @@
         <AssociationConnector Association="IKartModel.FK__Penalty__UserId__73BA3083" ManuallyRouted="false" />
         <AssociationConnector Association="IKartModel.FK__Products__Stock___45F365D3" ManuallyRouted="false" />
         <AssociationConnector Association="IKartModel.FK__Support_T__UserI__03F0984C" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="IKartModel.EmiCard_Documents" Width="1.5" PointX="5.25" PointY="22" />
+        <AssociationConnector Association="IKartModel.FK__EmiCard_D__Card___07C12930" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

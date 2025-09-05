@@ -24,17 +24,17 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>@item.StockId</td>
-                <td>@item.Category</td>
-                <td>@item.SubCategory</td>
-                <td>@item.TotalStocks</td>
-                <td>@item.AvailableStocks</td>
-                <td>
-                    <a href="@Url.Action("Edit", "Stocks", new { id = item.StockId })" class="btn btn-sm btn-primary">Edit</a>
-                    <a href="@Url.Action("Delete", "Stocks", new { id = item.StockId })" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>@item.StockId</td>
+                    <td>@item.Category</td>
+                    <td>@item.SubCategory</td>
+                    <td>@item.TotalStocks</td>
+                    <td>@item.AvailableStocks</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Stocks", new { id = item.StockId })" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="@Url.Action("Delete", "Stocks", new { id = item.StockId })" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

@@ -189,9 +189,12 @@
     <Content Include="Views\Products\Create.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Delete.cshtml" />
-    <Content Include="Views\Stocks\Create.cshtml" />
     <Content Include="Views\Products\Reports.cshtml" />
+    <Content Include="Views\Orders\Details.cshtml" />
+    <Content Include="Views\Users\View.cshtml" />
+    <Content Include="Views\EmiCard\View.cshtml" />
     <Content Include="Views\Stocks\Index.cshtml" />
+    <Content Include="Views\Stocks\Create.cshtml" />
     <Content Include="Views\Stocks\Edit.cshtml" />
     <Content Include="Views\Stocks\Delete.cshtml" />
     <None Include="Web.Debug.config">

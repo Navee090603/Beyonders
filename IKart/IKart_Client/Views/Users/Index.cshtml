@@ -1,4 +1,5 @@
-﻿﻿@{
+﻿@model IEnumerable<IKart_Shared.DTOs.UserDto>
+@{
     ViewBag.Title = "Users - Admin";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -6,7 +7,6 @@
 <div class="container mt-4 d-flex flex-column min-vh-100">
     <h2 class="mb-4">Manage Users</h2>
 
-    <!-- Users Table -->
     <div class="flex-grow-1">
         <table class="table table-bordered table-striped align-middle">
             <thead class="table-dark">
@@ -21,49 +21,38 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Static Example Rows -->
-                <tr>
-                    <td>1</td>
-                    <td>JohnDoe</td>
-                    <td>john.doe@example.com</td>
-                    <td>9876543210</td>
-                    <td>01-08-2025</td>
-                    <td class="status-cell">Active</td>
-                    <td>
-                        <button class="btn btn-outline-success btn-sm me-1" onclick="setStatus(this, 'Active')">
-                            <i class="fa fa-check-circle"></i> Active
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="setStatus(this, 'De-active')">
-                            <i class="fa fa-ban"></i> De-active
-                        </button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>2</td>
-                    <td>JaneSmith</td>
-                    <td>jane.smith@example.com</td>
-                    <td>9123456780</td>
-                    <td>15-07-2025</td>
-                    <td class="status-cell">De-active</td>
-                    <td>
-                        <button class="btn btn-outline-success btn-sm me-1" onclick="setStatus(this, 'Active')">
-                            <i class="fa fa-check-circle"></i> Active
-                        </button>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="setStatus(this, 'De-active')">
-                            <i class="fa fa-ban"></i> De-active
-                        </button>
-                    </td>
-                </tr>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.UserId</td>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.CreatedDate.ToString("dd-MM-yyyy")</td>
+                        <td class="status-cell">@user.Status</td>
+                        <td>
+                            @using (Html.BeginForm("View", "Users", new { id = user.UserId }, FormMethod.Get))
+                            {
+                                <button type="submit" class="btn btn-info btn-sm me-1">
+                                    <i class="fa fa-eye"></i> View
+                                </button>
+                            }
+                            @using (Html.BeginForm("UpdateStatus", "Users", new { id = user.UserId, status = "Active" }, FormMethod.Post))
+                            {
+                                <button type="submit" class="btn btn-outline-success btn-sm me-1">
+                                    <i class="fa fa-check-circle"></i> Activate
+                                </button>
+                            }
+                            @using (Html.BeginForm("UpdateStatus", "Users", new { id = user.UserId, status = "De-active" }, FormMethod.Post))
+                            {
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fa fa-ban"></i> De-activate
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 </div>
-
-<script>
-    function setStatus(button, status) {
-        const row = button.closest('tr');
-        const statusCell = row.querySelector('.status-cell');
-        statusCell.textContent = status;
-    }
-</script>
