@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.36128.20
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Design_IKart", "Design_IKart\Design_IKart.csproj", "{3B9CC656-4616-4349-A789-AB1E89F3B91F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKart_Design", "IKart_Design\IKart_Design.csproj", "{3B7D5934-FC63-4EE2-AC89-BEB858073D97}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B9CC656-4616-4349-A789-AB1E89F3B91F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B9CC656-4616-4349-A789-AB1E89F3B91F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B9CC656-4616-4349-A789-AB1E89F3B91F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B9CC656-4616-4349-A789-AB1E89F3B91F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B7D5934-FC63-4EE2-AC89-BEB858073D97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B7D5934-FC63-4EE2-AC89-BEB858073D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B7D5934-FC63-4EE2-AC89-BEB858073D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B7D5934-FC63-4EE2-AC89-BEB858073D97}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7E3160B-AD20-4ACE-928E-40CD7F612CFC}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <div class="row">
+        <!-- Tokens Raised -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Tokens Raised</div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li>Token #TKN-101 <span class="float-end">Open</span></li>
+                        <li>Token #TKN-102 <span class="float-end">In Progress</span></li>
+                        <li>Token #TKN-103 <span class="float-end">Resolved</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Quick Actions</div>
+                <div class="card-body">
+                    <a class="btn btn-sm btn-primary mb-1" href="@Url.Action("Create","Products", new { area = "Admin" })">
+                        <i class="fa fa-plus me-1"></i> Add Product
+                    </a>
+                    <a class="btn btn-sm btn-secondary mb-1" href="@Url.Action("Index","Orders", new { area = "Admin" })">
+                        <i class="fa fa-truck me-1"></i> View Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue Chart -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">Revenue (Last 7 Days)</div>
+                <div class="card-body" style="height:300px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">Recent Orders</div>
+                <div class="card-body">
+                    <table id="recentOrders" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#1001</td>
+                                <td>John Doe</td>
+                                <td>₹1999.99</td>
+                                <td>Completed</td>
+                                <td>02-Sep-2025</td>
+                            </tr>
+                            <tr>
+                                <td>#1002</td>
+                                <td>Jane Smith</td>
+                                <td>₹899.99</td>
+                                <td>Pending</td>
+                                <td>01-Sep-2025</td>
+                            </tr>
+                            <tr>
+                                <td>#1003</td>
+                                <td>Rahul Mehta</td>
+                                <td>₹4599.00</td>
+                                <td>Shipped</td>
+                                <td>31-Aug-2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Chart.js Revenue Line Chart
+            var ctx = document.getElementById('revenueChart').getContext('2d');
+            var revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Day -6', 'Day -5', 'Day -4', 'Day -3', 'Day -2', 'Day -1', 'Today'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [1200, 1500, 900, 2000, 1700, 2200, 1900],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // DataTable for recent orders
+            $('#recentOrders').DataTable({
+                paging: true,
+                searching: false,
+                info: false
+            });
+        });
+    </script>
+}
