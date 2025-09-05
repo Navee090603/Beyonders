@@ -58,7 +58,7 @@ namespace IKart_ClientSide.Controllers.User
                         Session["FullName"] = result.FullName;
                         Session["Username"] = result.Username;
 
-                        return RedirectToAction("Index", "Dashboard");
+                        return RedirectToAction("Index", "Product");
                     }
 
                     ModelState.AddModelError("", "Invalid username or password");
