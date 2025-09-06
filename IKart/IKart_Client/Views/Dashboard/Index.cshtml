@@ -1,0 +1,128 @@
+﻿@model IEnumerable<IKart_Shared.DTOs.Admin.OrderDto>
+@using Newtonsoft.Json
+
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <div class="row">
+        <!-- Tokens Raised -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Tokens Raised</div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        @foreach (var token in ViewBag.Tokens)
+                        {
+                            <li>
+                                Token ID:@token.TicketId - @token.Subject
+                                <span class="float-end">@token.Status</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">Quick Actions</div>
+                <div class="card-body">
+                    <a class="btn btn-sm btn-primary mb-1" href="@Url.Action("Create","Products", new { area = "Admin" })">
+                        <i class="fa fa-plus me-1"></i> Add Product
+                    </a>
+                    <a class="btn btn-sm btn-secondary mb-1" href="@Url.Action("Index","Orders", new { area = "Admin" })">
+                        <i class="fa fa-truck me-1"></i> View Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue Chart -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">Revenue (Last 7 Days)</div>
+                <div class="card-body" style="height:300px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">Recent Orders</div>
+                <div class="card-body">
+                    <table id="recentOrders" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model)
+                            {
+                                <tr>
+                                    <td>#@order.Order_Id</td>
+                                    <td>@order.UserName</td>
+                                    <td>₹@order.TotalAmount</td>
+                                    <td>@order.Status</td>
+                                    <td>@order.OrderDate.ToString("dd-MMM-yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            //Chart.js Revenue Line Chart
+            var revenueData = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Revenue));
+            var labels = revenueData.map(r => moment(r.Date).format("DD-MMM"));
+            var data = revenueData.map(r => r.Total);
+
+            var ctx = document.getElementById('revenueChart').getContext('2d');
+            var revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // DataTable for recent orders
+            $('#recentOrders').DataTable({
+                paging: true,
+                searching: false,
+                info: false
+            });
+        });
+    </script>
+}

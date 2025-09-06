@@ -1,0 +1,63 @@
+﻿@model IEnumerable<IKart_Shared.DTOs.Admin.EmiCardDto>
+@{
+    ViewBag.Title = "Manage EMI Cards";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-4 d-flex flex-column min-vh-100">
+    <h2 class="mb-4">Manage EMI Cards</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Card ID</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Fee Paid</th>
+                <th>Fee Status</th>
+                <th>Approval Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var card in Model)
+            {
+                <tr>
+                    <td>@card.CardId</td>
+                    <td>@card.UserName</td>
+                    <td>@card.Email</td>
+                    <td>@card.FeePaid</td>
+                    <td>@card.FeeStatus</td>
+                    <td>@card.ApprovalStatus</td>
+                    <td>
+                        @using (Html.BeginForm("View", "EmiCard", new { id = card.CardId }, FormMethod.Get))
+                        {
+                            <button type="submit" class="btn btn-info btn-sm me-1">
+                                <i class="fa fa-eye"></i> View
+                            </button>
+                        }
+
+
+                        @using (Html.BeginForm("UpdateStatus", "EmiCard", new { id = card.CardId, status = "Approved" }, FormMethod.Post))
+                        {
+                            <button type="submit" class="btn btn-success btn-sm me-1">
+                                <i class="fa fa-check-circle"></i> Approve
+                            </button>
+                        }
+                        @using (Html.BeginForm("UpdateStatus", "EmiCard", new { id = card.CardId, status = "Rejected" }, FormMethod.Post))
+                        {
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa fa-ban"></i> Reject
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

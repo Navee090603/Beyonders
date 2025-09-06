@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    ViewBag.Title = "Pay Joining Fee";
+}
+
+<h2>Pay Joining Fee</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<p>Please pay the joining fee to confirm your EMI card request.</p>
+
+<h4>Amount: ₹@ViewBag.FeeAmount</h4>
+
+@using (Html.BeginForm("ConfirmPayment", "Payment", FormMethod.Post))
+{
+<div class="form-group">
+    <label>Payment Method</label>
+    <select name="PaymentMethodId" class="form-control" required>
+        <option value="1">Credit Card</option>
+        <option value="2">Debit Card</option>
+        <option value="3">Net Banking</option>
+        <option value="4">UPI</option>
+    </select>
+</div>
+
+    <button type="submit" class="btn btn-success">Confirm Payment</button>
+}
