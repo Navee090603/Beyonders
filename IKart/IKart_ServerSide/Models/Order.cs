@@ -14,15 +14,28 @@ namespace IKart_ServerSide.Models
     
     public partial class Order
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Order()
+        {
+            this.Order_Cancellations = new HashSet<Order_Cancellations>();
+            this.Returns = new HashSet<Return>();
+        }
+    
         public int Order_Id { get; set; }
         public Nullable<int> ProductId { get; set; }
         public Nullable<int> UserId { get; set; }
         public Nullable<int> PaymentId { get; set; }
         public Nullable<System.DateTime> OrderDate { get; set; }
         public Nullable<System.DateTime> DeliveryDate { get; set; }
+        public string Region { get; set; }
+        public string OrderStatus { get; set; }
     
         public virtual Payment Payment { get; set; }
         public virtual Product Product { get; set; }
         public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order_Cancellations> Order_Cancellations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Return> Returns { get; set; }
     }
 }

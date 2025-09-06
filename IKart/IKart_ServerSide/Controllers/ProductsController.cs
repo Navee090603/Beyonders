@@ -13,7 +13,7 @@ namespace IKart_ServerSide.Controllers
     [RoutePrefix("api/products")]
     public class ProductsController : ApiController
     {
-        IKartEntities db = new IKartEntities();
+        IKartEntities1 db = new IKartEntities1();
 
         // Get all products
         [HttpGet]

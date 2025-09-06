@@ -25,6 +25,8 @@ namespace IKart_ServerSide.Models
             this.Payments = new HashSet<Payment>();
             this.Penalties = new HashSet<Penalty>();
             this.Support_Tickets = new HashSet<Support_Tickets>();
+            this.Order_Cancellations = new HashSet<Order_Cancellations>();
+            this.Returns = new HashSet<Return>();
         }
     
         public int UserId { get; set; }
@@ -53,5 +55,9 @@ namespace IKart_ServerSide.Models
         public virtual ICollection<Penalty> Penalties { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Support_Tickets> Support_Tickets { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order_Cancellations> Order_Cancellations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Return> Returns { get; set; }
     }
 }

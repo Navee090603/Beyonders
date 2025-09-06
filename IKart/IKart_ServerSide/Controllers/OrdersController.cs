@@ -11,7 +11,7 @@ namespace IKart_ServerSide.Controllers
     [RoutePrefix("api/orders")]
     public class OrdersController : ApiController
     {
-        private readonly IKartEntities db = new IKartEntities();
+        private readonly IKartEntities1 db = new IKartEntities1();
 
         // GET api/orders
         [HttpGet]

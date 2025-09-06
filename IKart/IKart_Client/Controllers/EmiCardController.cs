@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Net.Http;
+using System.Text;
 using System.Web.Mvc;
 using IKart_Shared.DTOs;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Text;
 
 namespace IKart_Client.Controllers
 {
@@ -14,14 +13,14 @@ namespace IKart_Client.Controllers
         private readonly string apiBaseUrl = "https://localhost:44365/api/emicards";
 
         // GET: EmiCard
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             using (var handler = new HttpClientHandler())
             {
                 handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
                 using (var client = new HttpClient(handler))
                 {
-                    var response = await client.GetStringAsync(apiBaseUrl);
+                    var response = client.GetStringAsync(apiBaseUrl).Result; // synchronous call
                     var cards = JsonConvert.DeserializeObject<List<EmiCardDto>>(response);
                     return View(cards);
                 }
@@ -29,14 +28,14 @@ namespace IKart_Client.Controllers
         }
 
         // GET: EmiCard/View/5
-        public async Task<ActionResult> View(int id)
+        public ActionResult View(int id)
         {
             using (var handler = new HttpClientHandler())
             {
                 handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
                 using (var client = new HttpClient(handler))
                 {
-                    var response = await client.GetStringAsync($"{apiBaseUrl}/{id}");
+                    var response = client.GetStringAsync($"{apiBaseUrl}/{id}").Result; // synchronous call
                     var card = JsonConvert.DeserializeObject<EmiCardDto>(response);
                     return View(card);
                 }
@@ -45,7 +44,7 @@ namespace IKart_Client.Controllers
 
         // POST: EmiCard/UpdateStatus/5
         [HttpPost]
-        public async Task<ActionResult> UpdateStatus(int id, string status)
+        public ActionResult UpdateStatus(int id, string status)
         {
             using (var handler = new HttpClientHandler())
             {
@@ -53,10 +52,12 @@ namespace IKart_Client.Controllers
                 using (var client = new HttpClient(handler))
                 {
                     var content = new StringContent($"\"{status}\"", Encoding.UTF8, "application/json");
-                    var response = await client.PutAsync($"{apiBaseUrl}/updatestatus/{id}", content);
+                    var response = client.PutAsync($"{apiBaseUrl}/updatestatus/{id}", content).Result; // synchronous call
 
                     if (response.IsSuccessStatusCode)
                         TempData["Message"] = "Status updated successfully!";
+                    else
+                        TempData["Error"] = "Failed to update status.";
                 }
             }
             return RedirectToAction("Index");

@@ -12,7 +12,7 @@ namespace IKart_ServerSide.Controllers
     [RoutePrefix("api/users")]
     public class UsersController : ApiController
     {
-        private readonly IKartEntities db = new IKartEntities();
+        private readonly IKartEntities1 db = new IKartEntities1();
 
         // GET api/users
         [HttpGet, Route("")]

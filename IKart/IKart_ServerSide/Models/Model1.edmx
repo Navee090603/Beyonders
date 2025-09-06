@@ -120,6 +120,17 @@
           <Property Name="ValidTo" Type="date" />
           <Property Name="Terms" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="Order_Cancellations">
+          <Key>
+            <PropertyRef Name="CancellationId" />
+          </Key>
+          <Property Name="CancellationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderId" Type="int" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="Reason" Type="nvarchar" MaxLength="255" />
+          <Property Name="CancelDate" Type="datetime" />
+          <Property Name="Refunded" Type="bit" />
+        </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="Order_Id" />
@@ -130,6 +141,8 @@
           <Property Name="PaymentId" Type="int" />
           <Property Name="OrderDate" Type="datetime" />
           <Property Name="DeliveryDate" Type="datetime" />
+          <Property Name="Region" Type="nvarchar" MaxLength="50" />
+          <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Payment_Details">
           <Key>
@@ -199,6 +212,18 @@
           <Property Name="Reason" Type="nvarchar" MaxLength="255" />
           <Property Name="Status" Type="nvarchar" MaxLength="20" />
           <Property Name="RefundDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Returns">
+          <Key>
+            <PropertyRef Name="ReturnId" />
+          </Key>
+          <Property Name="ReturnId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderId" Type="int" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="Reason" Type="nvarchar" MaxLength="255" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="ReturnDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Stocks">
           <Key>
@@ -405,6 +430,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Order_Can__Order__1BC821DD">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="Order_Cancellations" Type="Self.Order_Cancellations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="Order_Id" />
+            </Principal>
+            <Dependent Role="Order_Cancellations">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Order_Can__UserI__1CBC4616">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Order_Cancellations" Type="Self.Order_Cancellations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Order_Cancellations">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Orders__PaymentI__5EBF139D">
           <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -549,6 +598,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Returns__OrderId__160F4887">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="Returns" Type="Self.Returns" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="Order_Id" />
+            </Principal>
+            <Dependent Role="Returns">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Returns__Product__17F790F9">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="Returns" Type="Self.Returns" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="Returns">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Returns__UserId__17036CC0">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Returns" Type="Self.Returns" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Returns">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Support_T__UserI__03F0984C">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Support_Tickets" Type="Self.Support_Tickets" Multiplicity="*" />
@@ -572,6 +657,7 @@
           <EntitySet Name="Joining_Fee" EntityType="Self.Joining_Fee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Monthly_EMI_Calc" EntityType="Self.Monthly_EMI_Calc" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Offers" EntityType="Self.Offers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_Cancellations" EntityType="Self.Order_Cancellations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payment_Details" EntityType="Self.Payment_Details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payment_Methods" EntityType="Self.Payment_Methods" Schema="dbo" store:Type="Tables" />
@@ -579,6 +665,7 @@
           <EntitySet Name="Penalty" EntityType="Self.Penalty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Refunds" EntityType="Self.Refunds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Returns" EntityType="Self.Returns" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Stocks" EntityType="Self.Stocks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Support_Tickets" EntityType="Self.Support_Tickets" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -638,6 +725,14 @@
             <End Role="Products" EntitySet="Products" />
             <End Role="Offers" EntitySet="Offers" />
           </AssociationSet>
+          <AssociationSet Name="FK__Order_Can__Order__1BC821DD" Association="Self.FK__Order_Can__Order__1BC821DD">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Order_Cancellations" EntitySet="Order_Cancellations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Order_Can__UserI__1CBC4616" Association="Self.FK__Order_Can__UserI__1CBC4616">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Order_Cancellations" EntitySet="Order_Cancellations" />
+          </AssociationSet>
           <AssociationSet Name="FK__Orders__PaymentI__5EBF139D" Association="Self.FK__Orders__PaymentI__5EBF139D">
             <End Role="Payments" EntitySet="Payments" />
             <End Role="Orders" EntitySet="Orders" />
@@ -686,6 +781,18 @@
             <End Role="Payments" EntitySet="Payments" />
             <End Role="Refunds" EntitySet="Refunds" />
           </AssociationSet>
+          <AssociationSet Name="FK__Returns__OrderId__160F4887" Association="Self.FK__Returns__OrderId__160F4887">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Returns" EntitySet="Returns" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Returns__Product__17F790F9" Association="Self.FK__Returns__Product__17F790F9">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Returns" EntitySet="Returns" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Returns__UserId__17036CC0" Association="Self.FK__Returns__UserId__17036CC0">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Returns" EntitySet="Returns" />
+          </AssociationSet>
           <AssociationSet Name="FK__Support_T__UserI__03F0984C" Association="Self.FK__Support_T__UserI__03F0984C">
             <End Role="Users" EntitySet="Users" />
             <End Role="Support_Tickets" EntitySet="Support_Tickets" />
@@ -733,8 +840,8 @@
           <Property Name="VerifiedBy" Type="Int32" />
           <NavigationProperty Name="Admin" Relationship="Self.FK__Card_Requ__Verif__6477ECF3" FromRole="Card_Request" ToRole="Admins" />
           <NavigationProperty Name="User" Relationship="Self.FK__Card_Requ__UserI__628FA481" FromRole="Card_Request" ToRole="Users" />
+          <NavigationProperty Name="EmiCard_Documents" Relationship="Self.FK__EmiCard_D__Card___07C12930" FromRole="Card_Request" ToRole="EmiCard_Documents" />
           <NavigationProperty Name="Joining_Fee" Relationship="Self.FK__Joining_F__Card___6754599E" FromRole="Card_Request" ToRole="Joining_Fee" />
-          <NavigationProperty Name="EmiCard_Documents" Relationship="IKartModel.FK__EmiCard_D__Card___07C12930" FromRole="Card_Request" ToRole="EmiCard_Documents" />
         </EntityType>
         <EntityType Name="EMI_Card">
           <Key>
@@ -756,6 +863,18 @@
           <NavigationProperty Name="Payment_Methods" Relationship="Self.FK__EMI_Card__Paymen__5070F446" FromRole="EMI_Card" ToRole="Payment_Methods" />
           <NavigationProperty Name="User" Relationship="Self.FK__EMI_Card__UserId__4F7CD00D" FromRole="EMI_Card" ToRole="Users" />
           <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__EmiCar__5535A963" FromRole="EMI_Card" ToRole="Payments" />
+        </EntityType>
+        <EntityType Name="EmiCard_Documents">
+          <Key>
+            <PropertyRef Name="DocumentId" />
+          </Key>
+          <Property Name="DocumentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Card_Id" Type="Int32" />
+          <Property Name="DocumentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UploadedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Card_Request" Relationship="Self.FK__EmiCard_D__Card___07C12930" FromRole="EmiCard_Documents" ToRole="Card_Request" />
         </EntityType>
         <EntityType Name="FAQ">
           <Key>
@@ -832,6 +951,10 @@
           <NavigationProperty Name="Payment" Relationship="Self.FK__Orders__PaymentI__5EBF139D" FromRole="Orders" ToRole="Payments" />
           <NavigationProperty Name="Product" Relationship="Self.FK__Orders__ProductI__5CD6CB2B" FromRole="Orders" ToRole="Products" />
           <NavigationProperty Name="User" Relationship="Self.FK__Orders__UserId__5DCAEF64" FromRole="Orders" ToRole="Users" />
+          <Property Name="Region" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OrderStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Order_Cancellations" Relationship="IKartModel.FK__Order_Can__Order__1BC821DD" FromRole="Order" ToRole="Order_Cancellations" />
+          <NavigationProperty Name="Returns" Relationship="IKartModel.FK__Returns__OrderId__160F4887" FromRole="Order" ToRole="Return" />
         </EntityType>
         <EntityType Name="Payment_Details">
           <Key>
@@ -909,6 +1032,7 @@
           <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__ProductI__5CD6CB2B" FromRole="Products" ToRole="Orders" />
           <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__Produc__571DF1D5" FromRole="Products" ToRole="Payments" />
           <NavigationProperty Name="Stock" Relationship="Self.FK__Products__Stock___45F365D3" FromRole="Products" ToRole="Stocks" />
+          <NavigationProperty Name="Returns" Relationship="IKartModel.FK__Returns__Product__17F790F9" FromRole="Product" ToRole="Return" />
         </EntityType>
         <EntityType Name="Refund">
           <Key>
@@ -968,6 +1092,8 @@
           <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__UserId__5629CD9C" FromRole="Users" ToRole="Payments" />
           <NavigationProperty Name="Penalties" Relationship="Self.FK__Penalty__UserId__73BA3083" FromRole="Users" ToRole="Penalty" />
           <NavigationProperty Name="Support_Tickets" Relationship="Self.FK__Support_T__UserI__03F0984C" FromRole="Users" ToRole="Support_Tickets" />
+          <NavigationProperty Name="Order_Cancellations" Relationship="IKartModel.FK__Order_Can__UserI__1CBC4616" FromRole="User" ToRole="Order_Cancellations" />
+          <NavigationProperty Name="Returns" Relationship="IKartModel.FK__Returns__UserId__17036CC0" FromRole="User" ToRole="Return" />
         </EntityType>
         <Association Name="FK__Address__UserId__3F466844">
           <End Role="Users" Type="Self.User" Multiplicity="0..1" />
@@ -1014,6 +1140,18 @@
             </Principal>
             <Dependent Role="Card_Request">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EmiCard_D__Card___07C12930">
+          <End Role="Card_Request" Type="Self.Card_Request" Multiplicity="0..1" />
+          <End Role="EmiCard_Documents" Type="Self.EmiCard_Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Card_Request">
+              <PropertyRef Name="Card_Id" />
+            </Principal>
+            <Dependent Role="EmiCard_Documents">
+              <PropertyRef Name="Card_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1281,11 +1419,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="IKartEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="IKartEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Addresses" EntityType="Self.Address" />
           <EntitySet Name="Admins" EntityType="Self.Admin" />
           <EntitySet Name="Card_Request" EntityType="Self.Card_Request" />
           <EntitySet Name="EMI_Card" EntityType="Self.EMI_Card" />
+          <EntitySet Name="EmiCard_Documents" EntityType="Self.EmiCard_Documents" />
           <EntitySet Name="FAQs" EntityType="Self.FAQ" />
           <EntitySet Name="Installment_Payments" EntityType="Self.Installment_Payments" />
           <EntitySet Name="Joining_Fee" EntityType="Self.Joining_Fee" />
@@ -1316,6 +1455,10 @@
           <AssociationSet Name="FK__Card_Requ__UserI__628FA481" Association="Self.FK__Card_Requ__UserI__628FA481">
             <End Role="Users" EntitySet="Users" />
             <End Role="Card_Request" EntitySet="Card_Request" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EmiCard_D__Card___07C12930" Association="Self.FK__EmiCard_D__Card___07C12930">
+            <End Role="Card_Request" EntitySet="Card_Request" />
+            <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
           </AssociationSet>
           <AssociationSet Name="FK__Joining_F__Card___6754599E" Association="Self.FK__Joining_F__Card___6754599E">
             <End Role="Card_Request" EntitySet="Card_Request" />
@@ -1405,33 +1548,114 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Support_Tickets" EntitySet="Support_Tickets" />
           </AssociationSet>
-          <EntitySet Name="EmiCard_Documents" EntityType="IKartModel.EmiCard_Documents" />
-          <AssociationSet Name="FK__EmiCard_D__Card___07C12930" Association="IKartModel.FK__EmiCard_D__Card___07C12930">
-            <End Role="Card_Request" EntitySet="Card_Request" />
-            <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
+          <EntitySet Name="Order_Cancellations" EntityType="IKartModel.Order_Cancellations" />
+          <EntitySet Name="Returns" EntityType="IKartModel.Return" />
+          <AssociationSet Name="FK__Order_Can__Order__1BC821DD" Association="IKartModel.FK__Order_Can__Order__1BC821DD">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Order_Cancellations" EntitySet="Order_Cancellations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Order_Can__UserI__1CBC4616" Association="IKartModel.FK__Order_Can__UserI__1CBC4616">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order_Cancellations" EntitySet="Order_Cancellations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Returns__OrderId__160F4887" Association="IKartModel.FK__Returns__OrderId__160F4887">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Return" EntitySet="Returns" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Returns__Product__17F790F9" Association="IKartModel.FK__Returns__Product__17F790F9">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Return" EntitySet="Returns" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Returns__UserId__17036CC0" Association="IKartModel.FK__Returns__UserId__17036CC0">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Return" EntitySet="Returns" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="EmiCard_Documents">
+        <EntityType Name="Order_Cancellations">
           <Key>
-            <PropertyRef Name="DocumentId" />
+            <PropertyRef Name="CancellationId" />
           </Key>
-          <Property Name="DocumentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Card_Id" Type="Int32" />
-          <Property Name="DocumentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="FileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="UploadedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Card_Request" Relationship="IKartModel.FK__EmiCard_D__Card___07C12930" FromRole="EmiCard_Documents" ToRole="Card_Request" />
+          <Property Name="CancellationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="Reason" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CancelDate" Type="DateTime" Precision="3" />
+          <Property Name="Refunded" Type="Boolean" />
+          <NavigationProperty Name="Order" Relationship="IKartModel.FK__Order_Can__Order__1BC821DD" FromRole="Order_Cancellations" ToRole="Order" />
+          <NavigationProperty Name="User" Relationship="IKartModel.FK__Order_Can__UserI__1CBC4616" FromRole="Order_Cancellations" ToRole="User" />
         </EntityType>
-        <Association Name="FK__EmiCard_D__Card___07C12930">
-          <End Type="IKartModel.Card_Request" Role="Card_Request" Multiplicity="0..1" />
-          <End Type="IKartModel.EmiCard_Documents" Role="EmiCard_Documents" Multiplicity="*" />
+        <EntityType Name="Return">
+          <Key>
+            <PropertyRef Name="ReturnId" />
+          </Key>
+          <Property Name="ReturnId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="Reason" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReturnDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Order" Relationship="IKartModel.FK__Returns__OrderId__160F4887" FromRole="Return" ToRole="Order" />
+          <NavigationProperty Name="Product" Relationship="IKartModel.FK__Returns__Product__17F790F9" FromRole="Return" ToRole="Product" />
+          <NavigationProperty Name="User" Relationship="IKartModel.FK__Returns__UserId__17036CC0" FromRole="Return" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__Order_Can__Order__1BC821DD">
+          <End Type="IKartModel.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="IKartModel.Order_Cancellations" Role="Order_Cancellations" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Card_Request">
-              <PropertyRef Name="Card_Id" />
+            <Principal Role="Order">
+              <PropertyRef Name="Order_Id" />
             </Principal>
-            <Dependent Role="EmiCard_Documents">
-              <PropertyRef Name="Card_Id" />
+            <Dependent Role="Order_Cancellations">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Order_Can__UserI__1CBC4616">
+          <End Type="IKartModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="IKartModel.Order_Cancellations" Role="Order_Cancellations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Order_Cancellations">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Returns__OrderId__160F4887">
+          <End Type="IKartModel.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="IKartModel.Return" Role="Return" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Order_Id" />
+            </Principal>
+            <Dependent Role="Return">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Returns__Product__17F790F9">
+          <End Type="IKartModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="IKartModel.Return" Role="Return" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="Return">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Returns__UserId__17036CC0">
+          <End Type="IKartModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="IKartModel.Return" Role="Return" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Return">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1440,7 +1664,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="IKartModelStoreContainer" CdmEntityContainer="IKartEntities">
+        <EntityContainerMapping StorageEntityContainer="IKartModelStoreContainer" CdmEntityContainer="IKartEntities1">
           <EntitySetMapping Name="Addresses">
             <EntityTypeMapping TypeName="IKartModel.Address">
               <MappingFragment StoreEntitySet="Address">
@@ -1493,6 +1717,18 @@
                 <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
                 <ScalarProperty Name="ExpireDate" ColumnName="ExpireDate" />
                 <ScalarProperty Name="CardImage" ColumnName="CardImage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmiCard_Documents">
+            <EntityTypeMapping TypeName="IKartModel.EmiCard_Documents">
+              <MappingFragment StoreEntitySet="EmiCard_Documents">
+                <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+                <ScalarProperty Name="Card_Id" ColumnName="Card_Id" />
+                <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1557,6 +1793,8 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="IKartModel.Order">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
                 <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -1681,15 +1919,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="EmiCard_Documents">
-            <EntityTypeMapping TypeName="IKartModel.EmiCard_Documents">
-              <MappingFragment StoreEntitySet="EmiCard_Documents">
-                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
-                <ScalarProperty Name="Card_Id" ColumnName="Card_Id" />
-                <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+          <EntitySetMapping Name="Order_Cancellations">
+            <EntityTypeMapping TypeName="IKartModel.Order_Cancellations">
+              <MappingFragment StoreEntitySet="Order_Cancellations">
+                <ScalarProperty Name="Refunded" ColumnName="Refunded" />
+                <ScalarProperty Name="CancelDate" ColumnName="CancelDate" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="CancellationId" ColumnName="CancellationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Returns">
+            <EntityTypeMapping TypeName="IKartModel.Return">
+              <MappingFragment StoreEntitySet="Returns">
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="ReturnId" ColumnName="ReturnId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

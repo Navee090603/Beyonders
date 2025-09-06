@@ -115,6 +115,17 @@
     <Property Name="ValidTo" Type="date" />
     <Property Name="Terms" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="Order_Cancellations">
+    <Key>
+      <PropertyRef Name="CancellationId" />
+    </Key>
+    <Property Name="CancellationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderId" Type="int" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="Reason" Type="nvarchar" MaxLength="255" />
+    <Property Name="CancelDate" Type="datetime" />
+    <Property Name="Refunded" Type="bit" />
+  </EntityType>
   <EntityType Name="Orders">
     <Key>
       <PropertyRef Name="Order_Id" />
@@ -125,6 +136,8 @@
     <Property Name="PaymentId" Type="int" />
     <Property Name="OrderDate" Type="datetime" />
     <Property Name="DeliveryDate" Type="datetime" />
+    <Property Name="Region" Type="nvarchar" MaxLength="50" />
+    <Property Name="OrderStatus" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Payment_Details">
     <Key>
@@ -194,6 +207,18 @@
     <Property Name="Reason" Type="nvarchar" MaxLength="255" />
     <Property Name="Status" Type="nvarchar" MaxLength="20" />
     <Property Name="RefundDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Returns">
+    <Key>
+      <PropertyRef Name="ReturnId" />
+    </Key>
+    <Property Name="ReturnId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrderId" Type="int" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="ProductId" Type="int" />
+    <Property Name="Reason" Type="nvarchar" MaxLength="255" />
+    <Property Name="Status" Type="nvarchar" MaxLength="50" />
+    <Property Name="ReturnDate" Type="datetime" />
   </EntityType>
   <EntityType Name="Stocks">
     <Key>
@@ -400,6 +425,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__Order_Can__Order__1BC821DD">
+    <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+    <End Role="Order_Cancellations" Type="Self.Order_Cancellations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="Order_Id" />
+      </Principal>
+      <Dependent Role="Order_Cancellations">
+        <PropertyRef Name="OrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Order_Can__UserI__1CBC4616">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Order_Cancellations" Type="Self.Order_Cancellations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Order_Cancellations">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK__Orders__PaymentI__5EBF139D">
     <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
     <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -544,6 +593,42 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__Returns__OrderId__160F4887">
+    <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+    <End Role="Returns" Type="Self.Returns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Orders">
+        <PropertyRef Name="Order_Id" />
+      </Principal>
+      <Dependent Role="Returns">
+        <PropertyRef Name="OrderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Returns__Product__17F790F9">
+    <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+    <End Role="Returns" Type="Self.Returns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="Returns">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Returns__UserId__17036CC0">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Returns" Type="Self.Returns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Returns">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK__Support_T__UserI__03F0984C">
     <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
     <End Role="Support_Tickets" Type="Self.Support_Tickets" Multiplicity="*" />
@@ -567,6 +652,7 @@
     <EntitySet Name="Joining_Fee" EntityType="Self.Joining_Fee" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Monthly_EMI_Calc" EntityType="Self.Monthly_EMI_Calc" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Offers" EntityType="Self.Offers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Order_Cancellations" EntityType="Self.Order_Cancellations" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Payment_Details" EntityType="Self.Payment_Details" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Payment_Methods" EntityType="Self.Payment_Methods" Schema="dbo" store:Type="Tables" />
@@ -574,6 +660,7 @@
     <EntitySet Name="Penalty" EntityType="Self.Penalty" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Refunds" EntityType="Self.Refunds" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Returns" EntityType="Self.Returns" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Stocks" EntityType="Self.Stocks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Support_Tickets" EntityType="Self.Support_Tickets" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -633,6 +720,14 @@
       <End Role="Products" EntitySet="Products" />
       <End Role="Offers" EntitySet="Offers" />
     </AssociationSet>
+    <AssociationSet Name="FK__Order_Can__Order__1BC821DD" Association="Self.FK__Order_Can__Order__1BC821DD">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="Order_Cancellations" EntitySet="Order_Cancellations" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Order_Can__UserI__1CBC4616" Association="Self.FK__Order_Can__UserI__1CBC4616">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Order_Cancellations" EntitySet="Order_Cancellations" />
+    </AssociationSet>
     <AssociationSet Name="FK__Orders__PaymentI__5EBF139D" Association="Self.FK__Orders__PaymentI__5EBF139D">
       <End Role="Payments" EntitySet="Payments" />
       <End Role="Orders" EntitySet="Orders" />
@@ -680,6 +775,18 @@
     <AssociationSet Name="FK__Refunds__Payment__00200768" Association="Self.FK__Refunds__Payment__00200768">
       <End Role="Payments" EntitySet="Payments" />
       <End Role="Refunds" EntitySet="Refunds" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Returns__OrderId__160F4887" Association="Self.FK__Returns__OrderId__160F4887">
+      <End Role="Orders" EntitySet="Orders" />
+      <End Role="Returns" EntitySet="Returns" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Returns__Product__17F790F9" Association="Self.FK__Returns__Product__17F790F9">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="Returns" EntitySet="Returns" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Returns__UserId__17036CC0" Association="Self.FK__Returns__UserId__17036CC0">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Returns" EntitySet="Returns" />
     </AssociationSet>
     <AssociationSet Name="FK__Support_T__UserI__03F0984C" Association="Self.FK__Support_T__UserI__03F0984C">
       <End Role="Users" EntitySet="Users" />

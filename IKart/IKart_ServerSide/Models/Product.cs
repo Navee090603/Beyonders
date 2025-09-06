@@ -21,6 +21,7 @@ namespace IKart_ServerSide.Models
             this.Offers = new HashSet<Offer>();
             this.Orders = new HashSet<Order>();
             this.Payments = new HashSet<Payment>();
+            this.Returns = new HashSet<Return>();
         }
     
         public int ProductId { get; set; }
@@ -40,5 +41,7 @@ namespace IKart_ServerSide.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual Stock Stock { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Return> Returns { get; set; }
     }
 }

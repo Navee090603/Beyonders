@@ -46,6 +46,8 @@
     <Compile Include="DTOs\EmicardDto.cs" />
     <Compile Include="DTOs\OrdersDto.cs" />
     <Compile Include="DTOs\ProductDto.cs" />
+    <Compile Include="DTOs\RefundDto.cs" />
+    <Compile Include="DTOs\ReportsDto.cs" />
     <Compile Include="DTOs\StocksDto.cs" />
     <Compile Include="DTOs\UserDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

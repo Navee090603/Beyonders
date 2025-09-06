@@ -12,7 +12,7 @@ namespace IKart_ServerSide.Controllers
     [RoutePrefix("api/stocks")]
     public class StocksController : ApiController
     {
-        IKartEntities db = new IKartEntities();
+        IKartEntities1 db = new IKartEntities1();
 
         // GET: api/stocks
         [HttpGet, Route("")]

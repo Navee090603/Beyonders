@@ -195,6 +195,7 @@
     <Content Include="Views\Orders\Details.cshtml" />
     <Content Include="Views\Users\View.cshtml" />
     <Content Include="Views\EmiCard\View.cshtml" />
+    <Content Include="Views\Refunds\View.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

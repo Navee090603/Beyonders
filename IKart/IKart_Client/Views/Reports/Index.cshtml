@@ -1,95 +1,253 @@
-﻿﻿@{
+﻿@model IKart_Shared.DTOs.ReportsDto
+
+@using System
+@using System.Collections.Generic
+@using System.Linq
+
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewBag.Title = "Refunds";
+    ViewBag.Title = "Reports Summary";
+
 }
 
+<h2>Reports Summary</h2>
 
-<div class="container mt-4">
-    <h2 class="mb-4">Reports Dashboard</h2>
+<h3>EMI Cards</h3>
+<p>Total EMI Cards: @Model.TotalEmiCards</p>
 
-    <!-- Total Sales Section -->
-    <h4>Total Sales</h4>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Daily</th>
-                <th>Weekly</th>
-                <th>Monthly</th>
-                <th>Yearly</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>₹15,000</td>
-                <td>₹1,05,000</td>
-                <td>₹4,50,000</td>
-                <td>₹54,00,000</td>
-            </tr>
-        </tbody>
-    </table>
+<select id="cardTypeDropdown" onchange="filterCards(this.value)">
+    <option value="">--Select Card Type--</option>
+    @foreach (var kv in Model.EmiCardsByType)
+    {
+        <option value="@kv.Key">@kv.Key (@kv.Value)</option>
+    }
+</select>
 
-    <!-- Sales by Category -->
-    <h4>Sales by Product Category</h4>
-    <table class="table table-bordered">
-        <thead>
+<table id="cardsTable" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Card Number</th>
+            <th>User</th>
+            <th>Type</th>
+            <th>Balance</th>
+            <th>Limit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var card in Model.EmiCards)
+        {
             <tr>
-                <th>Category</th>
-                <th>Sales Amount</th>
+                <td>@card.CardNumber</td>
+                <td>@card.UserFullName</td>
+                <td>@card.CardType</td>
+                <td>@card.Balance</td>
+                <td>@card.TotalLimit</td>
             </tr>
-        </thead>
-        <tbody>
-            <tr><td>Electronics</td><td>₹1,20,000</td></tr>
-            <tr><td>Fashion</td><td>₹80,000</td></tr>
-            <tr><td>Home & Kitchen</td><td>₹50,000</td></tr>
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
-    <!-- Sales by Region -->
-    <h4>Sales by Region</h4>
-    <table class="table table-bordered">
-        <thead>
+<h3>Users</h3>
+<p>Total Users: @Model.TotalUsers</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Username</th>
+            <th>Status</th>
+            <th>Registered On</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
             <tr>
-                <th>Region</th>
-                <th>Sales Amount</th>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>@user.PhoneNo</td>
+                <td>@user.Username</td>
+                <td>@(user.Status ? "Active" : "Inactive")</td>
+                <td>@user.CreatedDate.ToString("yyyy-MM-dd")</td>
             </tr>
-        </thead>
-        <tbody>
-            <tr><td>Visakhapatnam</td><td>₹90,000</td></tr>
-            <tr><td>Hyderabad</td><td>₹70,000</td></tr>
-            <tr><td>Chennai</td><td>₹60,000</td></tr>
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
-    <!-- Sales by Payment Method -->
-    <h4>Sales by Payment Method</h4>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Payment Method</th>
-                <th>Sales Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Credit Card</td><td>₹1,00,000</td></tr>
-            <tr><td>UPI</td><td>₹80,000</td></tr>
-            <tr><td>Cash on Delivery</td><td>₹40,000</td></tr>
-        </tbody>
-    </table>
+<h3>Orders</h3>
+<p>Total Orders: @Model.TotalOrders</p>
 
-    <!-- Refunds and Returns -->
-    <h4>Refunds and Returns</h4>
-    <table class="table table-bordered">
-        <thead>
+<select id="regionDropdown" onchange="filterOrdersByRegion(this.value)">
+    <option value="">--Select Region--</option>
+    @foreach (var r in Model.OrdersByRegion.Keys)
+    {
+        <option value="@r">@r (@Model.OrdersByRegion[r])</option>
+    }
+</select>
+
+<select id="categoryDropdown" onchange="filterOrdersByCategory(this.value)">
+    <option value="">--Select Category--</option>
+    @foreach (var c in Model.OrdersByCategory.Keys)
+    {
+        <option value="@c">@c (@Model.OrdersByCategory[c])</option>
+    }
+</select>
+
+<select id="paymentDropdown" onchange="filterOrdersByPayment(this.value)">
+    <option value="">--Select Payment Method--</option>
+    @foreach (var p in Model.OrdersByPayment.Keys)
+    {
+        <option value="@p">@p (@Model.OrdersByPayment[p])</option>
+    }
+</select>
+
+<table id="ordersTable" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Product</th>
+            <th>Region</th>
+            <th>Status</th>
+            <th>Order Date</th>
+            <th>Delivery Date</th>
+            <th>Amount</th>
+            <th>Payment Method</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var o in Model.Orders)
+        {
             <tr>
-                <th>Refunds</th>
-                <th>Returns</th>
+                <td>@o.OrderId</td>
+                <td>@o.UserFullName</td>
+                <td>@o.ProductName</td>
+                <td>@o.Region</td>
+                <td>@o.OrderStatus</td>
+                <td>@o.OrderDate.ToString("yyyy-MM-dd")</td>
+                <td>@(o.DeliveryDate.HasValue ? o.DeliveryDate.Value.ToString("yyyy-MM-dd") : "-")</td>
+                <td>@o.TotalAmount</td>
+                <td>@o.PaymentMethod</td>
+                <td>@o.CategoryName</td>
             </tr>
-        </thead>
-        <tbody>
+        }
+    </tbody>
+</table>
+
+<h3>Refunds</h3>
+<p>Total Refunds: @Model.TotalRefunds</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Refund ID</th>
+            <th>Payment ID</th>
+            <th>Amount</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Refund Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.Refunds)
+        {
             <tr>
-                <td>120</td>
-                <td>85</td>
+                <td>@r.RefundId</td>
+                <td>@r.PaymentId</td>
+                <td>@r.Amount</td>
+                <td>@r.Reason</td>
+                <td>@r.Status</td>
+                <td>@r.RefundDate.ToString("yyyy-MM-dd")</td>
             </tr>
-        </tbody>
-    </table>
-</div>
+        }
+    </tbody>
+</table>
+
+<h3>Returns</h3>
+<p>Total Returns: @Model.TotalReturns</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Return ID</th>
+            <th>Order ID</th>
+            <th>User ID</th>
+            <th>Product ID</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.Returns)
+        {
+            <tr>
+                <td>@r.ReturnId</td>
+                <td>@r.OrderId</td>
+                <td>@r.UserId</td>
+                <td>@r.ProductId</td>
+                <td>@r.Reason</td>
+                <td>@r.Status</td>
+                <td>@r.ReturnDate.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Cancellations</h3>
+<p>Total Cancellations: @Model.TotalCancellations</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Cancellation ID</th>
+            <th>Order ID</th>
+            <th>User ID</th>
+            <th>Reason</th>
+            <th>Cancel Date</th>
+            <th>Refunded</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model.Cancellations)
+        {
+            <tr>
+                <td>@c.CancellationId</td>
+                <td>@c.OrderId</td>
+                <td>@c.UserId</td>
+                <td>@c.Reason</td>
+                <td>@c.CancelDate.ToString("yyyy-MM-dd")</td>
+                <td>@(c.Refunded ? "Yes" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function filterCards(type) {
+        var table = document.getElementById("cardsTable");
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            row.style.display = (type === "" || row.cells[2].innerText === type) ? "" : "none";
+        }
+    }
+
+    function filterOrdersByRegion(region) {
+        var table = document.getElementById("ordersTable");
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            row.style.display = (region === "" || row.cells[3].innerText === region) ? "" : "none";
+        }
+    }
+
+    function filterOrdersByCategory(category) {
+        var table = document.getElementById("ordersTable");
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            row.style.display = (category === "" || row.cells[9].innerText === category) ? "" : "none";
+        }
+    }
+
+    function filterOrdersByPayment(payment) {
+        var table = document.getElementById("ordersTable");
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            row.style.display = (payment === "" || row.cells[8].innerText === payment) ? "" : "none";
+        }
+    }
+</script>

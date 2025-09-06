@@ -8,7 +8,7 @@ namespace IKart_ServerSide.Controllers
     [RoutePrefix("api/emicards")]
     public class EmiCardController : ApiController
     {
-        private readonly IKartEntities db = new IKartEntities();
+        private readonly IKartEntities1 db = new IKartEntities1();
 
         //// GET: api/emicards
         //[HttpGet, Route("")]

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="IKartModelStoreContainer" CdmEntityContainer="IKartEntities">
+  <EntityContainerMapping StorageEntityContainer="IKartModelStoreContainer" CdmEntityContainer="IKartEntities1">
     <EntitySetMapping Name="Addresses">
       <EntityTypeMapping TypeName="IKartModel.Address">
         <MappingFragment StoreEntitySet="Address">
@@ -53,6 +53,18 @@
           <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
           <ScalarProperty Name="ExpireDate" ColumnName="ExpireDate" />
           <ScalarProperty Name="CardImage" ColumnName="CardImage" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmiCard_Documents">
+      <EntityTypeMapping TypeName="IKartModel.EmiCard_Documents">
+        <MappingFragment StoreEntitySet="EmiCard_Documents">
+          <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+          <ScalarProperty Name="Card_Id" ColumnName="Card_Id" />
+          <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+          <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -117,6 +129,8 @@
     <EntitySetMapping Name="Orders">
       <EntityTypeMapping TypeName="IKartModel.Order">
         <MappingFragment StoreEntitySet="Orders">
+          <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+          <ScalarProperty Name="Region" ColumnName="Region" />
           <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
           <ScalarProperty Name="ProductId" ColumnName="ProductId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -241,15 +255,28 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="EmiCard_Documents">
-      <EntityTypeMapping TypeName="IKartModel.EmiCard_Documents">
-        <MappingFragment StoreEntitySet="EmiCard_Documents">
-          <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
-          <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-          <ScalarProperty Name="FileName" ColumnName="FileName" />
-          <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
-          <ScalarProperty Name="Card_Id" ColumnName="Card_Id" />
-          <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+    <EntitySetMapping Name="Order_Cancellations">
+      <EntityTypeMapping TypeName="IKartModel.Order_Cancellations">
+        <MappingFragment StoreEntitySet="Order_Cancellations">
+          <ScalarProperty Name="Refunded" ColumnName="Refunded" />
+          <ScalarProperty Name="CancelDate" ColumnName="CancelDate" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+          <ScalarProperty Name="CancellationId" ColumnName="CancellationId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Returns">
+      <EntityTypeMapping TypeName="IKartModel.Return">
+        <MappingFragment StoreEntitySet="Returns">
+          <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+          <ScalarProperty Name="ReturnId" ColumnName="ReturnId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

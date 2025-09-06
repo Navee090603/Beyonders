@@ -13,10 +13,10 @@ namespace IKart_ServerSide.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class IKartEntities : DbContext
+    public partial class IKartEntities1 : DbContext
     {
-        public IKartEntities()
-            : base("name=IKartEntities")
+        public IKartEntities1()
+            : base("name=IKartEntities1")
         {
         }
     
@@ -29,6 +29,7 @@ namespace IKart_ServerSide.Models
         public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<Card_Request> Card_Request { get; set; }
         public virtual DbSet<EMI_Card> EMI_Card { get; set; }
+        public virtual DbSet<EmiCard_Documents> EmiCard_Documents { get; set; }
         public virtual DbSet<FAQ> FAQs { get; set; }
         public virtual DbSet<Installment_Payments> Installment_Payments { get; set; }
         public virtual DbSet<Joining_Fee> Joining_Fee { get; set; }
@@ -44,6 +45,7 @@ namespace IKart_ServerSide.Models
         public virtual DbSet<Stock> Stocks { get; set; }
         public virtual DbSet<Support_Tickets> Support_Tickets { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<EmiCard_Documents> EmiCard_Documents { get; set; }
+        public virtual DbSet<Order_Cancellations> Order_Cancellations { get; set; }
+        public virtual DbSet<Return> Returns { get; set; }
     }
 }
