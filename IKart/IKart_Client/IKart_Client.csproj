@@ -1,4 +1,5 @@
 ﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -43,11 +44,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.9.0.8\lib\net462\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -110,7 +142,9 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\user.css" />
     <Content Include="Global.asax" />
+    <Content Include="Logo\Logo.png" />
     <Content Include="Scripts\admin.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -150,22 +184,33 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\user.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\DashboardController.cs" />
-    <Compile Include="Controllers\EmiCardController.cs" />
-    <Compile Include="Controllers\OrdersController.cs" />
-    <Compile Include="Controllers\ProductsController.cs" />
-    <Compile Include="Controllers\RefundsController.cs" />
-    <Compile Include="Controllers\ReportsController.cs" />
-    <Compile Include="Controllers\StocksController.cs" />
-    <Compile Include="Controllers\SupportTicketsController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\Admin\DashboardController.cs" />
+    <Compile Include="Controllers\Admin\EmiCardController.cs" />
+    <Compile Include="Controllers\Admin\OrdersController.cs" />
+    <Compile Include="Controllers\Admin\ProductsController.cs" />
+    <Compile Include="Controllers\Admin\RefundsController.cs" />
+    <Compile Include="Controllers\Admin\ReportsController.cs" />
+    <Compile Include="Controllers\Admin\StocksController.cs" />
+    <Compile Include="Controllers\Admin\SupportTicketController.cs" />
+    <Compile Include="Controllers\Admin\UsersController.cs" />
+    <Compile Include="Controllers\User\AccountController.cs" />
+    <Compile Include="Controllers\User\AuthController.cs" />
+    <Compile Include="Controllers\User\DashboardController.cs" />
+    <Compile Include="Controllers\User\EMICardsController.cs" />
+    <Compile Include="Controllers\User\InfoController.cs" />
+    <Compile Include="Controllers\User\OrdersController.cs" />
+    <Compile Include="Controllers\User\PaymentsController.cs" />
+    <Compile Include="Controllers\User\ProductController.cs" />
+    <Compile Include="Controllers\User\SupportController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\IKartEntities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +219,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\EmiCard\Index.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\Refunds\Index.cshtml" />
@@ -189,15 +233,34 @@
     <Content Include="Views\Products\Create.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Delete.cshtml" />
-    <Content Include="Views\Products\Reports.cshtml" />
-    <Content Include="Views\Orders\Details.cshtml" />
-    <Content Include="Views\Users\View.cshtml" />
-    <Content Include="Views\EmiCard\View.cshtml" />
-    <Content Include="Views\Stocks\Index.cshtml" />
     <Content Include="Views\Stocks\Create.cshtml" />
-    <Content Include="Views\Stocks\Edit.cshtml" />
-    <Content Include="Views\Stocks\Delete.cshtml" />
-    <Content Include="Views\SupportTickets\Index.cshtml" />
+    <Content Include="Views\Products\Reports.cshtml" />
+    <Content Include="Views\Stocks\Remove.cshtml" />
+    <Content Include="Views\UserAuth\Register.cshtml" />
+    <Content Include="Views\Auth\Register.cshtml" />
+    <Content Include="Views\Auth\Login.cshtml" />
+    <Content Include="Views\Account\Addresses.cshtml" />
+    <Content Include="Views\Account\User.cshtml" />
+    <Content Include="Views\Account\EditAddress.cshtml" />
+    <Content Include="Views\Account\AddAddress.cshtml" />
+    <Content Include="Views\EmiCard\AddCard.cshtml" />
+    <Content Include="Views\EmiCard\Index.cshtml" />
+    <Content Include="Views\EMICards\Index.cshtml" />
+    <Content Include="Views\EMICards\AddCard.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\Details.cshtml" />
+    <Content Include="Views\Auth\VerifyOtp.cshtml" />
+    <Content Include="Views\Shared\_UserLayout.cshtml" />
+    <Content Include="Views\Shared\_UserHeader.cshtml" />
+    <Content Include="Views\Shared\_UserFooter.cshtml" />
+    <Content Include="Views\Shared\_UserLogin.cshtml" />
+    <Content Include="Views\Info\ConditionsOfUse.cshtml" />
+    <Content Include="Views\Info\PrivacyNotice.cshtml" />
+    <Content Include="Views\Shared\_InfoLayout.cshtml" />
+    <Content Include="Views\Auth\ForgotPassword.cshtml" />
+    <Content Include="Views\Auth\VerifyResetOtp.cshtml" />
+    <Content Include="Views\Auth\ResetPassword.cshtml" />
+    <Content Include="Views\Shared\_RegisterLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -208,6 +271,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Upload\ProductImages\" />
+    <Folder Include="Views\Payments\" />
+    <Folder Include="Views\Support\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IKart_Shared\IKart_Shared.csproj">
@@ -245,7 +310,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

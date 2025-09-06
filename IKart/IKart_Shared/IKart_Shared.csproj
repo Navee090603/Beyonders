@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.1.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -43,12 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTOs\EmicardDto.cs" />
-    <Compile Include="DTOs\OrdersDto.cs" />
-    <Compile Include="DTOs\ProductDto.cs" />
-    <Compile Include="DTOs\StocksDto.cs" />
-    <Compile Include="DTOs\SupportTicketDto.cs" />
-    <Compile Include="DTOs\UserDto.cs" />
+    <Compile Include="DTOs\Account\AddressDto.cs" />
+    <Compile Include="DTOs\Account\UserDto.cs" />
+    <Compile Include="DTOs\Authentication\AdminLoginDto.cs" />
+    <Compile Include="DTOs\Authentication\ResetPasswordDto.cs" />
+    <Compile Include="DTOs\Authentication\UserLoginDto.cs" />
+    <Compile Include="DTOs\Authentication\UserRegisterDto.cs" />
+    <Compile Include="DTOs\EMI_Card\CardRequestDto.cs" />
+    <Compile Include="DTOs\EMI_Card\EMICardDto.cs" />
+    <Compile Include="DTOs\Products\ProductDto.cs" />
+    <Compile Include="DTOs\Products\StocksDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

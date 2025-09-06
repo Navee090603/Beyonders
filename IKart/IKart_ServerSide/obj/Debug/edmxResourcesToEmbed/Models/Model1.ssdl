@@ -50,6 +50,7 @@
     <Property Name="IssueDate" Type="date" />
     <Property Name="ExpireDate" Type="date" />
     <Property Name="CardImage" Type="nvarchar(max)" />
+    <Property Name="CVV" Type="varchar" MaxLength="4" />
   </EntityType>
   <EntityType Name="EmiCard_Documents">
     <Key>
@@ -231,6 +232,8 @@
     <Property Name="OTP" Type="nvarchar" MaxLength="10" />
     <Property Name="Status" Type="nvarchar" MaxLength="20" />
     <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="OtpExpiry" Type="datetime" />
+    <Property Name="IsVerified" Type="bit" />
   </EntityType>
   <Association Name="FK__Address__UserId__3F466844">
     <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
@@ -304,7 +307,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__EmiCard_D__Card___07C12930">
+  <Association Name="FK__EmiCard_D__Card___17036CC0">
     <End Role="Card_Request" Type="Self.Card_Request" Multiplicity="0..1" />
     <End Role="EmiCard_Documents" Type="Self.EmiCard_Documents" Multiplicity="*" />
     <ReferentialConstraint>
@@ -601,7 +604,7 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="EMI_Card" EntitySet="EMI_Card" />
     </AssociationSet>
-    <AssociationSet Name="FK__EmiCard_D__Card___07C12930" Association="Self.FK__EmiCard_D__Card___07C12930">
+    <AssociationSet Name="FK__EmiCard_D__Card___17036CC0" Association="Self.FK__EmiCard_D__Card___17036CC0">
       <End Role="Card_Request" EntitySet="Card_Request" />
       <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
     </AssociationSet>

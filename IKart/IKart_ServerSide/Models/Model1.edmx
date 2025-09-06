@@ -55,6 +55,7 @@
           <Property Name="IssueDate" Type="date" />
           <Property Name="ExpireDate" Type="date" />
           <Property Name="CardImage" Type="nvarchar(max)" />
+          <Property Name="CVV" Type="varchar" MaxLength="4" />
         </EntityType>
         <EntityType Name="EmiCard_Documents">
           <Key>
@@ -236,6 +237,8 @@
           <Property Name="OTP" Type="nvarchar" MaxLength="10" />
           <Property Name="Status" Type="nvarchar" MaxLength="20" />
           <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="OtpExpiry" Type="datetime" />
+          <Property Name="IsVerified" Type="bit" />
         </EntityType>
         <Association Name="FK__Address__UserId__3F466844">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
@@ -309,7 +312,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__EmiCard_D__Card___07C12930">
+        <Association Name="FK__EmiCard_D__Card___17036CC0">
           <End Role="Card_Request" Type="Self.Card_Request" Multiplicity="0..1" />
           <End Role="EmiCard_Documents" Type="Self.EmiCard_Documents" Multiplicity="*" />
           <ReferentialConstraint>
@@ -606,7 +609,7 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="EMI_Card" EntitySet="EMI_Card" />
           </AssociationSet>
-          <AssociationSet Name="FK__EmiCard_D__Card___07C12930" Association="Self.FK__EmiCard_D__Card___07C12930">
+          <AssociationSet Name="FK__EmiCard_D__Card___17036CC0" Association="Self.FK__EmiCard_D__Card___17036CC0">
             <End Role="Card_Request" EntitySet="Card_Request" />
             <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
           </AssociationSet>
@@ -734,7 +737,7 @@
           <NavigationProperty Name="Admin" Relationship="Self.FK__Card_Requ__Verif__6477ECF3" FromRole="Card_Request" ToRole="Admins" />
           <NavigationProperty Name="User" Relationship="Self.FK__Card_Requ__UserI__628FA481" FromRole="Card_Request" ToRole="Users" />
           <NavigationProperty Name="Joining_Fee" Relationship="Self.FK__Joining_F__Card___6754599E" FromRole="Card_Request" ToRole="Joining_Fee" />
-          <NavigationProperty Name="EmiCard_Documents" Relationship="IKartModel.FK__EmiCard_D__Card___07C12930" FromRole="Card_Request" ToRole="EmiCard_Documents" />
+          <NavigationProperty Name="EmiCard_Documents" Relationship="IKartModel.FK__EmiCard_D__Card___17036CC0" FromRole="Card_Request" ToRole="EmiCard_Documents" />
         </EntityType>
         <EntityType Name="EMI_Card">
           <Key>
@@ -756,6 +759,7 @@
           <NavigationProperty Name="Payment_Methods" Relationship="Self.FK__EMI_Card__Paymen__5070F446" FromRole="EMI_Card" ToRole="Payment_Methods" />
           <NavigationProperty Name="User" Relationship="Self.FK__EMI_Card__UserId__4F7CD00D" FromRole="EMI_Card" ToRole="Users" />
           <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__EmiCar__5535A963" FromRole="EMI_Card" ToRole="Payments" />
+          <Property Name="CVV" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="FAQ">
           <Key>
@@ -960,6 +964,8 @@
           <Property Name="OTP" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="OtpExpiry" Type="DateTime" Precision="3" />
+          <Property Name="IsVerified" Type="Boolean" />
           <NavigationProperty Name="Addresses" Relationship="Self.FK__Address__UserId__3F466844" FromRole="Users" ToRole="Address" />
           <NavigationProperty Name="Card_Request" Relationship="Self.FK__Card_Requ__UserI__628FA481" FromRole="Users" ToRole="Card_Request" />
           <NavigationProperty Name="EMI_Card" Relationship="Self.FK__EMI_Card__UserId__4F7CD00D" FromRole="Users" ToRole="EMI_Card" />
@@ -1406,7 +1412,7 @@
             <End Role="Support_Tickets" EntitySet="Support_Tickets" />
           </AssociationSet>
           <EntitySet Name="EmiCard_Documents" EntityType="IKartModel.EmiCard_Documents" />
-          <AssociationSet Name="FK__EmiCard_D__Card___07C12930" Association="IKartModel.FK__EmiCard_D__Card___07C12930">
+          <AssociationSet Name="FK__EmiCard_D__Card___17036CC0" Association="IKartModel.FK__EmiCard_D__Card___17036CC0">
             <End Role="Card_Request" EntitySet="Card_Request" />
             <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
           </AssociationSet>
@@ -1421,9 +1427,9 @@
           <Property Name="FileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UploadedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Card_Request" Relationship="IKartModel.FK__EmiCard_D__Card___07C12930" FromRole="EmiCard_Documents" ToRole="Card_Request" />
+          <NavigationProperty Name="Card_Request" Relationship="IKartModel.FK__EmiCard_D__Card___17036CC0" FromRole="EmiCard_Documents" ToRole="Card_Request" />
         </EntityType>
-        <Association Name="FK__EmiCard_D__Card___07C12930">
+        <Association Name="FK__EmiCard_D__Card___17036CC0">
           <End Type="IKartModel.Card_Request" Role="Card_Request" Multiplicity="0..1" />
           <End Type="IKartModel.EmiCard_Documents" Role="EmiCard_Documents" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1481,6 +1487,7 @@
           <EntitySetMapping Name="EMI_Card">
             <EntityTypeMapping TypeName="IKartModel.EMI_Card">
               <MappingFragment StoreEntitySet="EMI_Card">
+                <ScalarProperty Name="CVV" ColumnName="CVV" />
                 <ScalarProperty Name="EmiCardId" ColumnName="EmiCardId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
@@ -1678,6 +1685,8 @@
                 <ScalarProperty Name="OTP" ColumnName="OTP" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="OtpExpiry" ColumnName="OtpExpiry" />
+                <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

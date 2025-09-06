@@ -41,6 +41,7 @@
     <EntitySetMapping Name="EMI_Card">
       <EntityTypeMapping TypeName="IKartModel.EMI_Card">
         <MappingFragment StoreEntitySet="EMI_Card">
+          <ScalarProperty Name="CVV" ColumnName="CVV" />
           <ScalarProperty Name="EmiCardId" ColumnName="EmiCardId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
@@ -238,6 +239,8 @@
           <ScalarProperty Name="OTP" ColumnName="OTP" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="OtpExpiry" ColumnName="OtpExpiry" />
+          <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

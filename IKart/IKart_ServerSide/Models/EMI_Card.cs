@@ -32,6 +32,7 @@ namespace IKart_ServerSide.Models
         public Nullable<System.DateTime> IssueDate { get; set; }
         public Nullable<System.DateTime> ExpireDate { get; set; }
         public string CardImage { get; set; }
+        public string CVV { get; set; }
     
         public virtual Admin Admin { get; set; }
         public virtual Payment_Methods Payment_Methods { get; set; }
