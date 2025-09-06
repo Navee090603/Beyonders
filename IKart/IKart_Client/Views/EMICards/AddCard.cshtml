@@ -2,7 +2,7 @@
 
 <h2>Choose Your EMI Card</h2>
 
-@using (Html.BeginForm("RequestCard", "EMICards", FormMethod.Post))
+@using (Html.BeginForm("RequestCard", "EMICards", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -55,6 +55,27 @@
         @Html.TextBoxFor(m => m.AadhaarNumber, new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.AadhaarNumber, "", new { @class = "text-danger" })
     </div>
+        <hr />
+        <h4>Upload Documents</h4>
+        <div class="form-group">
+            <label>Aadhaar Card</label>
+            <input type="file" name="Aadhaar" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label>PAN Card</label>
+            <input type="file" name="PAN" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label>Bank Book Front Page</label>
+            <input type="file" name="BankBook" class="form-control" required />
+        </div>
+
+        <hr />
+        <h4>Pay Joining Fee</h4>
+        <p>Scan the QR code below to pay the joining fee:</p>
+        <img src="~/Content/Images/emi_fee_qr.png" alt="QR Code" width="200" />
+        <p class="text-muted">After payment, click the button below to submit your request.</p>
+
 
     <button type="submit" class="btn btn-success">Submit Request</button>
 }

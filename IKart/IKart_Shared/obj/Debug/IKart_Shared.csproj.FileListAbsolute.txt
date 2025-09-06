@@ -26,3 +26,4 @@ C:\Training\Finalll_Projectt\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared
 C:\Training\Finalll_Projectt\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.csproj.CopyComplete
 C:\Training\Finalll_Projectt\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.dll
 C:\Training\Finalll_Projectt\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.pdb
+C:\Training\Finalll_Projectt\Beyonders\IKart\IKart_Shared\obj\Debug\IKart_Shared.csproj.AssemblyReference.cache

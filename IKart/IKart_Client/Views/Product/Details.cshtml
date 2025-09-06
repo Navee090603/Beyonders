@@ -5,7 +5,7 @@
 <p><strong>Price:</strong> ₹@Model.Cost</p>
 <p><strong>Description:</strong> @Model.ProductDetails</p>
 
-<form method="post" action="/Order/BuyNow">
+<form method="post" action="~/Order/BuyNow">
     <input type="hidden" name="productId" value="@Model.ProductId" />
     <button type="submit">Buy Now</button>
 </form>

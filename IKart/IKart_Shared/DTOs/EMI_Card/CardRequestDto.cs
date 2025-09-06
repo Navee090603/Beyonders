@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 
 namespace IKart_Shared.DTOs.EMI_Card
 {
@@ -29,7 +30,6 @@ namespace IKart_Shared.DTOs.EMI_Card
 
         [Required, RegularExpression(@"^[0-9]{12}$", ErrorMessage = "Aadhaar must be 12 digits")]
         public string AadhaarNumber { get; set; }
-
         public bool IsVerified { get; set; }
     }
 }

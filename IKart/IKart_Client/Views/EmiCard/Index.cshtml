@@ -1,48 +1,50 @@
-﻿@model List<IKart_Shared.DTOs.EMI_Card.EmiCardDto>
-
-<h2>My EMI Cards</h2>
-
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success">@TempData["Message"]</div>
+﻿@model IEnumerable<IKart_Shared.DTOs.EMI_Card.EmiCardDto>
+@{
+    ViewBag.Title = "Manage EMI Cards";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-@if (Model == null || !Model.Any())
-{
-    <p>No EMI cards found.</p>
-    <a href="@Url.Action("AddCard", "EMICards")" class="btn btn-primary">Add New EMI Card</a>
-}
-else
-{
-    <table class="table table-bordered">
-        <tr>
-            <th>Card Type</th>
-            <th>Card Number</th>
-            <th>Limit</th>
-            <th>Balance</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-        @foreach (var card in Model)
-        {
+<div class="container mt-4 d-flex flex-column min-vh-100">
+    <h2 class="mb-4">Manage EMI Cards</h2>
+
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
             <tr>
-                <td>@card.CardType</td>
-                <td>@card.CardNumber</td>
-                <td>@card.TotalLimit</td>
-                <td>@card.Balance</td>
-                <td>@(card.IsActive ? "Active" : "Inactive")</td>
-                <td>
-                    @if (!card.IsActive)
-                    {
-                        <a href="@Url.Action("PayFee", "EMICards", new { feeId = card.EmiCardId })"
-                           class="btn btn-success">
-                            Pay Joining Fee
-                        </a>
-                    }
-                </td>
+                <th>Card ID</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Fee Paid</th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
-        }
-    </table>
+        </thead>
+        <tbody>
+            @foreach (var card in Model)
+            {
+                <tr>
+                    <td>@card.CardId</td>
+                    <td>@card.UserName</td>
+                    <td>@card.Email</td>
+                    <td>@card.FeePaid</td>
+                    <td class="status-cell">@card.Status</td>
+                    <td>
+                        @Html.ActionLink("View", "View", new { id = card.CardId }, new { @class = "btn btn-info btn-sm me-1" })
 
-    <a href="@Url.Action("AddCard", "EMICards")" class="btn btn-primary">Add Another EMI Card</a>
-}
+                        @using (Html.BeginForm("UpdateStatus", "EmiCard", new { id = card.CardId, status = "Approved" }, FormMethod.Post))
+                        {
+                            <button type="submit" class="btn btn-success btn-sm me-1">
+                                <i class="fa fa-check-circle"></i> Approve
+                            </button>
+                        }
+                        @using (Html.BeginForm("UpdateStatus", "EmiCard", new { id = card.CardId, status = "Rejected" }, FormMethod.Post))
+                        {
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa fa-ban"></i> Reject
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,14 @@
+
+Function	   Example	                                   Description
+
+Length	        "hello".Length	                 Gets the number of characters in the string
+ToUpper()	"hello".ToUpper()	               Converts to uppercase
+ToLower()	"HELLO".ToLower()	                Converts to lowercase
+Substring()	"hello".Substring(1, 3)  	Extracts a substring starting at index 1 of length 3
+IndexOf()	"hello".IndexOf("l")	        Finds the index of a substring
+Replace()	"hello".Replace("l", "x")	Replaces all instances of a substring
+Contains()	"hello".Contains("he")	        Checks if the string contains a substring
+Trim()	        " hello ".Trim()	                Removes whitespace from both ends
+Split()	        "a,b,c".Split(',')	                Splits the string into an array
+Join() string.Join("-", new[] { "a", "b" })	Joins array elements into a string
+Equals()	"test".Equals("TEST", StringComparison.OrdinalIgnoreCase)	Compares two strings with options

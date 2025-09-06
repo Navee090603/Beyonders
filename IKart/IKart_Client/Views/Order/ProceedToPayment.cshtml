@@ -1,0 +1,24 @@
+﻿@model string
+
+<h2>Select Payment Method</h2>
+
+<form method="post" action="/Order/ConfirmPayment">
+    <div>
+        <input type="radio" name="paymentMethod" value="EMI" required />
+        <label>
+            <strong>Recommended:</strong> No Interest EMI
+            <br />
+            <em>"Buy now, pay later with zero stress!"</em>
+        </label>
+    </div>
+    <div>
+        <input type="radio" name="paymentMethod" value="UPI" />
+        <label>Pay using UPI</label>
+    </div>
+    <div>
+        <input type="radio" name="paymentMethod" value="COD" />
+        <label>Cash on Delivery</label>
+    </div>
+    <button type="submit">Place Order</button>
+</form>
+

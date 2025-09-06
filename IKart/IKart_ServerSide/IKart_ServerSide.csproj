@@ -139,11 +139,14 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Admin\EmiCardController.cs" />
     <Compile Include="Controllers\Admin\ProductsController.cs" />
     <Compile Include="Controllers\Admin\StocksController.cs" />
     <Compile Include="Controllers\User\AuthController.cs" />
     <Compile Include="Controllers\User\AccountController.cs" />
     <Compile Include="Controllers\User\EMICardsController.cs" />
+    <Compile Include="Controllers\User\OrdersController.cs" />
+    <Compile Include="Controllers\User\PaymentController.cs" />
     <Compile Include="Controllers\User\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -155,6 +158,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Card_Request.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmiCard_Documents.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EMI_Card.cs">
@@ -244,6 +250,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\EMIDocs\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Stocks\" />
   </ItemGroup>

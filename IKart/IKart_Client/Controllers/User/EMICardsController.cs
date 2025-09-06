@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Web.Mvc;
 using IKart_Shared.DTOs;
 using IKart_Shared.DTOs.EMI_Card;
 using Newtonsoft.Json;
+using IKart_ServerSide.Models;
+using System.Web;
 
 namespace IKart_Client.Controllers.User
 {
     public class EMICardsController : Controller
     {
+        IKartEntities db = new IKartEntities();
         private readonly string apiBase = "https://localhost:44365/api/emicards";
 
         // ✅ Show existing cards
@@ -78,17 +82,52 @@ namespace IKart_Client.Controllers.User
                     handler.ServerCertificateCustomValidationCallback = (s, c, ch, e) => true;
                     using (HttpClient client = new HttpClient(handler))
                     {
+                        // Step 1: Submit card request
                         var json = JsonConvert.SerializeObject(dto);
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
                         var res = client.PostAsync($"{apiBase}/request", content).Result;
 
                         if (res.IsSuccessStatusCode)
                         {
-                            TempData["Message"] = "Card request submitted successfully. Awaiting admin approval.";
-                            return RedirectToAction("Index");
-                        }
+                            var responseData = res.Content.ReadAsStringAsync().Result;
+                            var result = JsonConvert.DeserializeObject<dynamic>(responseData);
+                            int cardId = result.dto.Card_Id;
 
-                        ModelState.AddModelError("", res.Content.ReadAsStringAsync().Result);
+                            // Step 2: Upload documents
+                            var files = HttpContext.Request.Files;
+                            var formContent = new MultipartFormDataContent();
+
+                            foreach (string key in files)
+                            {
+                                var file = files[key];
+                                if (file != null && file.ContentLength > 0)
+                                {
+                                    var streamContent = new StreamContent(file.InputStream);
+                                    streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                                    {
+                                        Name = $"\"{key}\"",
+                                        FileName = $"\"{file.FileName}\""
+                                    };
+                                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                                    formContent.Add(streamContent, key, file.FileName);
+                                }
+                            }
+
+                            var uploadRes = client.PostAsync($"{apiBase}/upload-documents/{cardId}", formContent).Result;
+                            if (uploadRes.IsSuccessStatusCode)
+                            {
+                                TempData["Message"] = "Card request and documents submitted successfully.";
+                                return RedirectToAction("Index");
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", "Card created but document upload failed.");
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", res.Content.ReadAsStringAsync().Result);
+                        }
                     }
                 }
             }
@@ -99,6 +138,7 @@ namespace IKart_Client.Controllers.User
 
             return View("AddCard", dto);
         }
+
 
         // ✅ Pay joining fee after admin approval
         public ActionResult PayFee(int feeId)

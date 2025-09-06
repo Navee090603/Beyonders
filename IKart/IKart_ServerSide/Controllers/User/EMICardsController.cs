@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using IKart_ServerSide.Models;
 using IKart_Shared.DTOs;
@@ -43,6 +47,7 @@ namespace IKart_ServerSide.Controllers.Users
         [Route("request")]
         public IHttpActionResult RequestCard(CardRequestDto dto)
         {
+
             if (!ModelState.IsValid)
                 return BadRequest(string.Join("; ", ModelState.Values
                     .SelectMany(v => v.Errors)
@@ -71,6 +76,55 @@ namespace IKart_ServerSide.Controllers.Users
             dto.Card_Id = request.Card_Id;
             return Ok(new { message = "Card request submitted successfully", dto });
         }
+
+        [HttpPost]
+        [Route("upload-documents/{cardId}")]
+        public async Task<IHttpActionResult> UploadDocuments(int cardId)
+        {
+            var request = db.Card_Request.Find(cardId);
+            if (request == null)
+                return BadRequest("Invalid Card Request ID");
+
+            if (!HttpContext.Current.Request.Files.AllKeys.Any())
+                return BadRequest("No files received");
+
+            var allowedTypes = new[] { "Aadhaar", "PAN", "BankBook" };
+            var uploadedDocs = new List<EmiCard_Documents>();
+
+            foreach (string key in HttpContext.Current.Request.Files)
+            {
+                var file = HttpContext.Current.Request.Files[key];
+                if (file == null || file.ContentLength == 0)
+                    continue;
+
+                var docType = key; // Expecting keys: Aadhaar, PAN, BankBook
+                if (!allowedTypes.Contains(docType))
+                    continue;
+
+                var fileName = Path.GetFileName(file.FileName);
+                var serverPath = HttpContext.Current.Server.MapPath("~/Uploads/EMIDocs/");
+                Directory.CreateDirectory(serverPath); // Ensure folder exists
+
+                var fullPath = Path.Combine(serverPath, fileName);
+                file.SaveAs(fullPath);
+
+                var doc = new EmiCard_Documents
+                {
+                    Card_Id = cardId,
+                    DocumentType = docType,
+                    FileName = fileName,
+                    FilePath = fullPath,
+                    UploadedDate = DateTime.Now
+                };
+
+                db.EmiCard_Documents.Add(doc);
+                uploadedDocs.Add(doc);
+            }
+
+            await db.SaveChangesAsync();
+            return Ok(new { message = "Documents uploaded successfully", documents = uploadedDocs });
+        }
+
 
         // ✅ After admin approval → activate EMI card
         [HttpPost]

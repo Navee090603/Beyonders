@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace IKart_Client.Controllers.User
 {
-    public class DashboardController : Controller
+    public class UserDashBoardController : Controller
     {
         // GET: Dashboard
         public ActionResult Index()

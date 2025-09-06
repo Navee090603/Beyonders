@@ -50,6 +50,8 @@
         <AssociationConnector Association="IKartModel.FK__Penalty__UserId__73BA3083" ManuallyRouted="false" />
         <AssociationConnector Association="IKartModel.FK__Products__Stock___45F365D3" ManuallyRouted="false" />
         <AssociationConnector Association="IKartModel.FK__Support_T__UserI__03F0984C" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="IKartModel.EmiCard_Documents" Width="1.5" PointX="5.25" PointY="22" />
+        <AssociationConnector Association="IKartModel.FK__EmiCard_D__Card___160F4887" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,0 +1,72 @@
+﻿.OrderDto
+
+@{
+    ViewBag.Title = "Order Confirmation";
+}
+
+<h2>🎉 Order Confirmed</h2>
+<p>Your order has been placed successfully!</p>
+
+<div class="order-summary">
+    <p><strong>Order ID:</strong> @Model.OrderId</p>
+    <p><strong>Product ID:</strong> @Model.ProductId</p>
+    <p><strong>Payment Method ID:</strong> @Model.PaymentId</p>
+    <p><strong>Order Date:</strong> @Model.OrderDate.ToString("dd MMM yyyy")</p>
+    <p><strong>Estimated Delivery:</strong> @Model.DeliveryDate?.ToString("dd MMM yyyy")</p>
+</div>
+
+<h3>Next Steps</h3>
+<form method="get" action="/Order/NextStep">
+    <div>
+        <input type="radio" name="nextAction" value="shop" required />
+        <label>🛍️ Continue Shopping</label>
+    </div>
+    <div>
+        <input type="radio" name="nextAction" value="track" />
+        <label>📦 Track My Order</label>
+    </div>
+    <div>
+        <input type="radio" name="nextAction" value="history" />
+        <label>📄 View Order History</label>
+    </div>
+    <button type="submit">Go</button>
+</form>
+
+<style>
+
+    h2 {
+        color: #28a745;
+        margin-bottom: 10px;
+    }
+
+    .order-summary {
+        background-color: #f1f1f1;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        max-width: 500px;
+    }
+
+        .order-summary p {
+            margin: 5px 0;
+        }
+
+    form {
+        margin-top: 20px;
+    }
+
+    input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+</style>
+

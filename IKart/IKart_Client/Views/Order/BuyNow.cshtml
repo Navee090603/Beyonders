@@ -1,0 +1,28 @@
+﻿@model List<IKart_Shared.DTOs.AddressDto>
+
+<h2>Select Delivery Address</h2>
+<form method="post" action="/Order/ProceedToPayment">
+
+    @foreach (var address in Model)
+
+    {
+<div>
+    <input type="radio" name="addressId" value="@address.AddressId" required />
+    <label>@address.Street, @address.City, @address.State - @address.ZipCode</label>
+</div>
+            }
+    <button type="submit">Continue to Payment</button>
+</form>
+
+<hr />
+<h3>Add New Address</h3>
+<form method="post" action="https://localhost:44365/api/account/address">
+    <input type="hidden" name="UserId" value="1" />
+    <input name="Street" placeholder="Street" required />
+    <input name="City" placeholder="City" required />
+    <input name="State" placeholder="State" required />
+    <input name="ZipCode" placeholder="Zip Code" required />
+    <input name="Country" placeholder="Country" required />
+    <button type="submit">Add Address</button>
+</form>
+

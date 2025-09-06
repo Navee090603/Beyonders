@@ -56,6 +56,17 @@
           <Property Name="ExpireDate" Type="date" />
           <Property Name="CardImage" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="EmiCard_Documents">
+          <Key>
+            <PropertyRef Name="DocumentId" />
+          </Key>
+          <Property Name="DocumentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Card_Id" Type="int" />
+          <Property Name="DocumentType" Type="nvarchar" MaxLength="50" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="255" />
+          <Property Name="FilePath" Type="nvarchar(max)" />
+          <Property Name="UploadedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="FAQ">
           <Key>
             <PropertyRef Name="FaqId" />
@@ -295,6 +306,18 @@
             </Principal>
             <Dependent Role="EMI_Card">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__EmiCard_D__Card___160F4887">
+          <End Role="Card_Request" Type="Self.Card_Request" Multiplicity="0..1" />
+          <End Role="EmiCard_Documents" Type="Self.EmiCard_Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Card_Request">
+              <PropertyRef Name="Card_Id" />
+            </Principal>
+            <Dependent Role="EmiCard_Documents">
+              <PropertyRef Name="Card_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -543,6 +566,7 @@
           <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Card_Request" EntityType="Self.Card_Request" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EMI_Card" EntityType="Self.EMI_Card" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmiCard_Documents" EntityType="Self.EmiCard_Documents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FAQ" EntityType="Self.FAQ" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Installment_Payments" EntityType="Self.Installment_Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Joining_Fee" EntityType="Self.Joining_Fee" Schema="dbo" store:Type="Tables" />
@@ -581,6 +605,10 @@
           <AssociationSet Name="FK__EMI_Card__UserId__4F7CD00D" Association="Self.FK__EMI_Card__UserId__4F7CD00D">
             <End Role="Users" EntitySet="Users" />
             <End Role="EMI_Card" EntitySet="EMI_Card" />
+          </AssociationSet>
+          <AssociationSet Name="FK__EmiCard_D__Card___160F4887" Association="Self.FK__EmiCard_D__Card___160F4887">
+            <End Role="Card_Request" EntitySet="Card_Request" />
+            <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
           </AssociationSet>
           <AssociationSet Name="FK__FAQ__ProductId__787EE5A0" Association="Self.FK__FAQ__ProductId__787EE5A0">
             <End Role="Products" EntitySet="Products" />
@@ -706,6 +734,7 @@
           <NavigationProperty Name="Admin" Relationship="Self.FK__Card_Requ__Verif__6477ECF3" FromRole="Card_Request" ToRole="Admins" />
           <NavigationProperty Name="User" Relationship="Self.FK__Card_Requ__UserI__628FA481" FromRole="Card_Request" ToRole="Users" />
           <NavigationProperty Name="Joining_Fee" Relationship="Self.FK__Joining_F__Card___6754599E" FromRole="Card_Request" ToRole="Joining_Fee" />
+          <NavigationProperty Name="EmiCard_Documents" Relationship="IKartModel.FK__EmiCard_D__Card___160F4887" FromRole="Card_Request" ToRole="EmiCard_Documents" />
         </EntityType>
         <EntityType Name="EMI_Card">
           <Key>
@@ -1376,7 +1405,36 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Support_Tickets" EntitySet="Support_Tickets" />
           </AssociationSet>
+          <EntitySet Name="EmiCard_Documents" EntityType="IKartModel.EmiCard_Documents" />
+          <AssociationSet Name="FK__EmiCard_D__Card___160F4887" Association="IKartModel.FK__EmiCard_D__Card___160F4887">
+            <End Role="Card_Request" EntitySet="Card_Request" />
+            <End Role="EmiCard_Documents" EntitySet="EmiCard_Documents" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="EmiCard_Documents">
+          <Key>
+            <PropertyRef Name="DocumentId" />
+          </Key>
+          <Property Name="DocumentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Card_Id" Type="Int32" />
+          <Property Name="DocumentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UploadedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Card_Request" Relationship="IKartModel.FK__EmiCard_D__Card___160F4887" FromRole="EmiCard_Documents" ToRole="Card_Request" />
+        </EntityType>
+        <Association Name="FK__EmiCard_D__Card___160F4887">
+          <End Type="IKartModel.Card_Request" Role="Card_Request" Multiplicity="0..1" />
+          <End Type="IKartModel.EmiCard_Documents" Role="EmiCard_Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Card_Request">
+              <PropertyRef Name="Card_Id" />
+            </Principal>
+            <Dependent Role="EmiCard_Documents">
+              <PropertyRef Name="Card_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1620,6 +1678,18 @@
                 <ScalarProperty Name="OTP" ColumnName="OTP" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmiCard_Documents">
+            <EntityTypeMapping TypeName="IKartModel.EmiCard_Documents">
+              <MappingFragment StoreEntitySet="EmiCard_Documents">
+                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
+                <ScalarProperty Name="Card_Id" ColumnName="Card_Id" />
+                <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

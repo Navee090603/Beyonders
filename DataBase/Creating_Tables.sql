@@ -211,6 +211,16 @@ CREATE TABLE Support_Tickets (
     ClosedDate DATETIME
 );
  
+
+ CREATE TABLE EmiCard_Documents (
+    DocumentId INT PRIMARY KEY IDENTITY(1,1),
+    Card_Id INT FOREIGN KEY REFERENCES Card_Request(Card_Id),
+    DocumentType NVARCHAR(50), -- Aadhaar / AddressProof / FeeReceipt
+    FileName NVARCHAR(255),    -- stored name in project folder
+    FilePath NVARCHAR(MAX),    -- actual local path
+    UploadedDate DATETIME DEFAULT GETDATE()
+);
+
 select * from Products
  
 select * from Stocks
@@ -235,3 +245,7 @@ VALUES
 select * from EMI_Card
 
 select * from Card_Request
+
+select * from EmiCard_Documents
+
+delete from Card_Request where Card_Id=16
