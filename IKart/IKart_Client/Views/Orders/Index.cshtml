@@ -30,9 +30,9 @@
                             <td>@o.UserName</td>
                             <td>
                                 <span class="badge rounded-pill
-                                    @(o.Status == "Paid" ? "text-bg-success" :
-                                      o.Status == "Pending" ? "text-bg-warning" :
-                                      o.Status == "Failed" ? "text-bg-danger" : "text-bg-secondary")">
+                                    @(o.Status == "Paid" ? "bg-success" :
+                                      o.Status == "Pending" ? "bg-warning" :
+                                      o.Status == "Failed" ? "bg-danger" : "text-bg-secondary")">
                                     @o.Status
                                 </span>
                             </td>

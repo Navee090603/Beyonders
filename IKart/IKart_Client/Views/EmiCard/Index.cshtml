@@ -40,8 +40,8 @@
                             <td>@card.FeeStatus</td>
                             <td>
                                 <span class="badge rounded-pill
-                                    @(card.ApprovalStatus == "Approved" ? "text-bg-success" :
-                                      card.ApprovalStatus == "Rejected" ? "text-bg-danger" :
+                                    @(card.ApprovalStatus == "Approved" ? "bg-success" :
+                                      card.ApprovalStatus == "Rejected" ? "bg-danger" :
                                       "text-bg-warning")">
                                     @card.ApprovalStatus
                                 </span>
