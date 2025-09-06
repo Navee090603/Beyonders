@@ -299,9 +299,83 @@ VALUES
 (1, 'PAN Card', 'pan1.jpg', '/Content/EmiCardDocs/pan1.jpg'),
 (1, 'Bank Statement', 'bank1.docx', '/Content/EmiCardDocs/bank1.docx');
 
+-- Insert sample refunds
+INSERT INTO Refunds (PaymentId, Amount, Reason, Status)
+VALUES
+(1, 814.99, 'Product damaged on delivery', 'Processed'),
+(2, 519.50, 'Order cancelled by user', 'Pending');
+
+
 select * from EmiCard_Documents
 
 SELECT Card_Id, Status
 FROM Joining_Fee;
 
 select * from Card_Request
+
+INSERT INTO Refunds (PaymentId, Amount, Reason, Status)
+VALUES
+(1, 200.00, 'Customer return - wrong size', 'Processed'),
+(2, 500.00, 'Customer return - defective product', 'Processed');
+
+--=====================================================================================================================
+
+--Reports Page
+USE IKart;
+GO
+
+-- add columns to Orders for region and order status (if not already present)
+IF COL_LENGTH('dbo.Orders','Region') IS NULL
+BEGIN
+    ALTER TABLE Orders ADD Region NVARCHAR(50) NULL;
+END
+
+IF COL_LENGTH('dbo.Orders','OrderStatus') IS NULL
+BEGIN
+    ALTER TABLE Orders ADD OrderStatus NVARCHAR(50) NULL;
+END
+
+-- create Returns table
+IF OBJECT_ID('dbo.Returns','U') IS NULL
+BEGIN
+    CREATE TABLE Returns (
+        ReturnId INT PRIMARY KEY IDENTITY(1,1),
+        OrderId INT FOREIGN KEY REFERENCES Orders(Order_Id),
+        UserId INT FOREIGN KEY REFERENCES Users(UserId),
+        ProductId INT FOREIGN KEY REFERENCES Products(ProductId),
+        Reason NVARCHAR(255),
+        Status NVARCHAR(50),
+        ReturnDate DATETIME DEFAULT GETDATE()
+    );
+END
+
+-- create Order_Cancellations table
+select * from Order_Cancellations
+
+IF OBJECT_ID('dbo.Order_Cancellations','U') IS NULL
+BEGIN
+    CREATE TABLE Order_Cancellations (
+        CancellationId INT PRIMARY KEY IDENTITY(1,1),
+        OrderId INT FOREIGN KEY REFERENCES Orders(Order_Id),
+        UserId INT FOREIGN KEY REFERENCES Users(UserId),
+        Reason NVARCHAR(255),
+        CancelDate DATETIME DEFAULT GETDATE(),
+        Refunded BIT DEFAULT 0
+    );
+END
+
+-- sample updates/inserts to ensure reporting works
+UPDATE Orders SET Region = ISNULL(Region,'Chennai'), OrderStatus = ISNULL(OrderStatus,'Delivered')
+WHERE Region IS NULL AND OrderStatus IS NULL;
+
+-- Add a couple of returns and cancellations for reporting
+INSERT INTO Returns (OrderId, UserId, ProductId, Reason, Status)
+SELECT TOP 1 Order_Id, UserId, ProductId, 'Not as expected', 'Processed' FROM Orders;
+
+INSERT INTO Order_Cancellations (OrderId, UserId, Reason, Refunded)
+SELECT TOP 1 Order_Id, UserId, 'Customer changed mind', 1 FROM Orders
+WHERE OrderDate >= DATEADD(day,-30,GETDATE());
+
+-- add missing Regions for demonstration (if you want specific ones)
+UPDATE Users SET Status = ISNULL(Status,'Active') WHERE Status IS NULL;
+GO
