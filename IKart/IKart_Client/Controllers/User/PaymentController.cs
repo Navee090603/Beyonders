@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace IKart_Client.Controllers.User
@@ -38,7 +39,7 @@ namespace IKart_Client.Controllers.User
         }
 
         [HttpPost]
-        public ActionResult VerifyPayment(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, int PaymentMethodId)
+        public async Task<ActionResult> VerifyPayment(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, int PaymentMethodId)
         {
             var secret = ConfigurationManager.AppSettings["RazorpaySecret"];
             string generated_signature;
@@ -67,7 +68,8 @@ namespace IKart_Client.Controllers.User
             {
                 client.BaseAddress = new Uri("https://localhost:44365/");
 
-                var response = client.PostAsJsonAsync("api/emicards/request", dto).Result;
+                // 1. Save Card Request
+                var response = await client.PostAsJsonAsync("api/emicards/request", dto);
                 if (!response.IsSuccessStatusCode)
                 {
                     CleanupTempDocs();
@@ -75,11 +77,11 @@ namespace IKart_Client.Controllers.User
                     return RedirectToAction("Index", "EMICards");
                 }
 
-                var result = response.Content.ReadAsAsync<CardResponse>().Result;
+                var result = await response.Content.ReadAsAsync<CardResponse>();
                 int cardId = result.dto.Card_Id;
 
-                // Upload documents with correct keys (Aadhaar, PAN, BankBook)
-                if (docFiles != null && docFiles.Count > 0)
+                // 2. Upload documents with correct keys (Aadhaar, PAN, BankBook)
+                if (docFiles != null && docFiles.Count == 3) // Ensure all docs present
                 {
                     var form = new MultipartFormDataContent();
                     var docFieldNames = new[] { "Aadhaar", "PAN", "BankBook" };
@@ -97,18 +99,25 @@ namespace IKart_Client.Controllers.User
                         };
                         form.Add(streamContent, docFieldNames[i], fileName);
                     }
-                    client.PostAsync($"api/emicards/upload-documents/{cardId}", form);
+                    await client.PostAsync($"api/emicards/upload-documents/{cardId}", form);
 
-                    // Move files to permanent location
+                    // Move files to permanent location after successful upload
                     MoveDocsToPermanent(docFiles);
                 }
+                else
+                {
+                    CleanupTempDocs();
+                    TempData["Error"] = "All documents are required.";
+                    return RedirectToAction("Index", "EMICards");
+                }
 
+                // 3. Pay joining fee
                 var paymentDto = new PaymentDto
                 {
                     PaymentMethodId = PaymentMethodId,
                     Amount = amount
                 };
-                client.PostAsJsonAsync($"api/emicards/payfee/{cardId}", paymentDto);
+                await client.PostAsJsonAsync($"api/emicards/payfee/{cardId}", paymentDto);
             }
 
             CleanupTempDocs();

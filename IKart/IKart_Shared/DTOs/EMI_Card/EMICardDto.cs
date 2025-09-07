@@ -23,6 +23,7 @@ namespace IKart_Shared.DTOs.EMI_Card
         public DateTime? ExpireDate { get; set; }
         public decimal FeePaid { get; set; }
         public string Status { get; set; }   // Pending / Approved / Rejected
+        public string CardImage { get; set; }
         public List<EmiCardDocumentDto> Documents { get; set; }
     }
 

@@ -6,6 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace IKart_ServerSide.Controllers.Admin
 {
@@ -101,16 +104,23 @@ namespace IKart_ServerSide.Controllers.Admin
                     decimal totalLimit = cardReq.CardType == "Gold" ? 25000 :
                                         cardReq.CardType == "Diamond" ? 50000 : 100000;
 
+                    string cardNumber = Guid.NewGuid().ToString("N").Substring(0, 16);
+                    string userName = db.Users.FirstOrDefault(u => u.UserId == cardReq.UserId)?.FullName ?? "";
+
+                    // Generate the virtual card image and get the relative path
+                    string cardImagePath = GenerateCardImage(cardReq.CardType, cardNumber, userName);
+
                     var emiCard = new EMI_Card
                     {
                         UserId = cardReq.UserId,
                         CardType = cardReq.CardType,
-                        CardNumber = Guid.NewGuid().ToString("N").Substring(0, 16),
+                        CardNumber = cardNumber,
                         TotalLimit = totalLimit,
                         Balance = totalLimit,
                         IsActive = true,
                         IssueDate = DateTime.Now,
-                        ExpireDate = DateTime.Now.AddYears(3)
+                        ExpireDate = DateTime.Now.AddYears(3),
+                        CardImage = cardImagePath // <-- Store the image path in DB
                     };
                     db.EMI_Card.Add(emiCard);
                 }
@@ -124,6 +134,41 @@ namespace IKart_ServerSide.Controllers.Admin
 
             db.SaveChanges();
             return Ok("Approval status updated");
+        }
+
+        /// <summary>
+        /// Generates a PNG image for the virtual card, returns relative path for storage in CardImage column
+        /// </summary>
+        private string GenerateCardImage(string cardType, string cardNumber, string userName)
+        {
+            int width = 400;
+            int height = 220;
+            var bitmap = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(bitmap))
+            {
+                g.Clear(Color.FromArgb(0, 60, 150));
+                using (var fontType = new Font("Arial", 16, FontStyle.Bold))
+                using (var brush = new SolidBrush(Color.White))
+                    g.DrawString(cardType + " Card", fontType, brush, 20, 20);
+
+                using (var fontNum = new Font("Courier New", 20, FontStyle.Bold))
+                using (var brush = new SolidBrush(Color.White))
+                    g.DrawString(cardNumber, fontNum, brush, 20, 80);
+
+                using (var fontName = new Font("Arial", 12, FontStyle.Regular))
+                using (var brush = new SolidBrush(Color.White))
+                    g.DrawString(userName, fontName, brush, 20, 150);
+
+                using (var fontBrand = new Font("Arial", 10, FontStyle.Italic))
+                using (var brush = new SolidBrush(Color.LightGray))
+                    g.DrawString("IKart Virtual", fontBrand, brush, width - 120, height - 30);
+            }
+            string fileName = Guid.NewGuid().ToString() + ".png";
+            string relPath = "/Content/EmiCardImages/" + fileName;
+            string serverPath = System.Web.Hosting.HostingEnvironment.MapPath(relPath);
+            Directory.CreateDirectory(Path.GetDirectoryName(serverPath));
+            bitmap.Save(serverPath, ImageFormat.Png);
+            return relPath;
         }
     }
 }

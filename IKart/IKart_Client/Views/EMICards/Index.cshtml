@@ -20,6 +20,7 @@ else
 {
     <table class="table table-bordered">
         <tr>
+            <th>Card Image</th>
             <th>Card Type</th>
             <th>Card Number</th>
             <th>Limit</th>
@@ -30,6 +31,17 @@ else
         @foreach (var card in Model)
         {
             <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(card.CardImage))
+                    {
+                        var fileName = System.IO.Path.GetFileName(card.CardImage);
+                        <img src="https://localhost:44365/api/emicards/image/@fileName" alt="Card Image" style="max-width:140px;max-height:80px;" />
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
                 <td>@card.CardType</td>
                 <td>@card.CardNumber</td>
                 <td>@card.TotalLimit</td>
