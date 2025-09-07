@@ -1,146 +1,153 @@
-﻿using System;
+﻿using IKart_Shared.DTOs.EMI_Card;
+using Razorpay.Api;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Net.Http;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
-using IKart_Shared.DTOs.EMI_Card;
-using Newtonsoft.Json;
 
 namespace IKart_Client.Controllers.User
 {
     public class PaymentController : Controller
     {
-        private readonly string apiBase = "https://localhost:44365/api/emicards";
-
-        // Payment page
         public ActionResult Index()
         {
-            if (Session["PendingCardRequest"] == null || Session["FeeAmount"] == null)
-            {
-                TempData["Error"] = "No pending EMI card request found.";
+            if (Session["FeeAmount"] == null)
                 return RedirectToAction("Index", "EMICards");
-            }
 
-            ViewBag.FeeAmount = Session["FeeAmount"];
+            var fee = (decimal)Session["FeeAmount"];
+            var key = ConfigurationManager.AppSettings["RazorpayKey"];
+            var secret = ConfigurationManager.AppSettings["RazorpaySecret"];
+
+            RazorpayClient client = new RazorpayClient(key, secret);
+            var options = new Dictionary<string, object>
+            {
+                { "amount", (fee * 100) },
+                { "currency", "INR" },
+                { "payment_capture", 1 }
+            };
+
+            var order = client.Order.Create(options);
+
+            ViewBag.RazorpayKey = key;
+            ViewBag.OrderId = order["id"].ToString();
+            ViewBag.FeeAmount = fee;
+
             return View();
         }
 
         [HttpPost]
-        public ActionResult ConfirmPayment(int PaymentMethodId)
+        public ActionResult VerifyPayment(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, int PaymentMethodId)
         {
-            if (Session["PendingCardRequest"] == null || Session["UserId"] == null)
+            var secret = ConfigurationManager.AppSettings["RazorpaySecret"];
+            string generated_signature;
+            using (var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret)))
             {
-                TempData["Error"] = "Session expired or invalid request.";
+                var rawData = razorpay_order_id + "|" + razorpay_payment_id;
+                var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(rawData));
+                generated_signature = BitConverter.ToString(hash).Replace("-", "").ToLower();
+            }
+
+            if (generated_signature != razorpay_signature)
+            {
+                CleanupTempDocs();
+                TempData["Error"] = "Payment verification failed.";
                 return RedirectToAction("Index", "EMICards");
             }
 
             var dto = (CardRequestDto)Session["PendingCardRequest"];
-            int userId = Convert.ToInt32(Session["UserId"]);
-            decimal feeAmount = Convert.ToDecimal(Session["FeeAmount"]);
-            var uploadedDocs = Session["PendingDocuments"] as List<HttpPostedFileBase>;
+            var docFiles = (List<string>)Session["PendingDocuments"];
+            var amount = (decimal)Session["FeeAmount"];
 
-            try
+            var handler = new HttpClientHandler();
+            handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+
+            using (HttpClient client = new HttpClient(handler))
             {
-                using (var handler = new HttpClientHandler())
+                client.BaseAddress = new Uri("https://localhost:44365/");
+
+                var response = client.PostAsJsonAsync("api/emicards/request", dto).Result;
+                if (!response.IsSuccessStatusCode)
                 {
-                    // Ignore SSL errors for localhost testing
-                    handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-
-                    using (var client = new HttpClient(handler))
-                    {
-                        // 1️⃣ Send Card Request to API
-                        dto.UserId = userId;
-                        var jsonDto = JsonConvert.SerializeObject(dto);
-                        var contentDto = new StringContent(jsonDto, Encoding.UTF8, "application/json");
-                        var resRequest = client.PostAsync($"{apiBase}/request", contentDto).Result;
-
-                        if (!resRequest.IsSuccessStatusCode)
-                        {
-                            ModelState.AddModelError("", "Failed to create card request: " + resRequest.Content.ReadAsStringAsync().Result);
-                            ViewBag.FeeAmount = feeAmount;
-                            return View("Index");
-                        }
-
-                        // Get Card_Id returned by API
-                        var resultData = resRequest.Content.ReadAsStringAsync().Result;
-                        var createdRequest = JsonConvert.DeserializeObject<dynamic>(resultData);
-                        int cardId = createdRequest.dto.Card_Id;
-
-                        // 2️⃣ Upload Documents
-                        if (uploadedDocs != null && uploadedDocs.Count > 0)
-                        {
-                            using (var multipart = new MultipartFormDataContent())
-                            {
-                                foreach (var file in uploadedDocs)
-                                {
-                                    var fileContent = new ByteArrayContent(ReadFileBytes(file));
-                                    fileContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
-                                    {
-                                        Name = $"\"{file.FileName}\"",
-                                        FileName = $"\"{file.FileName}\""
-                                    };
-                                    multipart.Add(fileContent, file.FileName, file.FileName);
-                                }
-
-                                var resDocs = client.PostAsync($"{apiBase}/upload-documents/{cardId}", multipart).Result;
-                                if (!resDocs.IsSuccessStatusCode)
-                                {
-                                    ModelState.AddModelError("", "Document upload failed: " + resDocs.Content.ReadAsStringAsync().Result);
-                                    ViewBag.FeeAmount = feeAmount;
-                                    return View("Index");
-                                }
-                            }
-                        }
-
-                        // 3️⃣ Pay Joining Fee
-                        var paymentDto = new PaymentDto
-                        {
-                            CardId = cardId,
-                            UserId = userId,
-                            PaymentMethodId = PaymentMethodId,
-                            Amount = feeAmount
-                        };
-
-                        var jsonPayment = JsonConvert.SerializeObject(paymentDto);
-                        var contentPayment = new StringContent(jsonPayment, Encoding.UTF8, "application/json");
-                        var resPayment = client.PostAsync($"{apiBase}/payfee/{cardId}", contentPayment).Result;
-
-                        if (!resPayment.IsSuccessStatusCode)
-                        {
-                            ModelState.AddModelError("", "Payment failed: " + resPayment.Content.ReadAsStringAsync().Result);
-                            ViewBag.FeeAmount = feeAmount;
-                            return View("Index");
-                        }
-
-                        // Clear session after successful payment
-                        Session.Remove("PendingCardRequest");
-                        Session.Remove("PendingDocuments");
-                        Session.Remove("FeeAmount");
-
-                        TempData["Message"] = "Payment successful. Await admin approval to activate your EMI card.";
-                        return RedirectToAction("Index", "EMICards");
-                    }
+                    CleanupTempDocs();
+                    TempData["Error"] = "Failed to save card request.";
+                    return RedirectToAction("Index", "EMICards");
                 }
+
+                var result = response.Content.ReadAsAsync<CardResponse>().Result;
+                int cardId = result.dto.Card_Id;
+
+                if (docFiles != null && docFiles.Count > 0)
+                {
+                    var form = new MultipartFormDataContent();
+                    foreach (var fileName in docFiles)
+                    {
+                        var tempPath = Server.MapPath("~/TempDocs/");
+                        var fullPath = Path.Combine(tempPath, fileName);
+                        var fileBytes = System.IO.File.ReadAllBytes(fullPath);
+                        var streamContent = new ByteArrayContent(fileBytes);
+                        streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                        {
+                            Name = "files",
+                            FileName = fileName
+                        };
+                        form.Add(streamContent, "files", fileName);
+                    }
+                    client.PostAsync($"api/emicards/upload-documents/{cardId}", form);
+
+                    // Move files to permanent location
+                    MoveDocsToPermanent(docFiles);
+                }
+
+                var paymentDto = new PaymentDto
+                {
+                    PaymentMethodId = PaymentMethodId,
+                    Amount = amount
+                };
+                client.PostAsJsonAsync($"api/emicards/payfee/{cardId}", paymentDto);
             }
-            catch (Exception ex)
+
+            CleanupTempDocs();
+
+            TempData["Message"] = "Payment successful!";
+            return RedirectToAction("Index", "EMICards");
+        }
+
+        private void CleanupTempDocs()
+        {
+            var docFiles = (List<string>)Session["PendingDocuments"];
+            if (docFiles == null) return;
+
+            var tempPath = Server.MapPath("~/TempDocs/");
+            foreach (var fileName in docFiles)
             {
-                ModelState.AddModelError("", "Error: " + ex.Message);
-                ViewBag.FeeAmount = feeAmount;
-                return View("Index");
+                var fullPath = Path.Combine(tempPath, fileName);
+                if (System.IO.File.Exists(fullPath))
+                    System.IO.File.Delete(fullPath);
+            }
+            Session["PendingDocuments"] = null;
+        }
+
+        private void MoveDocsToPermanent(List<string> docFiles)
+        {
+            var tempPath = Server.MapPath("~/TempDocs/");
+            var permPath = Server.MapPath("~/Content/EmiCardDocuments/");
+            Directory.CreateDirectory(permPath);
+
+            foreach (var fileName in docFiles)
+            {
+                var tempFile = Path.Combine(tempPath, fileName);
+                var permFile = Path.Combine(permPath, fileName);
+                if (System.IO.File.Exists(tempFile))
+                    System.IO.File.Move(tempFile, permFile);
             }
         }
 
-        // Helper method to read HttpPostedFileBase into byte[]
-        private byte[] ReadFileBytes(HttpPostedFileBase file)
+        public class CardResponse
         {
-            using (var inputStream = file.InputStream)
-            {
-                byte[] bytes = new byte[file.ContentLength];
-                inputStream.Read(bytes, 0, file.ContentLength);
-                return bytes;
-            }
+            public string message { get; set; }
+            public CardRequestDto dto { get; set; }
         }
     }
 }

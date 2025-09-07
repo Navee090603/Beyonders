@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using IKart_Shared.DTOs.EMI_Card;
@@ -11,7 +12,7 @@ namespace IKart_Client.Controllers.User
         // Show existing EMI cards
         public ActionResult Index()
         {
-            // existing code to fetch user's EMI cards from API...
+            // TODO: fetch EMI cards from API
             return View();
         }
 
@@ -21,7 +22,7 @@ namespace IKart_Client.Controllers.User
             return View();
         }
 
-        // Submit Card Request (temporarily stored in session until payment)
+        // Submit Card Request and temporarily store files
         [HttpPost]
         public ActionResult RequestCard(CardRequestDto dto)
         {
@@ -39,28 +40,36 @@ namespace IKart_Client.Controllers.User
             // Store request temporarily in session
             Session["PendingCardRequest"] = dto;
 
-            // Save uploaded documents temporarily
+            // Save uploaded documents temporarily to a folder
             var files = HttpContext.Request.Files;
-            var tempDocs = new List<HttpPostedFileBase>();
+            var tempDocs = new List<string>();
+            var tempPath = Server.MapPath("~/TempDocs/");
+            Directory.CreateDirectory(tempPath);
+
             foreach (string key in files)
             {
                 var file = files[key];
                 if (file != null && file.ContentLength > 0)
-                    tempDocs.Add(file);
+                {
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    var fullPath = Path.Combine(tempPath, fileName);
+                    file.SaveAs(fullPath);
+                    tempDocs.Add(fileName);
+                }
             }
+
             Session["PendingDocuments"] = tempDocs;
 
             // Determine joining fee
             decimal fee;
             switch (dto.CardType)
             {
-                case "Gold": fee = 1000; break;
+                case "Gold": fee = 10; break;
                 case "Diamond": fee = 2000; break;
                 default: fee = 3000; break;
             }
             Session["FeeAmount"] = fee;
 
-            // Redirect to payment page
             return RedirectToAction("Index", "Payment");
         }
     }

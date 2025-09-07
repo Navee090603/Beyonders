@@ -12,7 +12,7 @@ namespace IKart_Shared.DTOs.Admin
         public int UserId { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
-        public decimal FeePaid { get; set; }
+        public decimal FeeAmount { get; set; }
         public string FeeStatus { get; set; }    // ✅ Fee Paid Status (from Joining_Fee.Status)
         public string ApprovalStatus { get; set; }  // ✅ Approved/Rejected/Pending (from Card_Request.IsVerified)
 

@@ -20,15 +20,17 @@ namespace IKart_ServerSide.Controllers.Admin
         {
             var cards = (from cr in db.Card_Request
                          join u in db.Users on cr.UserId equals u.UserId
+                         join jf in db.Joining_Fee on cr.Card_Id equals jf.Card_Id into jfGroup
+                         from joiningFee in jfGroup.DefaultIfEmpty()
                          select new EmiCardDto
                          {
                              CardId = cr.Card_Id,
                              UserId = u.UserId,
                              UserName = u.FullName,
                              Email = u.Email,
-
                              ApprovalStatus = (cr.IsVerified == true) ? "Approved" : "Rejected",
-
+                             FeeAmount = (decimal)(joiningFee != null ? joiningFee.Amount : 0),
+                             FeeStatus = joiningFee != null ? joiningFee.Status : "Not Available",
                              Documents = db.EmiCard_Documents
                                            .Where(d => d.Card_Id == cr.Card_Id)
                                            .Select(d => new EmiCardDocumentDto
@@ -50,6 +52,8 @@ namespace IKart_ServerSide.Controllers.Admin
         {
             var card = (from cr in db.Card_Request
                         join u in db.Users on cr.UserId equals u.UserId
+                        join jf in db.Joining_Fee on cr.Card_Id equals jf.Card_Id into jfGroup
+                        from joiningFee in jfGroup.DefaultIfEmpty()
                         where cr.Card_Id == id
                         select new EmiCardDto
                         {
@@ -57,9 +61,9 @@ namespace IKart_ServerSide.Controllers.Admin
                             UserId = u.UserId,
                             UserName = u.FullName,
                             Email = u.Email,
-
                             ApprovalStatus = (cr.IsVerified == true) ? "Approved" : "Rejected",
-
+                            FeeAmount = (decimal) (joiningFee != null ? joiningFee.Amount : 0),
+                            FeeStatus = joiningFee != null ? joiningFee.Status : "Not Available",
                             Documents = db.EmiCard_Documents
                                            .Where(d => d.Card_Id == cr.Card_Id)
                                            .Select(d => new EmiCardDocumentDto
@@ -78,7 +82,7 @@ namespace IKart_ServerSide.Controllers.Admin
             return Ok(card);
         }
 
-        // PUT: api/emicards/updatestatus/5
+        // PUT: api/emicards/updatestatus/{id}
         [HttpPut, Route("updatestatus/{id:int}")]
         public IHttpActionResult UpdateStatus(int id, [FromBody] string status)
         {
