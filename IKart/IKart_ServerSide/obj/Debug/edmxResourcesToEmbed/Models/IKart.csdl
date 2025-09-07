@@ -107,6 +107,8 @@
     <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Card_Request" Relationship="Self.FK__Joining_F__Card___6754599E" FromRole="Joining_Fee" ToRole="Card_Request" />
     <NavigationProperty Name="Payment_Methods" Relationship="Self.FK__Joining_F__Payme__68487DD7" FromRole="Joining_Fee" ToRole="Payment_Methods" />
+    <Property Name="PaymentId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="RazorpayPaymentId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="Monthly_EMI_Calc">
     <Key>

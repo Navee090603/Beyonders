@@ -3,36 +3,33 @@ using Razorpay.Api;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Net.Http;
-using System.Web;
 using System.Web.Mvc;
 
 namespace IKart_Client.Controllers.User
 {
     public class PaymentController : Controller
     {
-        // Show Payment Page
         public ActionResult Index()
         {
             if (Session["FeeAmount"] == null)
                 return RedirectToAction("Index", "EMICards");
 
             var fee = (decimal)Session["FeeAmount"];
-
-            // ✅ Load Razorpay keys from Web.config
             var key = ConfigurationManager.AppSettings["RazorpayKey"];
             var secret = ConfigurationManager.AppSettings["RazorpaySecret"];
 
-            // ✅ Create Razorpay order
             RazorpayClient client = new RazorpayClient(key, secret);
-            Dictionary<string, object> options = new Dictionary<string, object>();
-            options.Add("amount", (fee * 100)); // in paise
-            options.Add("currency", "INR");
-            options.Add("payment_capture", 1);
+            var options = new Dictionary<string, object>
+            {
+                { "amount", (fee * 100) },
+                { "currency", "INR" },
+                { "payment_capture", 1 }
+            };
 
-            Order order = client.Order.Create(options);
+            var order = client.Order.Create(options);
 
-            // Pass values to view
             ViewBag.RazorpayKey = key;
             ViewBag.OrderId = order["id"].ToString();
             ViewBag.FeeAmount = fee;
@@ -40,13 +37,10 @@ namespace IKart_Client.Controllers.User
             return View();
         }
 
-        // Verify Razorpay Payment
         [HttpPost]
         public ActionResult VerifyPayment(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, int PaymentMethodId)
         {
             var secret = ConfigurationManager.AppSettings["RazorpaySecret"];
-
-            // 🔐 Verify Razorpay signature
             string generated_signature;
             using (var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret)))
             {
@@ -57,16 +51,15 @@ namespace IKart_Client.Controllers.User
 
             if (generated_signature != razorpay_signature)
             {
+                CleanupTempDocs();
                 TempData["Error"] = "Payment verification failed.";
                 return RedirectToAction("Index", "EMICards");
             }
 
-            // ✅ Get session data
             var dto = (CardRequestDto)Session["PendingCardRequest"];
-            var documents = (List<HttpPostedFileBase>)Session["PendingDocuments"];
+            var docFiles = (List<string>)Session["PendingDocuments"];
             var amount = (decimal)Session["FeeAmount"];
 
-            // 🔐 Ignore SSL Certificate validation (for local dev only)
             var handler = new HttpClientHandler();
             handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
 
@@ -74,64 +67,90 @@ namespace IKart_Client.Controllers.User
             {
                 client.BaseAddress = new Uri("https://localhost:44365/");
 
-                // Save Card Request
                 var response = client.PostAsJsonAsync("api/emicards/request", dto).Result;
                 if (!response.IsSuccessStatusCode)
                 {
+                    CleanupTempDocs();
                     TempData["Error"] = "Failed to save card request.";
                     return RedirectToAction("Index", "EMICards");
                 }
 
-                // ✅ Deserialize response to strong type
                 var result = response.Content.ReadAsAsync<CardResponse>().Result;
-                if (result?.dto == null)
-                {
-                    TempData["Error"] = "Failed to retrieve Card ID from API response.";
-                    return RedirectToAction("Index", "EMICards");
-                }
-
                 int cardId = result.dto.Card_Id;
 
-                // Upload documents if any
-                if (documents != null && documents.Count > 0)
+                // Upload documents with correct keys (Aadhaar, PAN, BankBook)
+                if (docFiles != null && docFiles.Count > 0)
                 {
                     var form = new MultipartFormDataContent();
-                    foreach (var file in documents)
+                    var docFieldNames = new[] { "Aadhaar", "PAN", "BankBook" };
+                    for (int i = 0; i < docFiles.Count && i < docFieldNames.Length; i++)
                     {
-                        if (file != null && file.ContentLength > 0)
+                        var fileName = docFiles[i];
+                        var tempPath = Server.MapPath("~/TempDocs/");
+                        var fullPath = Path.Combine(tempPath, fileName);
+                        var fileBytes = System.IO.File.ReadAllBytes(fullPath);
+                        var streamContent = new ByteArrayContent(fileBytes);
+                        streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
                         {
-                            var streamContent = new StreamContent(file.InputStream);
-                            streamContent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
-                            {
-                                Name = file.FileName,
-                                FileName = file.FileName
-                            };
-                            form.Add(streamContent, file.FileName, file.FileName);
-                        }
+                            Name = docFieldNames[i],
+                            FileName = fileName
+                        };
+                        form.Add(streamContent, docFieldNames[i], fileName);
                     }
+                    client.PostAsync($"api/emicards/upload-documents/{cardId}", form);
 
-                    client.PostAsync($"api/emicards/upload-documents/{cardId}", form).Wait();
+                    // Move files to permanent location
+                    MoveDocsToPermanent(docFiles);
                 }
 
-                // Save payment
                 var paymentDto = new PaymentDto
                 {
                     PaymentMethodId = PaymentMethodId,
                     Amount = amount
                 };
-                client.PostAsJsonAsync($"api/emicards/payfee/{cardId}", paymentDto).Wait();
+                client.PostAsJsonAsync($"api/emicards/payfee/{cardId}", paymentDto);
             }
 
-            TempData["Message"] = "Payment successful! Your card request has been submitted for admin approval.";
+            CleanupTempDocs();
+
+            TempData["Message"] = "Payment successful!";
             return RedirectToAction("Index", "EMICards");
         }
 
-        // Strongly typed class for API response
+        private void CleanupTempDocs()
+        {
+            var docFiles = (List<string>)Session["PendingDocuments"];
+            if (docFiles == null) return;
+
+            var tempPath = Server.MapPath("~/TempDocs/");
+            foreach (var fileName in docFiles)
+            {
+                var fullPath = Path.Combine(tempPath, fileName);
+                if (System.IO.File.Exists(fullPath))
+                    System.IO.File.Delete(fullPath);
+            }
+            Session["PendingDocuments"] = null;
+        }
+
+        private void MoveDocsToPermanent(List<string> docFiles)
+        {
+            var tempPath = Server.MapPath("~/TempDocs/");
+            var permPath = Server.MapPath("~/Content/EmiCardDocuments/");
+            Directory.CreateDirectory(permPath);
+
+            foreach (var fileName in docFiles)
+            {
+                var tempFile = Path.Combine(tempPath, fileName);
+                var permFile = Path.Combine(permPath, fileName);
+                if (System.IO.File.Exists(tempFile))
+                    System.IO.File.Move(tempFile, permFile);
+            }
+        }
+
         public class CardResponse
         {
             public string message { get; set; }
             public CardRequestDto dto { get; set; }
         }
-
     }
 }

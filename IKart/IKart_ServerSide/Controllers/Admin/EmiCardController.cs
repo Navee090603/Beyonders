@@ -20,15 +20,17 @@ namespace IKart_ServerSide.Controllers.Admin
         {
             var cards = (from cr in db.Card_Request
                          join u in db.Users on cr.UserId equals u.UserId
+                         join jf in db.Joining_Fee on cr.Card_Id equals jf.Card_Id into jfGroup
+                         from joiningFee in jfGroup.DefaultIfEmpty()
                          select new EmiCardDto
                          {
                              CardId = cr.Card_Id,
                              UserId = u.UserId,
                              UserName = u.FullName,
                              Email = u.Email,
-
-                             ApprovalStatus = (cr.IsVerified == true) ? "Approved" : "Rejected",
-
+                             ApprovalStatus = (cr.IsVerified == true) ? "Approved" : (cr.IsVerified == false ? "Rejected" : "Pending"),
+                             FeeAmount = (decimal)(joiningFee != null ? joiningFee.Amount : 0),
+                             FeeStatus = joiningFee != null ? joiningFee.Status : "Not Available",
                              Documents = db.EmiCard_Documents
                                            .Where(d => d.Card_Id == cr.Card_Id)
                                            .Select(d => new EmiCardDocumentDto
@@ -50,6 +52,8 @@ namespace IKart_ServerSide.Controllers.Admin
         {
             var card = (from cr in db.Card_Request
                         join u in db.Users on cr.UserId equals u.UserId
+                        join jf in db.Joining_Fee on cr.Card_Id equals jf.Card_Id into jfGroup
+                        from joiningFee in jfGroup.DefaultIfEmpty()
                         where cr.Card_Id == id
                         select new EmiCardDto
                         {
@@ -57,9 +61,9 @@ namespace IKart_ServerSide.Controllers.Admin
                             UserId = u.UserId,
                             UserName = u.FullName,
                             Email = u.Email,
-
-                            ApprovalStatus = (cr.IsVerified == true) ? "Approved" : "Rejected",
-
+                            ApprovalStatus = (cr.IsVerified == true) ? "Approved" : (cr.IsVerified == false ? "Rejected" : "Pending"),
+                            FeeAmount = (decimal)(joiningFee != null ? joiningFee.Amount : 0),
+                            FeeStatus = joiningFee != null ? joiningFee.Status : "Not Available",
                             Documents = db.EmiCard_Documents
                                            .Where(d => d.Card_Id == cr.Card_Id)
                                            .Select(d => new EmiCardDocumentDto
@@ -78,17 +82,45 @@ namespace IKart_ServerSide.Controllers.Admin
             return Ok(card);
         }
 
-        // PUT: api/emicards/updatestatus/5
+        // PUT: api/emicards/updatestatus/{id}
         [HttpPut, Route("updatestatus/{id:int}")]
         public IHttpActionResult UpdateStatus(int id, [FromBody] string status)
         {
-            var card = db.Card_Request.FirstOrDefault(c => c.Card_Id == id);
-            if (card == null) return NotFound();
+            var cardReq = db.Card_Request.FirstOrDefault(c => c.Card_Id == id);
+            if (cardReq == null) return NotFound();
 
             if (status == "Approved")
-                card.IsVerified = true;
+            {
+                cardReq.IsVerified = true;
+
+                // Check if EMI Card already exists for this user and card type
+                bool alreadyExists = db.EMI_Card.Any(e => e.UserId == cardReq.UserId && e.CardType == cardReq.CardType);
+
+                if (!alreadyExists)
+                {
+                    decimal totalLimit = cardReq.CardType == "Gold" ? 25000 :
+                                        cardReq.CardType == "Diamond" ? 50000 : 100000;
+
+                    var emiCard = new EMI_Card
+                    {
+                        UserId = cardReq.UserId,
+                        CardType = cardReq.CardType,
+                        CardNumber = Guid.NewGuid().ToString("N").Substring(0, 16),
+                        TotalLimit = totalLimit,
+                        Balance = totalLimit,
+                        IsActive = true,
+                        IssueDate = DateTime.Now,
+                        ExpireDate = DateTime.Now.AddYears(3)
+                    };
+                    db.EMI_Card.Add(emiCard);
+                }
+            }
             else if (status == "Rejected")
-                card.IsVerified = false;
+            {
+                cardReq.IsVerified = false;
+
+                // (Optional) Refund logic can go here, if you integrate Razorpay refunds
+            }
 
             db.SaveChanges();
             return Ok("Approval status updated");

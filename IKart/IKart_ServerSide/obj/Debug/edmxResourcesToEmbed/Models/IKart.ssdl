@@ -91,6 +91,8 @@
     <Property Name="PaymentMethodId" Type="int" />
     <Property Name="Amount" Type="decimal" Precision="10" Scale="2" />
     <Property Name="Status" Type="nvarchar" MaxLength="20" />
+    <Property Name="PaymentId" Type="nvarchar" MaxLength="100" />
+    <Property Name="RazorpayPaymentId" Type="nvarchar" MaxLength="100" />
   </EntityType>
   <EntityType Name="Monthly_EMI_Calc">
     <Key>

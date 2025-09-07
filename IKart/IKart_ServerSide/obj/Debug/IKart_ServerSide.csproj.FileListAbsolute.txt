@@ -544,6 +544,11 @@ C:\NaveenCode\Beyonders\IKart\IKart_ServerSide\bin\Microsoft.CodeDom.Providers.D
 C:\NaveenCode\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.csproj.CopyComplete
 C:\NaveenCode\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.dll
 C:\NaveenCode\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.pdb
+C:\NaveenCode\Beyonders\IKart\IKart_ServerSide\bin\BouncyCastle.Crypto.dll
+C:\NaveenCode\Beyonders\IKart\IKart_ServerSide\bin\Razorpay.dll
+C:\NaveenCode\Beyonders\IKart\IKart_ServerSide\bin\BouncyCastle.Crypto.xml
+C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.csproj.AssemblyReference.cache
+C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.csproj.CoreCompileInputs.cache
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\bin\IKart_ServerSide.dll.config
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\bin\IKart_ServerSide.dll
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\bin\IKart_ServerSide.pdb
@@ -633,8 +638,6 @@ C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\bin\Syst
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\bin\System.Web.Http.xml
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\bin\System.Web.Http.WebHost.xml
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.csproj.AssemblyReference.cache
-C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.csproj.CoreCompileInputs.cache
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.csproj.CopyComplete
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.dll
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_ServerSide\obj\Debug\IKart_ServerSide.pdb

@@ -521,6 +521,9 @@ C:\NaveenCode\Beyonders\IKart\IKart_Client\obj\Debug\IKart_Client.csproj.CoreCom
 C:\NaveenCode\Beyonders\IKart\IKart_Client\obj\Debug\IKart_Client.csproj.CopyComplete
 C:\NaveenCode\Beyonders\IKart\IKart_Client\obj\Debug\IKart_Client.dll
 C:\NaveenCode\Beyonders\IKart\IKart_Client\obj\Debug\IKart_Client.pdb
+C:\NaveenCode\Beyonders\IKart\IKart_Client\bin\BouncyCastle.Crypto.dll
+C:\NaveenCode\Beyonders\IKart\IKart_Client\bin\Razorpay.dll
+C:\NaveenCode\Beyonders\IKart\IKart_Client\bin\BouncyCastle.Crypto.xml
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_Client\bin\IKart_Client.dll.config
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_Client\bin\IKart_Client.dll
 C:\Users\naveent\Downloads\Final_Ikart\Beyonders\IKart\IKart_Client\bin\IKart_Client.pdb

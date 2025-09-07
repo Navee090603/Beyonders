@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="IKartModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="IKartModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Address">
           <Key>
             <PropertyRef Name="AddressId" />
@@ -96,6 +96,8 @@
           <Property Name="PaymentMethodId" Type="int" />
           <Property Name="Amount" Type="decimal" Precision="10" Scale="2" />
           <Property Name="Status" Type="nvarchar" MaxLength="20" />
+          <Property Name="PaymentId" Type="nvarchar" MaxLength="100" />
+          <Property Name="RazorpayPaymentId" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Monthly_EMI_Calc">
           <Key>
@@ -725,8 +727,7 @@
             <End Role="Support_Tickets" EntitySet="Support_Tickets" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="IKartModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -837,6 +838,8 @@
           <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Card_Request" Relationship="Self.FK__Joining_F__Card___6754599E" FromRole="Joining_Fee" ToRole="Card_Request" />
           <NavigationProperty Name="Payment_Methods" Relationship="Self.FK__Joining_F__Payme__68487DD7" FromRole="Joining_Fee" ToRole="Payment_Methods" />
+          <Property Name="PaymentId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RazorpayPaymentId" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Monthly_EMI_Calc">
           <Key>
@@ -1606,6 +1609,8 @@
           <EntitySetMapping Name="Joining_Fee">
             <EntityTypeMapping TypeName="IKartModel.Joining_Fee">
               <MappingFragment StoreEntitySet="Joining_Fee">
+                <ScalarProperty Name="RazorpayPaymentId" ColumnName="RazorpayPaymentId" />
+                <ScalarProperty Name="PaymentId" ColumnName="PaymentId" />
                 <ScalarProperty Name="Fee_Id" ColumnName="Fee_Id" />
                 <ScalarProperty Name="Card_Id" ColumnName="Card_Id" />
                 <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />

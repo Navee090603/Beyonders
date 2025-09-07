@@ -15,33 +15,7 @@ namespace IKart_ServerSide.Controllers.Users
     {
         private readonly IKartEntities db = new IKartEntities();
 
-        // 1️⃣ Get all EMI cards for a user
-        [HttpGet]
-        [Route("user/{userId}")]
-        public IHttpActionResult GetUserCards(int userId)
-        {
-            if (!db.Users.Any(u => u.UserId == userId))
-                return BadRequest("Invalid UserId");
-
-            var cards = db.EMI_Card
-                .Where(c => c.UserId == userId)
-                .Select(c => new EmiCardDto
-                {
-                    EmiCardId = c.EmiCardId,
-                    UserId = (int)c.UserId,
-                    CardType = c.CardType,
-                    CardNumber = c.CardNumber,
-                    TotalLimit = (decimal)c.TotalLimit,
-                    Balance = (decimal)c.Balance,
-                    IsActive = (bool)c.IsActive,
-                    IssueDate = c.IssueDate,
-                    ExpireDate = c.ExpireDate
-                }).ToList();
-
-            return Ok(cards);
-        }
-
-        // 2️⃣ Request new card
+        // 1️⃣ Request EMI Card
         [HttpPost]
         [Route("request")]
         public IHttpActionResult RequestCard(CardRequestDto dto)
@@ -71,20 +45,12 @@ namespace IKart_ServerSide.Controllers.Users
 
             dto.Card_Id = request.Card_Id;
 
-            // Determine joining fee (C#7 compatible)
-            decimal fee;
-            switch (dto.CardType)
-            {
-                case "Gold":
-                    fee = 10;
-                    break;
-                case "Diamond":
-                    fee = 2000;
-                    break;
-                default:
-                    fee = 3000;
-                    break;
-            }
+            // Determine joining fee based on card type (FIXED: Gold = 1000)
+            decimal fee = 3000; // Default fee
+            if (dto.CardType == "Gold")
+                fee = 1000;
+            else if (dto.CardType == "Diamond")
+                fee = 2000;
 
             var joiningFee = new Joining_Fee
             {
@@ -93,13 +59,14 @@ namespace IKart_ServerSide.Controllers.Users
                 Amount = fee,
                 Status = "Pending"
             };
+
             db.Joining_Fee.Add(joiningFee);
             db.SaveChanges();
 
-            return Ok(new { message = "Card request submitted successfully. Pay joining fee.", dto });
+            return Ok(new { message = "Card request submitted successfully", dto });
         }
 
-        // 3️⃣ Upload documents
+        // 2️⃣ Upload Documents for EMI Card
         [HttpPost]
         [Route("upload-documents/{cardId}")]
         public async Task<IHttpActionResult> UploadDocuments(int cardId)
@@ -117,8 +84,11 @@ namespace IKart_ServerSide.Controllers.Users
             foreach (string key in HttpContext.Current.Request.Files)
             {
                 var file = HttpContext.Current.Request.Files[key];
-                if (file == null || file.ContentLength == 0) continue;
-                if (!allowedTypes.Contains(key)) continue;
+                if (file == null || file.ContentLength == 0)
+                    continue;
+
+                if (!allowedTypes.Contains(key))
+                    continue;
 
                 var fileName = Path.GetFileName(file.FileName);
                 var serverPath = HttpContext.Current.Server.MapPath("~/Content/EmiCardDocuments/");
@@ -140,10 +110,11 @@ namespace IKart_ServerSide.Controllers.Users
             }
 
             await db.SaveChangesAsync();
+
             return Ok(new { message = "Documents uploaded successfully", documents = uploadedDocs });
         }
 
-        // 4️⃣ Pay Joining Fee
+        // 3️⃣ Pay Joining Fee
         [HttpPost]
         [Route("payfee/{cardId}")]
         public IHttpActionResult PayJoiningFee(int cardId, [FromBody] PaymentDto payment)
@@ -151,25 +122,21 @@ namespace IKart_ServerSide.Controllers.Users
             if (payment == null)
                 return BadRequest("Payment data is required.");
 
-            // Validate method ID
             var method = db.Payment_Methods.FirstOrDefault(m => m.PaymentMethodId == payment.PaymentMethodId);
             if (method == null)
                 return BadRequest("Invalid Payment Method");
 
-            // Find joining fee
             var joiningFee = db.Joining_Fee.FirstOrDefault(j => j.Card_Id == cardId);
             if (joiningFee == null)
                 return NotFound();
 
-            // Mark as paid
             joiningFee.Status = "Paid";
             joiningFee.PaymentMethodId = payment.PaymentMethodId;
             joiningFee.Amount = payment.Amount;
 
             db.SaveChanges();
 
-            return Ok(new { message = "Payment successful. Await admin approval to activate EMI card." });
+            return Ok(new { message = "Payment successful. Await admin approval." });
         }
-
     }
 }

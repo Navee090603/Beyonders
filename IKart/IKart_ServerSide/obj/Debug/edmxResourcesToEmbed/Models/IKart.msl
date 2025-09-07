@@ -93,6 +93,8 @@
     <EntitySetMapping Name="Joining_Fee">
       <EntityTypeMapping TypeName="IKartModel.Joining_Fee">
         <MappingFragment StoreEntitySet="Joining_Fee">
+          <ScalarProperty Name="RazorpayPaymentId" ColumnName="RazorpayPaymentId" />
+          <ScalarProperty Name="PaymentId" ColumnName="PaymentId" />
           <ScalarProperty Name="Fee_Id" ColumnName="Fee_Id" />
           <ScalarProperty Name="Card_Id" ColumnName="Card_Id" />
           <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
