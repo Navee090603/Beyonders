@@ -21,9 +21,10 @@ namespace IKart_ServerSide.Models
             this.Card_Request = new HashSet<Card_Request>();
             this.EMI_Card = new HashSet<EMI_Card>();
             this.Monthly_EMI_Calc = new HashSet<Monthly_EMI_Calc>();
+            this.Order_Cancellations = new HashSet<Order_Cancellations>();
             this.Orders = new HashSet<Order>();
             this.Payments = new HashSet<Payment>();
-            this.Penalties = new HashSet<Penalty>();
+            this.Returns = new HashSet<Return>();
             this.Support_Tickets = new HashSet<Support_Tickets>();
         }
     
@@ -48,11 +49,13 @@ namespace IKart_ServerSide.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Monthly_EMI_Calc> Monthly_EMI_Calc { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order_Cancellations> Order_Cancellations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Payment> Payments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Penalty> Penalties { get; set; }
+        public virtual ICollection<Return> Returns { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Support_Tickets> Support_Tickets { get; set; }
     }

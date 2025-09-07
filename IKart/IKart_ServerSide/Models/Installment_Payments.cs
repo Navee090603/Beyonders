@@ -14,12 +14,6 @@ namespace IKart_ServerSide.Models
     
     public partial class Installment_Payments
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Installment_Payments()
-        {
-            this.Penalties = new HashSet<Penalty>();
-        }
-    
         public int InstallmentId { get; set; }
         public Nullable<int> EMI_Id { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
@@ -27,7 +21,5 @@ namespace IKart_ServerSide.Models
         public Nullable<bool> IsPaid { get; set; }
     
         public virtual Monthly_EMI_Calc Monthly_EMI_Calc { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Penalty> Penalties { get; set; }
     }
 }

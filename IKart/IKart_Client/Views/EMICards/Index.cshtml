@@ -1,4 +1,5 @@
 ﻿@model List<IKart_Shared.DTOs.EMI_Card.EmiCardDto>
+
 @{
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
@@ -24,8 +25,8 @@ else
             <th>Limit</th>
             <th>Balance</th>
             <th>Status</th>
-            <th>Actions</th>
         </tr>
+
         @foreach (var card in Model)
         {
             <tr>
@@ -34,15 +35,6 @@ else
                 <td>@card.TotalLimit</td>
                 <td>@card.Balance</td>
                 <td>@(card.IsActive ? "Active" : "Inactive")</td>
-                <td>
-                    @if (!card.IsActive)
-                    {
-                        <a href="@Url.Action("PayFee", "EMICards", new { feeId = card.EmiCardId })"
-                           class="btn btn-success">
-                            Pay Joining Fee
-                        </a>
-                    }
-                </td>
             </tr>
         }
     </table>

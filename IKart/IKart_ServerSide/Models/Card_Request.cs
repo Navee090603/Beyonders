@@ -17,8 +17,8 @@ namespace IKart_ServerSide.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Card_Request()
         {
-            this.Joining_Fee = new HashSet<Joining_Fee>();
             this.EmiCard_Documents = new HashSet<EmiCard_Documents>();
+            this.Joining_Fee = new HashSet<Joining_Fee>();
         }
     
         public int Card_Id { get; set; }
@@ -34,8 +34,8 @@ namespace IKart_ServerSide.Models
         public virtual Admin Admin { get; set; }
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Joining_Fee> Joining_Fee { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EmiCard_Documents> EmiCard_Documents { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Joining_Fee> Joining_Fee { get; set; }
     }
 }

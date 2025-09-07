@@ -1,79 +1,160 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Mvc;
-using IKart_Shared.DTOs;
+using IKart_Shared.DTOs.Admin;
 using Newtonsoft.Json;
 
 namespace IKart_Client.Controllers
 {
     public class StocksController : Controller
     {
-        string stocksApiUrl = "https://localhost:44365/api/stocks";
+        string apiUrl = "https://localhost:44365/api/stocks";
 
-        // GET: Stocks/Create
-        public ActionResult Create()
+        // LIST ALL
+        public ActionResult Index()
         {
-            return View();
+            List<StocksDto> stocks = new List<StocksDto>();
+            using (var handler = new HttpClientHandler())
+            {
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, errors) => true;
+                using (var client = new HttpClient(handler))
+                {
+                    var res = client.GetAsync(apiUrl).Result;
+                    if (res.IsSuccessStatusCode)
+                    {
+                        var json = res.Content.ReadAsStringAsync().Result;
+                        stocks = JsonConvert.DeserializeObject<List<StocksDto>>(json);
+                    }
+                }
+            }
+            return View(stocks);
         }
 
-        // POST: Stocks/Create
+        // CREATE GET
+        public ActionResult Create() => View();
+
+        // CREATE POST
         [HttpPost]
         public ActionResult Create(StocksDto dto)
         {
-            if (!ModelState.IsValid)
-                return View(dto);
+            if (!ModelState.IsValid) return View(dto);
 
             using (var handler = new HttpClientHandler())
             {
-                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-                using (HttpClient client = new HttpClient(handler))
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, errors) => true;
+                using (var client = new HttpClient(handler))
                 {
                     var json = JsonConvert.SerializeObject(dto);
                     var data = new StringContent(json, Encoding.UTF8, "application/json");
-                    var res = client.PostAsync(stocksApiUrl, data).Result;
-                    if (res.IsSuccessStatusCode)
-                        return RedirectToAction("Index", "Products"); // after adding stock, go back to products list
+                    var res = client.PostAsync(apiUrl, data).Result;
+                    if (res.IsSuccessStatusCode) return RedirectToAction("Index");
                 }
             }
-
             return View(dto);
         }
 
-        // =====================
-        // Remove Stock
-        // =====================
-        // GET: Stocks/Remove
-        public ActionResult Remove()
+        // EDIT GET
+        public ActionResult Edit(int id)
         {
-            return View();
+            StocksDto stock = null;
+            using (var handler = new HttpClientHandler())
+            {
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, errors) => true;
+                using (var client = new HttpClient(handler))
+                {
+                    var res = client.GetAsync(apiUrl + "/" + id).Result;
+                    if (res.IsSuccessStatusCode)
+                    {
+                        var json = res.Content.ReadAsStringAsync().Result;
+                        stock = JsonConvert.DeserializeObject<StocksDto>(json);
+                    }
+                }
+            }
+            return View(stock);
         }
 
-        // POST: Stocks/Remove
+        // EDIT POST
         [HttpPost]
-        public ActionResult Remove(StocksDto dto)
+        public ActionResult Edit(int id, StocksDto dto)
         {
-            if (!ModelState.IsValid)
-                return View(dto);
+            if (!ModelState.IsValid) return View(dto);
 
             using (var handler = new HttpClientHandler())
             {
-                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-                using (HttpClient client = new HttpClient(handler))
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, errors) => true;
+                using (var client = new HttpClient(handler))
                 {
                     var json = JsonConvert.SerializeObject(dto);
                     var data = new StringContent(json, Encoding.UTF8, "application/json");
-                    var res = client.PostAsync(stocksApiUrl + "/remove", data).Result; // endpoint: /api/stocks/remove
-                    if (res.IsSuccessStatusCode)
-                        return RedirectToAction("Index", "Products");
+                    var res = client.PutAsync(apiUrl + "/" + id, data).Result;
+                    if (res.IsSuccessStatusCode) return RedirectToAction("Index");
                 }
             }
-
             return View(dto);
         }
 
+        // DELETE GET - Show confirmation page
+        public ActionResult Delete(int id)
+        {
+            StocksDto stock = null;
+            using (var handler = new HttpClientHandler())
+            {
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, errors) => true;
+                using (var client = new HttpClient(handler))
+                {
+                    var res = client.GetAsync(apiUrl + "/" + id).Result;
+                    if (res.IsSuccessStatusCode)
+                    {
+                        var json = res.Content.ReadAsStringAsync().Result;
+                        stock = JsonConvert.DeserializeObject<StocksDto>(json);
+                    }
+                }
+            }
 
+            if (stock == null) return HttpNotFound();
+            return View(stock);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            using (var handler = new HttpClientHandler())
+            {
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, errors) => true;
+                using (var client = new HttpClient(handler))
+                {
+                    var res = client.DeleteAsync(apiUrl + "/" + id).Result;
+
+                    if (res.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else if (res.StatusCode == HttpStatusCode.Conflict)
+                    {
+                        // Read API error message
+                        var errorMsg = res.Content.ReadAsStringAsync().Result;
+                        ViewBag.Error = errorMsg;
+
+                        // Reload stock details so view can render again
+                        var stockRes = client.GetAsync(apiUrl + "/" + id).Result;
+                        if (stockRes.IsSuccessStatusCode)
+                        {
+                            var json = stockRes.Content.ReadAsStringAsync().Result;
+                            var stock = JsonConvert.DeserializeObject<StocksDto>(json);
+                            return View("Delete", stock);
+                        }
+                        return View("Delete");
+                    }
+                }
+            }
+
+            // fallback
+            return RedirectToAction("Index");
+        }
     }
 }

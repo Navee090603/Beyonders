@@ -31,10 +31,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=13.0.1.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
+    <Reference Include="BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Razorpay, Version=3.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Razorpay.3.3.2\lib\net47\Razorpay.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,15 +64,27 @@
   <ItemGroup>
     <Compile Include="DTOs\Account\AddressDto.cs" />
     <Compile Include="DTOs\Account\UserDto.cs" />
+    <Compile Include="DTOs\Admin\EmicardDto.cs" />
+    <Compile Include="DTOs\Admin\OrdersDto.cs" />
+    <Compile Include="DTOs\Admin\ProductDto.cs" />
+    <Compile Include="DTOs\Admin\RefundDto.cs" />
+    <Compile Include="DTOs\Admin\ReportsDto.cs" />
+    <Compile Include="DTOs\Admin\StocksDto.cs" />
+    <Compile Include="DTOs\Admin\SupportTicketDto.cs" />
+    <Compile Include="DTOs\Admin\UserDto.cs" />
     <Compile Include="DTOs\Authentication\AdminLoginDto.cs" />
     <Compile Include="DTOs\Authentication\ResetPasswordDto.cs" />
     <Compile Include="DTOs\Authentication\UserLoginDto.cs" />
     <Compile Include="DTOs\Authentication\UserRegisterDto.cs" />
     <Compile Include="DTOs\EMI_Card\CardRequestDto.cs" />
     <Compile Include="DTOs\EMI_Card\EMICardDto.cs" />
+    <Compile Include="DTOs\EMI_Card\PaymentDto.cs" />
     <Compile Include="DTOs\Products\ProductDto.cs" />
     <Compile Include="DTOs\Products\StocksDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
