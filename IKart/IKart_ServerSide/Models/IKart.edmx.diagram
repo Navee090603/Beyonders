@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a1bd83d486fc4742920c2256e7185d49" Name="Diagram1" ZoomLevel="29">
+      <Diagram DiagramId="a1bd83d486fc4742920c2256e7185d49" Name="Diagram1" ZoomLevel="163">
         <EntityTypeShape EntityType="IKartModel.Address" Width="1.5" PointX="3" PointY="12.125" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Admin" Width="1.5" PointX="3.75" PointY="8.625" IsExpanded="true" />
         <EntityTypeShape EntityType="IKartModel.Card_Request" Width="1.5" PointX="3" PointY="16.25" IsExpanded="true" />
@@ -61,7 +61,11 @@
         <EntityTypeShape EntityType="IKartModel.COD_UPI_Orders" Width="1.5" PointX="8.25" PointY="8.75" />
         <AssociationConnector Association="IKartModel.FK__COD_UPI_O__Produ__1CBC4616" />
         <AssociationConnector Association="IKartModel.FK__COD_UPI_O__UserI__1DB06A4F" />
-      </Diagram>
+        <EntityTypeShape EntityType="IKartModel.RazorPayment" Width="1.5" PointX="11.25" PointY="9.75" />
+        <AssociationConnector Association="IKartModel.FK__RazorPaym__Addre__2EDAF651" />
+        <AssociationConnector Association="IKartModel.FK__RazorPaym__Produ__2CF2ADDF" />
+        <AssociationConnector Association="IKartModel.FK__RazorPaym__UserI__2DE6D218" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -26,4 +26,15 @@ namespace IKart_Shared.DTOs.Orders
         public DateTime OrderDate { get; set; }
         public DateTime DeliveryDate { get; set; }
     }
+
+    public class RazorpayPaymentDto
+    {
+        public int PaymentId { get; set; }
+        public int ProductId { get; set; }
+        public int UserId { get; set; }
+        public int AddressId { get; set; }
+        public string RazorPayTransactionId { get; set; } // Store Razorpay's payment_id here
+        public decimal Amount { get; set; }
+        public DateTime PaymentDate { get; set; }
+    }
 }

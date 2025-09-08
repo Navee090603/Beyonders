@@ -290,6 +290,7 @@
     <Content Include="Views\Order\PlaceOrder.cshtml" />
     <Content Include="Views\Order\ShowUPISummary.cshtml" />
     <Content Include="Views\Shared\_UserSidebar.cshtml" />
+    <Content Include="Views\Order\ShowRazorpaySummary.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

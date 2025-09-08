@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace IKart_ServerSide.Controllers.Users
@@ -14,84 +13,79 @@ namespace IKart_ServerSide.Controllers.Users
     {
         private readonly IKartEntities db = new IKartEntities();
 
+        // Get all RazorPayments for a user
         [HttpGet]
         [Route("user/{userId}")]
         public IHttpActionResult GetPaymentsByUser(int userId)
         {
-            var paymentEntities = db.Payments
+            var paymentEntities = db.RazorPayments
                 .Where(p => p.UserId == userId)
                 .ToList();
 
-            var payments = paymentEntities.Select(p =>
+            var payments = paymentEntities.Select(p => new UserPaymentDto
             {
-                var emi = p.Monthly_EMI_Calc.FirstOrDefault();
-                return new UserPaymentDto
-                {
-                    PaymentId = p.PaymentId,
-                    ProductName = p.Product?.ProductName ?? "N/A",
-                    CardType = p.EMI_Card?.CardType ?? "N/A",
-                    TotalAmount = p.TotalAmount ?? 0m,
-                    EMIAmount = emi?.EMIAmount ?? 0m,
-                    TenureMonths = emi?.TenureMonths ?? 0,
-                    Status = p.Status,
-                    PaymentDate = p.PaymentDate ?? DateTime.MinValue
-                };
+                PaymentId = p.PaymentId,
+                ProductName = p.Product?.ProductName ?? "N/A",
+                TotalAmount = p.Amount,
+                Status = "Paid",
+                PaymentDate = p.PaymentDate
             }).ToList();
 
             return Ok(payments);
         }
 
+        // Get a single RazorPayment by int PaymentId
         [HttpGet]
         [Route("details/{paymentId}")]
         public IHttpActionResult GetPaymentDetails(int paymentId)
         {
-            var payment = db.Payments.Find(paymentId);
+            var payment = db.RazorPayments.Find(paymentId);
             if (payment == null) return NotFound();
-
-            var emi = payment.Monthly_EMI_Calc.FirstOrDefault();
-
-            var installments = db.Installment_Payments
-                .Where(i => i.PaymentId == paymentId) // Use navigation property
-                .ToList()
-                .Select(i =>
-                {
-                    var penalty = db.Penalties
-                        .FirstOrDefault(p => p.InstallmentId == i.InstallmentId);
-
-                    return new InstallmentDto
-                    {
-                        InstallmentId = i.InstallmentId,
-                        DueDate = i.DueDate ?? DateTime.MinValue,
-                        Amount = i.Amount ?? 0m,
-                        IsPaid = (bool)i.IsPaid,
-                        Penalty = penalty != null
-                            ? new PenaltyDto
-                            {
-                                PenaltyId = penalty.PenaltyId,
-                                Days_Overdue = penalty.Days_Overdue ?? 0,
-                                PenaltyAmount = penalty.PenaltyAmount ?? 0m,
-                                Status = penalty.Status
-                            }
-                            : null
-                    };
-                }).ToList();
 
             var dto = new UserPaymentDto
             {
                 PaymentId = payment.PaymentId,
                 ProductName = payment.Product?.ProductName ?? "N/A",
-                CardType = payment.EMI_Card?.CardType ?? "N/A",
-                TotalAmount = payment.TotalAmount ?? 0m,
-                EMIAmount = emi?.EMIAmount ?? 0m,
-                TenureMonths = emi?.TenureMonths ?? 0,
-                Status = payment.Status,
-                PaymentDate = payment.PaymentDate ?? DateTime.MinValue,
-                Installments = installments
+                TotalAmount = payment.Amount,
+                Status = "Paid",
+                PaymentDate = payment.PaymentDate
             };
 
             return Ok(dto);
         }
 
+        // Store a new Razorpay payment
+        [HttpPost]
+        [Route("razorpay")]
+        public IHttpActionResult StoreRazorpayPayment(RazorpayPaymentDto dto)
+        {
+            try
+            {
+                var payment = new RazorPayment
+                {
+                    ProductId = dto.ProductId,
+                    UserId = dto.UserId,
+                    AddressId = dto.AddressId,
+                    RazorPayTransactionId = dto.RazorPayTransactionId, // store Razorpay payment id (string)
+                    Amount = dto.Amount,
+                    PaymentDate = dto.PaymentDate
+                };
+                db.RazorPayments.Add(payment);
+                db.SaveChanges();
+
+                // Return the auto-generated PaymentId to client if needed
+                return Ok(new { PaymentId = payment.PaymentId });
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        // For completeness: UPI/COD payments are still handled in main Payments table
+        // If you want to show UPI/COD payments, add similar endpoints for db.Payments
+
+        // Installment payment example (if you use EMI logic)
         [HttpPost]
         [Route("pay-installment/{installmentId}")]
         public IHttpActionResult PayInstallment(int installmentId)

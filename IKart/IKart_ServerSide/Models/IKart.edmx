@@ -206,6 +206,18 @@
           <Property Name="ProductDetails" Type="nvarchar(max)" />
           <Property Name="ProductImage" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="RazorPayment">
+          <Key>
+            <PropertyRef Name="PaymentId" />
+          </Key>
+          <Property Name="PaymentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="AddressId" Type="int" />
+          <Property Name="RazorPayTransactionId" Type="nvarchar" MaxLength="50" />
+          <Property Name="Amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="PaymentDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="Refunds">
           <Key>
             <PropertyRef Name="RefundId" />
@@ -604,6 +616,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__RazorPaym__Addre__2EDAF651">
+          <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+          <End Role="RazorPayment" Type="Self.RazorPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="AddressId" />
+            </Principal>
+            <Dependent Role="RazorPayment">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RazorPaym__Produ__2CF2ADDF">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="RazorPayment" Type="Self.RazorPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="RazorPayment">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RazorPaym__UserI__2DE6D218">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="RazorPayment" Type="Self.RazorPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="RazorPayment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Refunds__Payment__76969D2E">
           <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
           <End Role="Refunds" Type="Self.Refunds" Multiplicity="*" />
@@ -694,6 +742,7 @@
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Penalty" EntityType="Self.Penalty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RazorPayment" EntityType="Self.RazorPayment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Refunds" EntityType="Self.Refunds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Returns" EntityType="Self.Returns" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Stocks" EntityType="Self.Stocks" Schema="dbo" store:Type="Tables" />
@@ -811,6 +860,18 @@
             <End Role="Stocks" EntitySet="Stocks" />
             <End Role="Products" EntitySet="Products" />
           </AssociationSet>
+          <AssociationSet Name="FK__RazorPaym__Addre__2EDAF651" Association="Self.FK__RazorPaym__Addre__2EDAF651">
+            <End Role="Address" EntitySet="Address" />
+            <End Role="RazorPayment" EntitySet="RazorPayment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RazorPaym__Produ__2CF2ADDF" Association="Self.FK__RazorPaym__Produ__2CF2ADDF">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="RazorPayment" EntitySet="RazorPayment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RazorPaym__UserI__2DE6D218" Association="Self.FK__RazorPaym__UserI__2DE6D218">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="RazorPayment" EntitySet="RazorPayment" />
+          </AssociationSet>
           <AssociationSet Name="FK__Refunds__Payment__76969D2E" Association="Self.FK__Refunds__Payment__76969D2E">
             <End Role="Payments" EntitySet="Payments" />
             <End Role="Refunds" EntitySet="Refunds" />
@@ -852,6 +913,7 @@
           <Property Name="ZipCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="User" Relationship="Self.FK__Address__UserId__412EB0B6" FromRole="Address" ToRole="Users" />
+          <NavigationProperty Name="RazorPayments" Relationship="IKartModel.FK__RazorPaym__Addre__2EDAF651" FromRole="Address" ToRole="RazorPayment" />
         </EntityType>
         <EntityType Name="Admin">
           <Key>
@@ -1061,6 +1123,7 @@
           <NavigationProperty Name="Stock" Relationship="Self.FK__Products__Stock___47DBAE45" FromRole="Products" ToRole="Stocks" />
           <NavigationProperty Name="Returns" Relationship="Self.FK__Returns__Product__03F0984C" FromRole="Products" ToRole="Returns" />
           <NavigationProperty Name="COD_UPI_Orders" Relationship="IKartModel.FK__COD_UPI_O__Produ__1CBC4616" FromRole="Product" ToRole="COD_UPI_Orders" />
+          <NavigationProperty Name="RazorPayments" Relationship="IKartModel.FK__RazorPaym__Produ__2CF2ADDF" FromRole="Product" ToRole="RazorPayment" />
         </EntityType>
         <EntityType Name="Refund">
           <Key>
@@ -1140,6 +1203,7 @@
           <NavigationProperty Name="Support_Tickets" Relationship="Self.FK__Support_T__UserI__7A672E12" FromRole="Users" ToRole="Support_Tickets" />
           <NavigationProperty Name="Penalties" Relationship="IKartModel.FK__Penalty__UserId__17F790F9" FromRole="User" ToRole="Penalty" />
           <NavigationProperty Name="COD_UPI_Orders" Relationship="IKartModel.FK__COD_UPI_O__UserI__1DB06A4F" FromRole="User" ToRole="COD_UPI_Orders" />
+          <NavigationProperty Name="RazorPayments" Relationship="IKartModel.FK__RazorPaym__UserI__2DE6D218" FromRole="User" ToRole="RazorPayment" />
         </EntityType>
         <Association Name="FK__Address__UserId__412EB0B6">
           <End Role="Users" Type="Self.User" Multiplicity="0..1" />
@@ -1648,7 +1712,20 @@
             <End Role="User" EntitySet="Users" />
             <End Role="COD_UPI_Orders" EntitySet="COD_UPI_Orders" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="RazorPayments" EntityType="IKartModel.RazorPayment" />
+          <AssociationSet Name="FK__RazorPaym__Addre__2EDAF651" Association="IKartModel.FK__RazorPaym__Addre__2EDAF651">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="RazorPayment" EntitySet="RazorPayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RazorPaym__Produ__2CF2ADDF" Association="IKartModel.FK__RazorPaym__Produ__2CF2ADDF">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="RazorPayment" EntitySet="RazorPayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RazorPaym__UserI__2DE6D218" Association="IKartModel.FK__RazorPaym__UserI__2DE6D218">
+            <End Role="User" EntitySet="Users" />
+            <End Role="RazorPayment" EntitySet="RazorPayments" />
+          </AssociationSet>
+          </EntityContainer>
         <Association Name="FK_Installment_Payments_Payment">
           <End Type="IKartModel.Payment" Role="Payment" Multiplicity="0..1" />
           <End Type="IKartModel.Installment_Payments" Role="Installment_Payments" Multiplicity="*" />
@@ -1739,7 +1816,58 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="RazorPayment">
+          <Key>
+            <PropertyRef Name="PaymentId" />
+          </Key>
+          <Property Name="PaymentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="AddressId" Type="Int32" />
+          <Property Name="RazorPayTransactionId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="PaymentDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Address" Relationship="IKartModel.FK__RazorPaym__Addre__2EDAF651" FromRole="RazorPayment" ToRole="Address" />
+          <NavigationProperty Name="Product" Relationship="IKartModel.FK__RazorPaym__Produ__2CF2ADDF" FromRole="RazorPayment" ToRole="Product" />
+          <NavigationProperty Name="User" Relationship="IKartModel.FK__RazorPaym__UserI__2DE6D218" FromRole="RazorPayment" ToRole="User" />
+        </EntityType>
+        <Association Name="FK__RazorPaym__Addre__2EDAF651">
+          <End Type="IKartModel.Address" Role="Address" Multiplicity="0..1" />
+          <End Type="IKartModel.RazorPayment" Role="RazorPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="AddressId" />
+            </Principal>
+            <Dependent Role="RazorPayment">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RazorPaym__Produ__2CF2ADDF">
+          <End Type="IKartModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="IKartModel.RazorPayment" Role="RazorPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="RazorPayment">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RazorPaym__UserI__2DE6D218">
+          <End Type="IKartModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="IKartModel.RazorPayment" Role="RazorPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="RazorPayment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -2027,6 +2155,19 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RazorPayments">
+            <EntityTypeMapping TypeName="IKartModel.RazorPayment">
+              <MappingFragment StoreEntitySet="RazorPayment">
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="RazorPayTransactionId" ColumnName="RazorPayTransactionId" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PaymentId" ColumnName="PaymentId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

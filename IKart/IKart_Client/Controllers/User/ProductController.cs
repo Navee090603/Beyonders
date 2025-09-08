@@ -11,7 +11,6 @@ namespace IKart_Client.Controllers
     {
         string baseUrl = "https://localhost:44365/api/product";
 
-        // GET: Product
         public ActionResult Index()
         {
             List<ProductDto> products = new List<ProductDto>();
@@ -32,7 +31,6 @@ namespace IKart_Client.Controllers
             return View(products);
         }
 
-        // GET: Product/Details/5
         public ActionResult Details(int id)
         {
             ProductDto product = null;

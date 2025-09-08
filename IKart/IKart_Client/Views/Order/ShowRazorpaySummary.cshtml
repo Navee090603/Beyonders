@@ -1,0 +1,58 @@
+﻿@{ var product = ViewBag.Product as IKart_Shared.DTOs.ProductDto;
+    decimal deliveryFee = 100;
+    decimal? totalCost = product.Cost + deliveryFee; }
+
+<h2>Razorpay Payment</h2>
+<div class="card mb-3">
+    <div class="card-body">
+        <h4>@product.ProductName</h4>
+        <img src="@product.ProductImage" alt="@product.ProductName" style="width:200px;" />
+        <p><strong>Price:</strong> ₹@product.Cost</p>
+        <p><strong>Delivery Fee:</strong> ₹@deliveryFee</p>
+        <p><strong>Total Cost:</strong> ₹@totalCost</p>
+        <p><strong>Expected Delivery Date:</strong> @DateTime.Now.AddDays(5)</p>
+    </div>
+</div>
+
+<button id="rzp-button" class="btn btn-primary">Pay with Razorpay</button>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById('rzp-button').onclick = function(e){
+        var options = {
+            "key": "@ViewBag.RazorpayKey", // Pass your Razorpay Key from controller
+            "amount": "@(totalCost * 100)", // Amount in paise
+            "currency": "INR",
+            "name": "@product.ProductName",
+            "description": "Order Payment",
+            "handler": function (response){
+                // Submit payment details to backend
+                fetch('@Url.Action("RazorpayPaymentSuccess", "Order")', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        productId: @product.ProductId,
+                        addressId: @ViewBag.AddressId,
+                        userId: @ViewBag.UserId,
+                        amount: "@totalCost"
+                    })
+                }).then(r => r.json()).then(res => {
+                    if(res.success && res.orderPlaced){
+                        window.location.href = '@Url.Action("PlaceOrder", "Order")?productId=@product.ProductId&addressId=@ViewBag.AddressId&method=RAZORPAY';
+                    }
+                    else{
+                        alert("Payment recorded, but order failed. Please contact support.");
+                    }
+                });
+            },
+            "prefill": {
+                "email": "@User.Identity.Name"
+            },
+            "theme": { "color": "#3399cc" }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+        e.preventDefault();
+    }
+</script>

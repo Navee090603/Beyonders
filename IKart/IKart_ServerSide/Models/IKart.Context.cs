@@ -47,5 +47,6 @@ namespace IKart_ServerSide.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Penalty> Penalties { get; set; }
         public virtual DbSet<COD_UPI_Orders> COD_UPI_Orders { get; set; }
+        public virtual DbSet<RazorPayment> RazorPayments { get; set; }
     }
 }
