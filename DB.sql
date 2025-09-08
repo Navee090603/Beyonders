@@ -1,6 +1,15 @@
+-- ==========================
+-- Create Database
+-- ==========================
 CREATE DATABASE IKart;
+GO
 
 USE IKart;
+GO
+
+-- ==========================
+-- Create Tables
+-- ==========================
 
 -- 1. Admins
 CREATE TABLE Admins (
@@ -102,17 +111,21 @@ CREATE TABLE EMI_Card (
     CardImage NVARCHAR(MAX) NULL
 );
 
--- 10. Payments
 CREATE TABLE Payments (
     PaymentId INT PRIMARY KEY IDENTITY(1,1),
-    EmiCardId INT FOREIGN KEY REFERENCES EMI_Card(EmiCardId),
-    UserId INT FOREIGN KEY REFERENCES Users(UserId),
-    ProductId INT FOREIGN KEY REFERENCES Products(ProductId),
-    PaymentMethodId INT FOREIGN KEY REFERENCES Payment_Methods(PaymentMethodId),
-    ProcessingFee DECIMAL(10,2),
-    TotalAmount DECIMAL(10,2),
+    EmiCardId INT NULL,
+    UserId INT NOT NULL,
+    ProductId INT NOT NULL,
+    PaymentMethodId INT NOT NULL,
+    ProcessingFee DECIMAL(18,2) DEFAULT 0,
+    TotalAmount DECIMAL(18,2) NOT NULL,
+	RazorpayPaymentId NVARCHAR(100) NULL,
     PaymentDate DATETIME DEFAULT GETDATE(),
-    Status NVARCHAR(20) CHECK (Status IN ('Pending','Paid','Failed'))
+    Status NVARCHAR(50) DEFAULT 'Pending',
+    FOREIGN KEY (EmiCardId) REFERENCES EMI_Card(EmiCardId),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId),
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId),
+    FOREIGN KEY (PaymentMethodId) REFERENCES Payment_Methods(PaymentMethodId)
 );
 
 -- 11. Orders
@@ -133,7 +146,9 @@ CREATE TABLE Joining_Fee (
     Card_Id INT FOREIGN KEY REFERENCES Card_Request(Card_Id),
     PaymentMethodId INT FOREIGN KEY REFERENCES Payment_Methods(PaymentMethodId),
     Amount DECIMAL(10,2),
-    Status NVARCHAR(20)
+    Status NVARCHAR(20),
+    RazorpayPaymentId NVARCHAR(100) NULL,
+    PaymentId NVARCHAR(100) NULL
 );
 
 -- 13. Monthly_EMI_Calc
@@ -153,10 +168,36 @@ CREATE TABLE Installment_Payments (
     EMI_Id INT FOREIGN KEY REFERENCES Monthly_EMI_Calc(EMI_Id),
     DueDate DATE,
     Amount DECIMAL(10,2),
-    IsPaid BIT DEFAULT 0
+    IsPaid BIT DEFAULT 0,
+    PaymentId INT NULL,
+    CONSTRAINT FK_Installment_Payments_Payment FOREIGN KEY (PaymentId) REFERENCES Payments(PaymentId)
 );
 
--- 16. FAQ
+-- 15. COD_UPI_Orders
+CREATE TABLE COD_UPI_Orders (
+    OrderId INT PRIMARY KEY IDENTITY(1000,1),
+    ProductId INT FOREIGN KEY REFERENCES Products(ProductId),
+    UserId INT FOREIGN KEY REFERENCES Users(UserId),
+    OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
+    DeliveryDate DATETIME NOT NULL,
+    PaymentType VARCHAR(10) NOT NULL CHECK (PaymentType IN ('COD', 'UPI')),
+    PaymentStatus VARCHAR(20) NOT NULL DEFAULT 'Pending'
+);
+
+-- 16. Penalty
+CREATE TABLE Penalty (
+    PenaltyId INT PRIMARY KEY IDENTITY(1,1),
+    InstallmentId INT FOREIGN KEY REFERENCES Installment_Payments(InstallmentId),
+    UserId INT FOREIGN KEY REFERENCES Users(UserId),
+    DueDate DATE,
+    Days_Overdue INT,
+    PenaltyPerDay DECIMAL(10,2) DEFAULT 50,
+    PenaltyAmount DECIMAL(10,2),
+    Status NVARCHAR(20),
+    LastUpdated DATETIME DEFAULT GETDATE()
+);
+
+-- 17. FAQ
 CREATE TABLE FAQ (
     FaqId INT PRIMARY KEY IDENTITY(1,1),
     ProductId INT FOREIGN KEY REFERENCES Products(ProductId),
@@ -220,24 +261,19 @@ CREATE TABLE Order_Cancellations (
 -- ==========================
 -- Sample Inserts
 -- ==========================
-select * from Card_Request
-select * from Payment_Methods
-select * from Payments
-select * from Payment_Details
-
-select * from Joining_Fee
 
 -- Admins
 INSERT INTO Admins (Username, PasswordHash) VALUES
 ('superadmin', 'adminhashed1'),
 ('manager1', 'adminhashed2');
 
--- Payment Methods
-INSERT INTO Payment_Methods (MethodName) VALUES
-('Credit Card'),
-('Debit Card'),
-('Net Banking'),
-('UPI');
+-- 1. Add PaymentMethod entries if not already present
+INSERT INTO Payment_Methods (MethodName) VALUES ('Credit');
+INSERT INTO Payment_Methods (MethodName) VALUES ('Debit');
+INSERT INTO Payment_Methods (MethodName) VALUES ('UPI');
+INSERT INTO Payment_Methods (MethodName) VALUES ('Razorpay');
+INSERT INTO Payment_Methods (MethodName) VALUES ('Card');
+
 
 -- Users
 INSERT INTO Users (FullName, Email, PhoneNo, Username, PasswordHash, OTP, Status) VALUES
@@ -269,10 +305,10 @@ INSERT INTO EMI_Card (UserId, PaymentMethodId, ActivatedBy, CardType, CardNumber
 (2, 2, 2, 'Platinum', '4222222222222222', 200000, 180000, 1, '2025-02-01', '2030-02-01', 'platinum_card.png');
 
 -- Payments
-INSERT INTO Payments (EmiCardId, UserId, ProductId, PaymentMethodId, ProcessingFee, TotalAmount, Status) VALUES
-(1, 1, 1, 1, 15.00, 814.99, 'Paid'),
-(2, 2, 2, 2, 20.00, 519.50, 'Pending'),
-(NULL, 3, 3, 4, 5.00, 134.99, 'Failed');
+INSERT INTO Payments (EmiCardId, UserId, ProductId, PaymentMethodId, ProcessingFee, TotalAmount, RazorpayPaymentId, PaymentDate, Status) VALUES
+(1, 1, 1, 1, 15.00, 814.99, NULL, GETDATE(), 'Paid'),
+(2, 2, 2, 2, 20.00, 519.50, NULL, GETDATE(), 'Pending'),
+(NULL, 3, 3, 4, 5.00, 134.99, 'pay_test_ABC123', GETDATE(), 'Failed');
 
 -- Orders
 INSERT INTO Orders (ProductId, UserId, PaymentId, DeliveryDate) VALUES
@@ -296,7 +332,7 @@ VALUES
 (2, '2025-10-01', 173.17, 0),
 (2, '2025-11-01', 173.16, 0);
 
--- EMI Card Documents
+-- EmiCard Documents
 INSERT INTO EmiCard_Documents (Card_Id, DocumentType, FileName, FilePath)
 VALUES 
 (1, 'Aadhar Card', 'aadhar1.pdf', '/Content/EmiCardDocs/aadhar1.pdf'),
@@ -308,9 +344,3 @@ INSERT INTO Refunds (PaymentId, Amount, Reason, Status)
 VALUES
 (1, 814.99, 'Product damaged on delivery', 'Processed'),
 (2, 519.50, 'Order cancelled by user', 'Pending');
-
-select * from EMI_Card
-select * from Users
-select * from Card_Request
-select * from EmiCard_Documents
-select * from Joining_Fee

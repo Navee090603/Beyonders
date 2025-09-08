@@ -1,108 +1,150 @@
 ﻿using IKart_ServerSide.Models;
 using IKart_Shared.DTOs.Payment;
+using Razorpay.Api;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+
+// Alias the Payment classes to avoid ambiguity
+using IKartPayment = IKart_ServerSide.Models.Payment;
+using RazorpayPayment = Razorpay.Api.Payment;
 
 namespace IKart_ServerSide.Controllers.Users
 {
     [RoutePrefix("api/payments")]
     public class ProductPaymentController : ApiController
     {
-        private readonly IKartEntities db = new IKartEntities();
+        // Database connection
+        private IKartEntities db = new IKartEntities();
 
+        // Razorpay credentials (use your test keys here)
+        private string razorpayKey = ConfigurationManager.AppSettings["RazorpayKey"];
+        private string razorpaySecret = ConfigurationManager.AppSettings["RazorpaySecret"];
+
+        // ✅ Get payment options like card balance, etc.
         [HttpGet]
-        [Route("user/{userId}")]
-        public IHttpActionResult GetPaymentsByUser(int userId)
+        [Route("options/{userId}/{productId}")]
+        public IHttpActionResult GetPaymentOptions(int userId, int productId)
         {
-            var paymentEntities = db.Payments
-                .Where(p => p.UserId == userId)
-                .ToList();
+            var user = db.Users.Find(userId);
+            var product = db.Products.Find(productId);
 
-            var payments = paymentEntities.Select(p =>
+            if (user == null || product == null)
+                return NotFound();
+
+            var card = db.EMI_Card.FirstOrDefault(c => c.UserId == userId && c.IsActive == true);
+
+            decimal cardBalance = (decimal)(card != null ? card.Balance : 0);
+
+            return Ok(new
             {
-                var emi = p.Monthly_EMI_Calc.FirstOrDefault();
-                return new UserPaymentDto
-                {
-                    PaymentId = p.PaymentId,
-                    ProductName = p.Product?.ProductName ?? "N/A",
-                    CardType = p.EMI_Card?.CardType ?? "N/A",
-                    TotalAmount = p.TotalAmount ?? 0m,
-                    EMIAmount = emi?.EMIAmount ?? 0m,
-                    TenureMonths = emi?.TenureMonths ?? 0,
-                    Status = p.Status,
-                    PaymentDate = p.PaymentDate ?? DateTime.MinValue
-                };
-            }).ToList();
-
-            return Ok(payments);
+                HasCard = card != null,
+                CardType = card?.CardType,
+                CardBalance = cardBalance,
+                ProductCost = product.Cost
+            });
         }
 
-        [HttpGet]
-        [Route("details/{paymentId}")]
-        public IHttpActionResult GetPaymentDetails(int paymentId)
-        {
-            var payment = db.Payments.Find(paymentId);
-            if (payment == null) return NotFound();
-
-            var emi = payment.Monthly_EMI_Calc.FirstOrDefault();
-
-            var installments = db.Installment_Payments
-                .Where(i => i.PaymentId == paymentId) // Use navigation property
-                .ToList()
-                .Select(i =>
-                {
-                    var penalty = db.Penalties
-                        .FirstOrDefault(p => p.InstallmentId == i.InstallmentId);
-
-                    return new InstallmentDto
-                    {
-                        InstallmentId = i.InstallmentId,
-                        DueDate = i.DueDate ?? DateTime.MinValue,
-                        Amount = i.Amount ?? 0m,
-                        IsPaid = (bool)i.IsPaid,
-                        Penalty = penalty != null
-                            ? new PenaltyDto
-                            {
-                                PenaltyId = penalty.PenaltyId,
-                                Days_Overdue = penalty.Days_Overdue ?? 0,
-                                PenaltyAmount = penalty.PenaltyAmount ?? 0m,
-                                Status = penalty.Status
-                            }
-                            : null
-                    };
-                }).ToList();
-
-            var dto = new UserPaymentDto
-            {
-                PaymentId = payment.PaymentId,
-                ProductName = payment.Product?.ProductName ?? "N/A",
-                CardType = payment.EMI_Card?.CardType ?? "N/A",
-                TotalAmount = payment.TotalAmount ?? 0m,
-                EMIAmount = emi?.EMIAmount ?? 0m,
-                TenureMonths = emi?.TenureMonths ?? 0,
-                Status = payment.Status,
-                PaymentDate = payment.PaymentDate ?? DateTime.MinValue,
-                Installments = installments
-            };
-
-            return Ok(dto);
-        }
-
+        // ✅ Create Razorpay order for payment
         [HttpPost]
-        [Route("pay-installment/{installmentId}")]
-        public IHttpActionResult PayInstallment(int installmentId)
+        [Route("razorpay-order")]
+        public IHttpActionResult CreateRazorpayOrder(OrderRequestDto request)
         {
-            var installment = db.Installment_Payments.Find(installmentId);
-            if (installment == null) return NotFound();
+            var product = db.Products.Find(request.ProductId);
+            if (product == null)
+                return NotFound();
 
-            installment.IsPaid = true;
+            var client = new RazorpayClient(razorpayKey, razorpaySecret);
+
+            Dictionary<string, object> options = new Dictionary<string, object>();
+            options.Add("amount", (int)(product.Cost * 100)); // amount in paise
+            options.Add("currency", "INR");
+            options.Add("payment_capture", 1);
+
+            var order = client.Order.Create(options);
+
+            return Ok(new
+            {
+                orderId = order["id"],
+                amount = order["amount"],
+                currency = order["currency"],
+                productName = product.ProductName
+            });
+        }
+
+        // ✅ Verify Razorpay payment after user completes it
+        [HttpPost]
+        [Route("razorpay-verify")]
+        public IHttpActionResult VerifyRazorpayPayment(VerifyPaymentDto dto)
+        {
+            try
+            {
+                var client = new RazorpayClient(razorpayKey, razorpaySecret);
+
+                Dictionary<string, string> attributes = new Dictionary<string, string>();
+                attributes.Add("razorpay_order_id", dto.RazorpayOrderId);
+                attributes.Add("razorpay_payment_id", dto.RazorpayPaymentId);
+                attributes.Add("razorpay_signature", dto.RazorpaySignature);
+
+                Utils.verifyPaymentSignature(attributes);
+
+                // Save payment details
+                var payment = new IKartPayment();
+                payment.EmiCardId = null;
+                payment.UserId = dto.UserId;
+                payment.ProductId = dto.ProductId;
+                payment.PaymentMethodId = db.Payment_Methods.FirstOrDefault(m => m.MethodName == "UPI")?.PaymentMethodId ?? 4;
+                payment.ProcessingFee = 0;
+                payment.TotalAmount = dto.Amount;
+                payment.PaymentDate = DateTime.Now;
+                payment.Status = "Paid";
+
+                db.Payments.Add(payment);
+                db.SaveChanges();
+
+                return Ok(new { Message = "Payment verified successfully!", PaymentId = payment.PaymentId });
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(new Exception("Payment verification failed: " + ex.Message));
+            }
+        }
+
+        // ✅ Pay using user's card balance
+        [HttpPost]
+        [Route("pay-card")]
+        public IHttpActionResult PayUsingCard(CardPaymentDto dto)
+        {
+            var user = db.Users.Find(dto.UserId);
+            var product = db.Products.Find(dto.ProductId);
+            var card = db.EMI_Card.FirstOrDefault(c => c.UserId == dto.UserId && c.IsActive == true);
+
+            if (user == null || product == null || card == null)
+                return NotFound();
+
+            if (card.Balance < product.Cost)
+                return BadRequest("Insufficient card balance.");
+
+            // Deduct balance
+            card.Balance -= product.Cost;
+
+            // Save payment in database
+            var payment = new IKartPayment();
+            payment.EmiCardId = card.EmiCardId;
+            payment.UserId = user.UserId;
+            payment.ProductId = product.ProductId;
+            payment.PaymentMethodId = db.Payment_Methods.FirstOrDefault(m => m.MethodName == "Card")?.PaymentMethodId ?? 5;
+            payment.ProcessingFee = 0;
+            payment.TotalAmount = product.Cost;
+            payment.PaymentDate = DateTime.Now;
+            payment.Status = "Paid";
+
+            db.Payments.Add(payment);
             db.SaveChanges();
 
-            return Ok();
+            return Ok(new { Message = "Payment completed using card balance!", PaymentId = payment.PaymentId });
         }
     }
 }
