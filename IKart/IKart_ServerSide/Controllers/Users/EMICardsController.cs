@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -45,10 +48,10 @@ namespace IKart_ServerSide.Controllers.Users
 
             dto.Card_Id = request.Card_Id;
 
-            // Determine joining fee based on card type
+            // Determine joining fee based on card type (FIXED: Gold = 1000)
             decimal fee = 3000; // Default fee
             if (dto.CardType == "Gold")
-                fee = 10;
+                fee = 1000;
             else if (dto.CardType == "Diamond")
                 fee = 2000;
 
@@ -138,5 +141,80 @@ namespace IKart_ServerSide.Controllers.Users
 
             return Ok(new { message = "Payment successful. Await admin approval." });
         }
+
+        // 4️⃣ Get EMI Cards for a user (with CardImage property)
+        [HttpGet]
+        [Route("user/{userId}")]
+        public IHttpActionResult GetUserEmiCards(int userId)
+        {
+            // Materialize first, THEN use Path.GetFileName (LINQ-to-Objects)
+            var rows = db.EMI_Card
+                .Where(ec => ec.UserId == userId)
+                .ToList();
+
+            var emiCards = rows.Select(ec => new IKart_Shared.DTOs.EMI_Card.EmiCardDto
+            {
+                EmiCardId = ec.EmiCardId,
+                CardId = ec.EmiCardId,
+                UserId = (int)ec.UserId,
+                CardType = ec.CardType,
+                CardNumber = ec.CardNumber,
+                TotalLimit = (decimal)ec.TotalLimit,
+                Balance = (decimal)ec.Balance,
+                IsActive = (bool)ec.IsActive,
+                IssueDate = ec.IssueDate,
+                ExpireDate = ec.ExpireDate,
+
+                // Only the filename (e.g., "accb63338c8145cd.png")
+                CardImage = string.IsNullOrWhiteSpace(ec.CardImage)
+                    ? null
+                    : Path.GetFileName(ec.CardImage)
+            }).ToList();
+
+            return Ok(emiCards);
+        }
+
+        // 5️⃣ Serve EMI Card Images by filename
+        //[HttpGet]
+        //[Route("image/{fileName}")]
+        //public IHttpActionResult GetCardImage(string fileName)
+        //{
+        //    if (string.IsNullOrWhiteSpace(fileName))
+        //        return BadRequest("Missing file name.");
+
+        //    var path = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/EmiCardImages/" + fileName);
+        //    if (!System.IO.File.Exists(path))
+        //        return NotFound();
+
+        //    var bytes = System.IO.File.ReadAllBytes(path);
+        //    var result = new HttpResponseMessage(HttpStatusCode.OK)
+        //    {
+        //        Content = new ByteArrayContent(bytes)
+        //    };
+        //    result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+        //    return ResponseMessage(result);
+        //}
+
+        [HttpGet]
+        [Route("image/{fileName}")]
+        public IHttpActionResult GetCardImage(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+                return BadRequest("Missing file name.");
+
+            var path = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/EmiCardImages/" + fileName);
+            if (!System.IO.File.Exists(path))
+                return NotFound();
+
+            var bytes = System.IO.File.ReadAllBytes(path);
+            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(bytes)
+            };
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+            return ResponseMessage(result);
+        }
+
+
     }
 }

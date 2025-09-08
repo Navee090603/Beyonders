@@ -218,8 +218,10 @@
     <Compile Include="Controllers\User\AuthController.cs" />
     <Compile Include="Controllers\User\EMICardsController.cs" />
     <Compile Include="Controllers\User\InfoController.cs" />
+    <Compile Include="Controllers\User\OrderController.cs" />
     <Compile Include="Controllers\User\PaymentController.cs" />
     <Compile Include="Controllers\User\ProductController.cs" />
+    <Compile Include="Controllers\User\ProductPaymentController.cs" />
     <Compile Include="Controllers\User\SupportController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -281,6 +283,15 @@
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\Details.cshtml" />
     <Content Include="Views\Payment\Index.cshtml" />
+    <Content Include="Views\ProductPayment\UserPaymentPageIndex.cshtml" />
+    <Content Include="Views\ProductPayment\Details.cshtml" />
+    <Content Include="Views\Order\BuyNow.cshtml" />
+    <Content Include="Views\Order\ChoosePayment.cshtml" />
+    <Content Include="Views\Order\PlaceOrder.cshtml" />
+    <Content Include="Views\Order\ShowUPISummary.cshtml" />
+    <Content Include="Views\Shared\_UserSidebar.cshtml" />
+    <Content Include="Views\Support\Index.cshtml" />
+    <Content Include="Views\Support\IncidentStatus.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

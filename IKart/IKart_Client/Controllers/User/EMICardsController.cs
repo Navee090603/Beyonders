@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using IKart_Shared.DTOs.EMI_Card;
@@ -12,8 +13,21 @@ namespace IKart_Client.Controllers.User
         // Show existing EMI cards
         public ActionResult Index()
         {
-            // TODO: fetch EMI cards from API
-            return View();
+            int userId = Convert.ToInt32(Session["UserId"]);
+            using (var handler = new HttpClientHandler())
+            {
+                handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+                using (var client = new HttpClient(handler))
+                {
+                    var response = client.GetAsync($"https://localhost:44365/api/emicards/user/{userId}").Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var data = response.Content.ReadAsAsync<List<IKart_Shared.DTOs.EMI_Card.EmiCardDto>>().Result;
+                        return View(data);
+                    }
+                }
+            }
+            return View(new List<IKart_Shared.DTOs.EMI_Card.EmiCardDto>());
         }
 
         // Select Card Type
@@ -60,11 +74,11 @@ namespace IKart_Client.Controllers.User
 
             Session["PendingDocuments"] = tempDocs;
 
-            // Determine joining fee
+            // Determine joining fee (FIXED: Gold = 1000)
             decimal fee;
             switch (dto.CardType)
             {
-                case "Gold": fee = 10; break;
+                case "Gold": fee = 1000; break;
                 case "Diamond": fee = 2000; break;
                 default: fee = 3000; break;
             }

@@ -5,7 +5,7 @@ using System.Data.Entity;
 using IKart_ServerSide.Models;
 using IKart_Shared.DTOs;
 
-namespace IKart_ServerSide.Controllers
+namespace IKart_ServerSide.Controllers.Users
 {
     [RoutePrefix("api/product")]
     public class ProductController : ApiController

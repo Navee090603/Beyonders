@@ -45,5 +45,7 @@ namespace IKart_ServerSide.Models
         public virtual DbSet<Stock> Stocks { get; set; }
         public virtual DbSet<Support_Tickets> Support_Tickets { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Penalty> Penalties { get; set; }
+        public virtual DbSet<COD_UPI_Orders> COD_UPI_Orders { get; set; }
     }
 }

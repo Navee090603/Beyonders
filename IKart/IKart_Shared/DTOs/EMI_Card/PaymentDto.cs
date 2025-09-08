@@ -12,5 +12,6 @@ namespace IKart_Shared.DTOs.EMI_Card
         public int UserId { get; set; }
         public int PaymentMethodId { get; set; }
         public decimal Amount { get; set; }
+        public string PaymentId { get; set; }
     }
 }

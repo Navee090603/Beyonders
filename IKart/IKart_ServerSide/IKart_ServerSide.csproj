@@ -164,10 +164,12 @@
     <Compile Include="Controllers\Admin\StocksController.cs" />
     <Compile Include="Controllers\Admin\SupportTicketsController.cs" />
     <Compile Include="Controllers\Admin\UsersController.cs" />
-    <Compile Include="Controllers\User\AuthController.cs" />
-    <Compile Include="Controllers\User\AccountController.cs" />
-    <Compile Include="Controllers\User\EMICardsController.cs" />
-    <Compile Include="Controllers\User\ProductController.cs" />
+    <Compile Include="Controllers\Users\AuthController.cs" />
+    <Compile Include="Controllers\Users\AccountController.cs" />
+    <Compile Include="Controllers\Users\EMICardsController.cs" />
+    <Compile Include="Controllers\Users\OrderController.cs" />
+    <Compile Include="Controllers\Users\ProductController.cs" />
+    <Compile Include="Controllers\Users\ProductPaymentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -178,6 +180,9 @@
       <DependentUpon>IKart.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Card_Request.cs">
+      <DependentUpon>IKart.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\COD_UPI_Orders.cs">
       <DependentUpon>IKart.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\EmiCard_Documents.cs">
@@ -228,6 +233,9 @@
     <Compile Include="Models\Payment_Methods.cs">
       <DependentUpon>IKart.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Penalty.cs">
+      <DependentUpon>IKart.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Product.cs">
       <DependentUpon>IKart.tt</DependentUpon>
     </Compile>
@@ -272,6 +280,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
+    <Folder Include="Views\Default\" />
+    <Folder Include="Views\ProductPayment\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

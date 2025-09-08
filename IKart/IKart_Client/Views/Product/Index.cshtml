@@ -9,12 +9,16 @@
 @if (Id != null)
 {
 <div style="margin-top: 30px;">
-<a href="@Url.Action("User", "Account", new { Id })" class="btn btn-info">
+    <a href="@Url.Action("User", "Account", new { Id })" class="btn btn-info">
         View Your Profile
-</a>
-<a href="@Url.Action("Index", "EMICards")" class="btn btn-info">
+    </a>
+    <a href="@Url.Action("Index", "EMICards")" class="btn btn-info">
         EMI Card
-</a>
+    </a>
+
+    <a href="@Url.Action("UserPaymentPageIndex", "ProductPayment")" class="btn btn-primary btn-lg">
+        💳 View My Payments
+    </a>
 </div>}
  
 <h2>Latest Products</h2>
@@ -27,6 +31,7 @@
 <h4>@item.ProductName</h4>
 <p>₹@item.Cost</p>
 <a href="@Url.Action("Details", "Product", new { id = item.ProductId })">View Details</a>
+
 </div>}
 </div>
  
