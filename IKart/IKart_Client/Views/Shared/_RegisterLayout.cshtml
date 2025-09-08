@@ -1,6 +1,4 @@
-﻿@{
-    Layout = null;
-}
+﻿@{ Layout = null; }
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,8 +13,8 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #f2f2f2;
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff4f8, #f3e8ff); /* soft pastel pink → lavender */
             display: flex;
             flex-direction: column;
         }
@@ -26,23 +24,23 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 60px;
+            padding-top: 80px;
         }
 
         .register-container {
             width: 100%;
             max-width: 400px;
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 30px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            border: 1px solid #f3e8ff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
         }
 
         .logo {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
             .logo img {
@@ -54,22 +52,32 @@
             font-weight: 600;
             margin-bottom: 20px;
             text-align: center;
+            color: #6b2a6c; /* soft lavender accent */
         }
 
         .form-control {
             font-size: 14px;
-            border-radius: 4px;
+            border-radius: 6px;
+            border: 1px solid #e0c7ff;
         }
 
+            .form-control:focus {
+                border-color: #c084fc;
+                box-shadow: 0 0 0 0.2rem rgba(192,132,252,0.25);
+            }
+
         .btn-register {
-            background-color: #f0c14b;
-            border-color: #a88734 #9c7e31 #846a29;
-            color: #111;
+            background: linear-gradient(90deg, #fbcfe8, #d8b4fe); /* pink → lavender gradient */
+            border: none;
+            color: #fff;
             font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
 
             .btn-register:hover {
-                background-color: #ddb347;
+                background: linear-gradient(90deg, #f9b7dc, #c084fc);
+                color: #fff;
             }
 
         footer {
@@ -77,11 +85,12 @@
             font-size: 12px;
             color: #555;
             padding: 10px 0;
-            background-color: #f2f2f2;
+            background: transparent;
+            margin-top: 20px;
         }
 
             footer a {
-                color: #0066c0;
+                color: #6b2a6c;
                 margin: 0 8px;
                 text-decoration: none;
             }

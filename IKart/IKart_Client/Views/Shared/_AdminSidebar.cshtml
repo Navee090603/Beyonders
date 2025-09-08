@@ -1,18 +1,63 @@
-﻿﻿@{ var current = Request.Url.AbsolutePath.ToLower(); }
-<nav id="admin-sidebar" class="bg-dark text-white d-flex flex-column" style="min-height:100vh;">
-    <div class="sidebar-brand d-flex align-items-center p-3">
-        <img src="@Url.Content("~/Content/images/admin-logo.png")" alt="logo" style="height:28px;margin-right:8px;" onerror="this.style.display='none'" />
-        <strong>IKart Admin</strong>
+﻿@{ var current = Request.Url.AbsolutePath.ToLower(); }
+<nav id="admin-sidebar" class="d-flex flex-column" style="min-height:100vh; background:#fff0f5; padding:15px; box-shadow:2px 0 8px rgba(0,0,0,0.08);">
+    <!-- Brand -->
+    <div class="sidebar-brand d-flex align-items-center mb-4">
+        <img src="@Url.Content("~/Content/images/admin-logo.png")"
+             alt="logo"
+             style="height:32px; margin-right:10px;"
+             onerror="this.style.display='none'" />
+        <strong style="color:#444; font-size:1.2rem;">IKart Admin</strong>
     </div>
 
+    <!-- Nav links -->
     <ul class="nav flex-column sidebar-nav flex-grow-1">
-        <li class="nav-item"><a class="nav-link text-white" href="@Url.Action("Index","Dashboard", new { area = "" })"><i class="fa fa-tachometer-alt mr-2"></i>Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="@Url.Action("Index","Users", new { area = "" })"><i class="fa fa-users mr-2"></i>Users</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="@Url.Action("Index","Products", new { area = "" })"><i class="fa fa-box-open mr-2"></i>Products</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="@Url.Action("Index","Orders", new { area = "" })"><i class="fa fa-shopping-cart mr-2"></i>Orders</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="@Url.Action("Index","Refunds", new { area = "" })"><i class="fa fa-undo mr-2"></i>Refunds</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="@Url.Action("Index","EmiCard", new { area = "" })"><i class="fa fa-credit-card mr-2"></i>EMI Card</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="@Url.Action("Index","Reports", new { area = "" })"><i class="fa fa-chart-line mr-2"></i>Reports</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="@Url.Action("Index","SupportTicket", new { area = "" })"><i class="fa fa-life-ring mr-2"></i>Support Ticket</a></li>
+        <li class="nav-item"><a class="nav-link text-muted" href="@Url.Action("Index","Dashboard", new { area = "" })"><i class="fa fa-tachometer-alt mr-2"></i>Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link text-muted" href="@Url.Action("Index","Users", new { area = "" })"><i class="fa fa-users mr-2"></i>Users</a></li>
+        <li class="nav-item"><a class="nav-link text-muted" href="@Url.Action("Index","Products", new { area = "" })"><i class="fa fa-box-open mr-2"></i>Products</a></li>
+        <li class="nav-item"><a class="nav-link text-muted" href="@Url.Action("Index","Orders", new { area = "" })"><i class="fa fa-shopping-cart mr-2"></i>Orders</a></li>
+        <li class="nav-item"><a class="nav-link text-muted" href="@Url.Action("Index","Refunds", new { area = "" })"><i class="fa fa-undo mr-2"></i>Refunds</a></li>
+        <li class="nav-item"><a class="nav-link text-muted" href="@Url.Action("Index","EmiCard", new { area = "" })"><i class="fa fa-credit-card mr-2"></i>EMI Card</a></li>
+        <li class="nav-item"><a class="nav-link text-muted" href="@Url.Action("Index","Reports", new { area = "" })"><i class="fa fa-chart-line mr-2"></i>Reports</a></li>
+        <li class="nav-item"><a class="nav-link text-muted" href="@Url.Action("Index","SupportTickets", new { area = "" })"><i class="fa fa-life-ring mr-2"></i>Support Ticket</a></li>
     </ul>
 </nav>
+
+<style>
+    #admin-sidebar .nav-link {
+        color: #555;
+        padding: 12px 14px;
+        border-radius: 8px;
+        margin-bottom: 6px;
+        font-weight: 500;
+        transition: all 0.25s ease;
+        background: transparent;
+    }
+
+
+        /* Hover with soft pastel accent */
+        #admin-sidebar .nav-link:hover {
+            background: linear-gradient(90deg, #fbcfe8, #d8b4fe); /* Light pink → Lavender pastel */
+            color: #111 !important;
+            transform: translateX(3px);
+        }
+
+
+        /* Active link */
+        #admin-sidebar .nav-link.active {
+            background: linear-gradient(90deg, #ffd6e8, #e0c7ff); /* Soft pink-lavender gradient */
+            color: #000 !important;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+
+        /* Icons */
+        #admin-sidebar .nav-link i {
+            color: #ffa3c4; /* Soft icon color */
+            transition: color 0.2s ease;
+        }
+
+        #admin-sidebar .nav-link:hover i {
+            color: #ff758c; /* Slightly stronger accent on hover */
+        }
+</style>

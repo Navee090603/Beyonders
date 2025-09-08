@@ -1,6 +1,4 @@
-﻿@{
-    Layout = null;
-}
+﻿@{ Layout = null; }
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,67 +13,90 @@
             height: 100%;
             margin: 0;
             padding: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
-            background-color: #f2f2f2;
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #fff4f8, #f3e8ff); /* pastel pink → lavender */
         }
 
             body > .main-content {
-                flex: 1; /* this pushes footer to bottom */
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 80px;
             }
-
-        .login-container {
-            max-width: 350px;
-            margin: 20px auto;
-            background: #fff;
-            border: 1px solid #ddd;
-            padding: 10px 25px;
-            border-radius: 8px;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
-        }
 
         .brand-logo {
             display: flex;
             justify-content: center;
-            margin-bottom: 5px;
-            padding-top: 80px;
+            margin-bottom: 20px;
         }
 
             .brand-logo img {
-                max-width: 170px;
+                max-width: 160px;
+            }
+
+        .login-container {
+            width: 100%;
+            max-width: 360px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #f3e8ff;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+            .login-container:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.12);
             }
 
         .login-title {
             font-size: 22px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #6b2a6c; /* soft lavender accent */
         }
 
         .form-control {
-            border-radius: 4px;
             font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #e0c7ff;
         }
 
+            .form-control:focus {
+                border-color: #c084fc;
+                box-shadow: 0 0 8px rgba(192,132,252,0.25);
+            }
+
         .btn-login {
-            background-color: #f0c14b;
-            border-color: #a88734 #9c7e31 #846a29;
-            color: #111;
+            width: 100%;
+            background: linear-gradient(90deg, #fbcfe8, #d8b4fe);
+            border: none;
+            color: #fff;
             font-weight: 600;
+            border-radius: 6px;
+            padding: 10px;
+            transition: all 0.3s ease;
         }
 
             .btn-login:hover {
-                background-color: #ddb347;
+                background: linear-gradient(90deg, #f9b7dc, #c084fc);
+                color: #fff;
             }
 
         .extra-links {
             font-size: 13px;
-            margin-top: 15px;
+            margin-top: 20px;
             text-align: center;
+            color: #444;
         }
 
             .extra-links a {
-                color: #0066c0;
+                color: #6b2a6c;
                 text-decoration: none;
             }
 
@@ -87,31 +108,27 @@
             text-align: center;
             font-size: 12px;
             color: #555;
-            padding: 0;
-            background-color: #f2f2f2; /* optional, matches body */
+            padding: 10px 0;
+            margin-top: 20px;
         }
 
             footer a {
-                color: #0066c0;
-                margin: 0 8px;
+                color: #6b2a6c;
                 text-decoration: none;
             }
 
                 footer a:hover {
                     text-decoration: underline;
                 }
-
     </style>
 </head>
 <body>
     <div class="main-content">
-        
         <div class="brand-logo">
             <img src="~/Logo/Logo.png" alt="IKart" />
         </div>
 
         <div class="login-container">
-            @*<div class="login-title">@ViewBag.Title</div>*@
             @RenderBody()
         </div>
 
@@ -122,10 +139,10 @@
                 @Html.ActionLink("Privacy Notice", "PrivacyNotice", "Info").
             </p>
         </div>
-      </div>
+    </div>
 
-        <footer>
-            <p>© 2025, IKart.com, Inc. or its affiliates</p>
-        </footer>
+    <footer>
+        <p>© 2025, IKart.com, Inc. or its affiliates</p>
+    </footer>
 </body>
 </html>

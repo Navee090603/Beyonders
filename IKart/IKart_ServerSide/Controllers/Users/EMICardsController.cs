@@ -147,28 +147,54 @@ namespace IKart_ServerSide.Controllers.Users
         [Route("user/{userId}")]
         public IHttpActionResult GetUserEmiCards(int userId)
         {
-            var emiCards = (from ec in db.EMI_Card
-                            where ec.UserId == userId
-                            select new IKart_Shared.DTOs.EMI_Card.EmiCardDto
-                            {
-                                EmiCardId = ec.EmiCardId,
-                                CardId = ec.EmiCardId, // or whatever is your CardId
-                                UserId = (int)ec.UserId,
-                                CardType = ec.CardType,
-                                CardNumber = ec.CardNumber,
-                                TotalLimit = (decimal)ec.TotalLimit,
-                                Balance = (decimal)ec.Balance,
-                                IsActive = (bool)ec.IsActive,
-                                IssueDate = ec.IssueDate,
-                                ExpireDate = ec.ExpireDate,
-                                // Add CardImage mapping
-                                CardImage = ec.CardImage
-                            }).ToList();
+            // Materialize first, THEN use Path.GetFileName (LINQ-to-Objects)
+            var rows = db.EMI_Card
+                .Where(ec => ec.UserId == userId)
+                .ToList();
+
+            var emiCards = rows.Select(ec => new IKart_Shared.DTOs.EMI_Card.EmiCardDto
+            {
+                EmiCardId = ec.EmiCardId,
+                CardId = ec.EmiCardId,
+                UserId = (int)ec.UserId,
+                CardType = ec.CardType,
+                CardNumber = ec.CardNumber,
+                TotalLimit = (decimal)ec.TotalLimit,
+                Balance = (decimal)ec.Balance,
+                IsActive = (bool)ec.IsActive,
+                IssueDate = ec.IssueDate,
+                ExpireDate = ec.ExpireDate,
+
+                // Only the filename (e.g., "accb63338c8145cd.png")
+                CardImage = string.IsNullOrWhiteSpace(ec.CardImage)
+                    ? null
+                    : Path.GetFileName(ec.CardImage)
+            }).ToList();
 
             return Ok(emiCards);
         }
 
         // 5️⃣ Serve EMI Card Images by filename
+        //[HttpGet]
+        //[Route("image/{fileName}")]
+        //public IHttpActionResult GetCardImage(string fileName)
+        //{
+        //    if (string.IsNullOrWhiteSpace(fileName))
+        //        return BadRequest("Missing file name.");
+
+        //    var path = System.Web.Hosting.HostingEnvironment.MapPath("~/Content/EmiCardImages/" + fileName);
+        //    if (!System.IO.File.Exists(path))
+        //        return NotFound();
+
+        //    var bytes = System.IO.File.ReadAllBytes(path);
+        //    var result = new HttpResponseMessage(HttpStatusCode.OK)
+        //    {
+        //        Content = new ByteArrayContent(bytes)
+        //    };
+        //    result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+        //    return ResponseMessage(result);
+        //}
+
         [HttpGet]
         [Route("image/{fileName}")]
         public IHttpActionResult GetCardImage(string fileName)
@@ -188,5 +214,7 @@ namespace IKart_ServerSide.Controllers.Users
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
             return ResponseMessage(result);
         }
+
+
     }
 }
