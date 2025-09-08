@@ -20,6 +20,7 @@ namespace IKart_ServerSide.Models
             this.Monthly_EMI_Calc = new HashSet<Monthly_EMI_Calc>();
             this.Orders = new HashSet<Order>();
             this.Refunds = new HashSet<Refund>();
+            this.Installment_Payments = new HashSet<Installment_Payments>();
         }
     
         public int PaymentId { get; set; }
@@ -42,5 +43,7 @@ namespace IKart_ServerSide.Models
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Refund> Refunds { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Installment_Payments> Installment_Payments { get; set; }
     }
 }

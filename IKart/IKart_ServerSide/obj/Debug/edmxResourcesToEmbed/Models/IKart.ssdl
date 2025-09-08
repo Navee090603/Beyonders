@@ -34,6 +34,18 @@
     <Property Name="IsVerified" Type="bit" />
     <Property Name="VerifiedBy" Type="int" />
   </EntityType>
+  <EntityType Name="COD_UPI_Orders">
+    <Key>
+      <PropertyRef Name="OrderId" />
+    </Key>
+    <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProductId" Type="int" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="OrderDate" Type="datetime" Nullable="false" />
+    <Property Name="DeliveryDate" Type="datetime" Nullable="false" />
+    <Property Name="PaymentType" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="PaymentStatus" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
   <EntityType Name="EMI_Card">
     <Key>
       <PropertyRef Name="EmiCardId" />
@@ -81,6 +93,7 @@
     <Property Name="DueDate" Type="date" />
     <Property Name="Amount" Type="decimal" Precision="10" Scale="2" />
     <Property Name="IsPaid" Type="bit" />
+    <Property Name="PaymentId" Type="int" />
   </EntityType>
   <EntityType Name="Joining_Fee">
     <Key>
@@ -161,6 +174,20 @@
     <Property Name="TotalAmount" Type="decimal" Precision="10" Scale="2" />
     <Property Name="PaymentDate" Type="datetime" />
     <Property Name="Status" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="Penalty">
+    <Key>
+      <PropertyRef Name="PenaltyId" />
+    </Key>
+    <Property Name="PenaltyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InstallmentId" Type="int" />
+    <Property Name="UserId" Type="int" />
+    <Property Name="DueDate" Type="date" />
+    <Property Name="Days_Overdue" Type="int" />
+    <Property Name="PenaltyPerDay" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="PenaltyAmount" Type="decimal" Precision="10" Scale="2" />
+    <Property Name="Status" Type="nvarchar" MaxLength="20" />
+    <Property Name="LastUpdated" Type="datetime" />
   </EntityType>
   <EntityType Name="Products">
     <Key>
@@ -269,6 +296,30 @@
       </Principal>
       <Dependent Role="Card_Request">
         <PropertyRef Name="VerifiedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__COD_UPI_O__Produ__1CBC4616">
+    <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+    <End Role="COD_UPI_Orders" Type="Self.COD_UPI_Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="COD_UPI_Orders">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__COD_UPI_O__UserI__1DB06A4F">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="COD_UPI_Orders" Type="Self.COD_UPI_Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="COD_UPI_Orders">
+        <PropertyRef Name="UserId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -512,6 +563,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK__Penalty__Install__17036CC0">
+    <End Role="Installment_Payments" Type="Self.Installment_Payments" Multiplicity="0..1" />
+    <End Role="Penalty" Type="Self.Penalty" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Installment_Payments">
+        <PropertyRef Name="InstallmentId" />
+      </Principal>
+      <Dependent Role="Penalty">
+        <PropertyRef Name="InstallmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Penalty__UserId__17F790F9">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Penalty" Type="Self.Penalty" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Penalty">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK__Products__Stock___47DBAE45">
     <End Role="Stocks" Type="Self.Stocks" Multiplicity="0..1" />
     <End Role="Products" Type="Self.Products" Multiplicity="*" />
@@ -584,10 +659,23 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Installment_Payments_Payment">
+    <End Role="Payments" Type="Self.Payments" Multiplicity="0..1" />
+    <End Role="Installment_Payments" Type="Self.Installment_Payments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Payments">
+        <PropertyRef Name="PaymentId" />
+      </Principal>
+      <Dependent Role="Installment_Payments">
+        <PropertyRef Name="PaymentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="IKartModelStoreContainer">
     <EntitySet Name="Address" EntityType="Self.Address" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Card_Request" EntityType="Self.Card_Request" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="COD_UPI_Orders" EntityType="Self.COD_UPI_Orders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="EMI_Card" EntityType="Self.EMI_Card" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="EmiCard_Documents" EntityType="Self.EmiCard_Documents" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FAQ" EntityType="Self.FAQ" Schema="dbo" store:Type="Tables" />
@@ -599,6 +687,7 @@
     <EntitySet Name="Payment_Details" EntityType="Self.Payment_Details" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Payment_Methods" EntityType="Self.Payment_Methods" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Penalty" EntityType="Self.Penalty" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Refunds" EntityType="Self.Refunds" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Returns" EntityType="Self.Returns" Schema="dbo" store:Type="Tables" />
@@ -616,6 +705,14 @@
     <AssociationSet Name="FK__Card_Requ__Verif__5070F446" Association="Self.FK__Card_Requ__Verif__5070F446">
       <End Role="Admins" EntitySet="Admins" />
       <End Role="Card_Request" EntitySet="Card_Request" />
+    </AssociationSet>
+    <AssociationSet Name="FK__COD_UPI_O__Produ__1CBC4616" Association="Self.FK__COD_UPI_O__Produ__1CBC4616">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="COD_UPI_Orders" EntitySet="COD_UPI_Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__COD_UPI_O__UserI__1DB06A4F" Association="Self.FK__COD_UPI_O__UserI__1DB06A4F">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="COD_UPI_Orders" EntitySet="COD_UPI_Orders" />
     </AssociationSet>
     <AssociationSet Name="FK__EMI_Card__Activa__5629CD9C" Association="Self.FK__EMI_Card__Activa__5629CD9C">
       <End Role="Admins" EntitySet="Admins" />
@@ -697,6 +794,14 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="Payments" EntitySet="Payments" />
     </AssociationSet>
+    <AssociationSet Name="FK__Penalty__Install__17036CC0" Association="Self.FK__Penalty__Install__17036CC0">
+      <End Role="Installment_Payments" EntitySet="Installment_Payments" />
+      <End Role="Penalty" EntitySet="Penalty" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Penalty__UserId__17F790F9" Association="Self.FK__Penalty__UserId__17F790F9">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Penalty" EntitySet="Penalty" />
+    </AssociationSet>
     <AssociationSet Name="FK__Products__Stock___47DBAE45" Association="Self.FK__Products__Stock___47DBAE45">
       <End Role="Stocks" EntitySet="Stocks" />
       <End Role="Products" EntitySet="Products" />
@@ -720,6 +825,10 @@
     <AssociationSet Name="FK__Support_T__UserI__7A672E12" Association="Self.FK__Support_T__UserI__7A672E12">
       <End Role="Users" EntitySet="Users" />
       <End Role="Support_Tickets" EntitySet="Support_Tickets" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Installment_Payments_Payment" Association="Self.FK_Installment_Payments_Payment">
+      <End Role="Payments" EntitySet="Payments" />
+      <End Role="Installment_Payments" EntitySet="Installment_Payments" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

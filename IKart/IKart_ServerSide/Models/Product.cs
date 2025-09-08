@@ -21,6 +21,7 @@ namespace IKart_ServerSide.Models
             this.Orders = new HashSet<Order>();
             this.Payments = new HashSet<Payment>();
             this.Returns = new HashSet<Return>();
+            this.COD_UPI_Orders = new HashSet<COD_UPI_Orders>();
         }
     
         public int ProductId { get; set; }
@@ -40,5 +41,7 @@ namespace IKart_ServerSide.Models
         public virtual Stock Stock { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Return> Returns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<COD_UPI_Orders> COD_UPI_Orders { get; set; }
     }
 }

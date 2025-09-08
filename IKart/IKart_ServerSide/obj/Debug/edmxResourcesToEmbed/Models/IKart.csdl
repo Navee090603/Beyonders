@@ -95,6 +95,9 @@
     <Property Name="Amount" Type="Decimal" Precision="10" Scale="2" />
     <Property Name="IsPaid" Type="Boolean" />
     <NavigationProperty Name="Monthly_EMI_Calc" Relationship="Self.FK__Installme__EMI_I__6EF57B66" FromRole="Installment_Payments" ToRole="Monthly_EMI_Calc" />
+    <Property Name="PaymentId" Type="Int32" />
+    <NavigationProperty Name="Payment" Relationship="IKartModel.FK_Installment_Payments_Payment" FromRole="Installment_Payments" ToRole="Payment" />
+    <NavigationProperty Name="Penalties" Relationship="IKartModel.FK__Penalty__Install__17036CC0" FromRole="Installment_Payments" ToRole="Penalty" />
   </EntityType>
   <EntityType Name="Joining_Fee">
     <Key>
@@ -199,6 +202,7 @@
     <NavigationProperty Name="Product" Relationship="Self.FK__Payments__Produc__5BE2A6F2" FromRole="Payments" ToRole="Products" />
     <NavigationProperty Name="User" Relationship="Self.FK__Payments__UserId__5AEE82B9" FromRole="Payments" ToRole="Users" />
     <NavigationProperty Name="Refunds" Relationship="Self.FK__Refunds__Payment__76969D2E" FromRole="Payments" ToRole="Refunds" />
+    <NavigationProperty Name="Installment_Payments" Relationship="IKartModel.FK_Installment_Payments_Payment" FromRole="Payment" ToRole="Installment_Payments" />
   </EntityType>
   <EntityType Name="Product">
     <Key>
@@ -216,6 +220,7 @@
     <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__Produc__5BE2A6F2" FromRole="Products" ToRole="Payments" />
     <NavigationProperty Name="Stock" Relationship="Self.FK__Products__Stock___47DBAE45" FromRole="Products" ToRole="Stocks" />
     <NavigationProperty Name="Returns" Relationship="Self.FK__Returns__Product__03F0984C" FromRole="Products" ToRole="Returns" />
+    <NavigationProperty Name="COD_UPI_Orders" Relationship="IKartModel.FK__COD_UPI_O__Produ__1CBC4616" FromRole="Product" ToRole="COD_UPI_Orders" />
   </EntityType>
   <EntityType Name="Refund">
     <Key>
@@ -293,6 +298,8 @@
     <NavigationProperty Name="Payments" Relationship="Self.FK__Payments__UserId__5AEE82B9" FromRole="Users" ToRole="Payments" />
     <NavigationProperty Name="Returns" Relationship="Self.FK__Returns__UserId__02FC7413" FromRole="Users" ToRole="Returns" />
     <NavigationProperty Name="Support_Tickets" Relationship="Self.FK__Support_T__UserI__7A672E12" FromRole="Users" ToRole="Support_Tickets" />
+    <NavigationProperty Name="Penalties" Relationship="IKartModel.FK__Penalty__UserId__17F790F9" FromRole="User" ToRole="Penalty" />
+    <NavigationProperty Name="COD_UPI_Orders" Relationship="IKartModel.FK__COD_UPI_O__UserI__1DB06A4F" FromRole="User" ToRole="COD_UPI_Orders" />
   </EntityType>
   <Association Name="FK__Address__UserId__412EB0B6">
     <End Role="Users" Type="Self.User" Multiplicity="0..1" />
@@ -779,5 +786,117 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="Support_Tickets" EntitySet="Support_Tickets" />
     </AssociationSet>
+    <AssociationSet Name="FK_Installment_Payments_Payment" Association="IKartModel.FK_Installment_Payments_Payment">
+      <End Role="Payment" EntitySet="Payments" />
+      <End Role="Installment_Payments" EntitySet="Installment_Payments" />
+    </AssociationSet>
+    <EntitySet Name="Penalties" EntityType="IKartModel.Penalty" />
+    <AssociationSet Name="FK__Penalty__Install__17036CC0" Association="IKartModel.FK__Penalty__Install__17036CC0">
+      <End Role="Installment_Payments" EntitySet="Installment_Payments" />
+      <End Role="Penalty" EntitySet="Penalties" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Penalty__UserId__17F790F9" Association="IKartModel.FK__Penalty__UserId__17F790F9">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Penalty" EntitySet="Penalties" />
+    </AssociationSet>
+    <EntitySet Name="COD_UPI_Orders" EntityType="IKartModel.COD_UPI_Orders" />
+    <AssociationSet Name="FK__COD_UPI_O__Produ__1CBC4616" Association="IKartModel.FK__COD_UPI_O__Produ__1CBC4616">
+      <End Role="Product" EntitySet="Products" />
+      <End Role="COD_UPI_Orders" EntitySet="COD_UPI_Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__COD_UPI_O__UserI__1DB06A4F" Association="IKartModel.FK__COD_UPI_O__UserI__1DB06A4F">
+      <End Role="User" EntitySet="Users" />
+      <End Role="COD_UPI_Orders" EntitySet="COD_UPI_Orders" />
+    </AssociationSet>
   </EntityContainer>
+  <Association Name="FK_Installment_Payments_Payment">
+    <End Type="IKartModel.Payment" Role="Payment" Multiplicity="0..1" />
+    <End Type="IKartModel.Installment_Payments" Role="Installment_Payments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Payment">
+        <PropertyRef Name="PaymentId" />
+      </Principal>
+      <Dependent Role="Installment_Payments">
+        <PropertyRef Name="PaymentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Penalty">
+    <Key>
+      <PropertyRef Name="PenaltyId" />
+    </Key>
+    <Property Name="PenaltyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InstallmentId" Type="Int32" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="DueDate" Type="DateTime" Precision="0" />
+    <Property Name="Days_Overdue" Type="Int32" />
+    <Property Name="PenaltyPerDay" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="PenaltyAmount" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="LastUpdated" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Installment_Payments" Relationship="IKartModel.FK__Penalty__Install__17036CC0" FromRole="Penalty" ToRole="Installment_Payments" />
+    <NavigationProperty Name="User" Relationship="IKartModel.FK__Penalty__UserId__17F790F9" FromRole="Penalty" ToRole="User" />
+  </EntityType>
+  <Association Name="FK__Penalty__Install__17036CC0">
+    <End Type="IKartModel.Installment_Payments" Role="Installment_Payments" Multiplicity="0..1" />
+    <End Type="IKartModel.Penalty" Role="Penalty" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Installment_Payments">
+        <PropertyRef Name="InstallmentId" />
+      </Principal>
+      <Dependent Role="Penalty">
+        <PropertyRef Name="InstallmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Penalty__UserId__17F790F9">
+    <End Type="IKartModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="IKartModel.Penalty" Role="Penalty" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Penalty">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="COD_UPI_Orders">
+    <Key>
+      <PropertyRef Name="OrderId" />
+    </Key>
+    <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DeliveryDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PaymentType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="PaymentStatus" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Product" Relationship="IKartModel.FK__COD_UPI_O__Produ__1CBC4616" FromRole="COD_UPI_Orders" ToRole="Product" />
+    <NavigationProperty Name="User" Relationship="IKartModel.FK__COD_UPI_O__UserI__1DB06A4F" FromRole="COD_UPI_Orders" ToRole="User" />
+  </EntityType>
+  <Association Name="FK__COD_UPI_O__Produ__1CBC4616">
+    <End Type="IKartModel.Product" Role="Product" Multiplicity="0..1" />
+    <End Type="IKartModel.COD_UPI_Orders" Role="COD_UPI_Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="COD_UPI_Orders">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__COD_UPI_O__UserI__1DB06A4F">
+    <End Type="IKartModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="IKartModel.COD_UPI_Orders" Role="COD_UPI_Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="COD_UPI_Orders">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

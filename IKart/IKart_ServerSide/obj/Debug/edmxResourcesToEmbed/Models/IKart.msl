@@ -82,6 +82,7 @@
     <EntitySetMapping Name="Installment_Payments">
       <EntityTypeMapping TypeName="IKartModel.Installment_Payments">
         <MappingFragment StoreEntitySet="Installment_Payments">
+          <ScalarProperty Name="PaymentId" ColumnName="PaymentId" />
           <ScalarProperty Name="InstallmentId" ColumnName="InstallmentId" />
           <ScalarProperty Name="EMI_Id" ColumnName="EMI_Id" />
           <ScalarProperty Name="DueDate" ColumnName="DueDate" />
@@ -254,6 +255,34 @@
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="OtpExpiry" ColumnName="OtpExpiry" />
           <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Penalties">
+      <EntityTypeMapping TypeName="IKartModel.Penalty">
+        <MappingFragment StoreEntitySet="Penalty">
+          <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="PenaltyAmount" ColumnName="PenaltyAmount" />
+          <ScalarProperty Name="PenaltyPerDay" ColumnName="PenaltyPerDay" />
+          <ScalarProperty Name="Days_Overdue" ColumnName="Days_Overdue" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="InstallmentId" ColumnName="InstallmentId" />
+          <ScalarProperty Name="PenaltyId" ColumnName="PenaltyId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COD_UPI_Orders">
+      <EntityTypeMapping TypeName="IKartModel.COD_UPI_Orders">
+        <MappingFragment StoreEntitySet="COD_UPI_Orders">
+          <ScalarProperty Name="PaymentStatus" ColumnName="PaymentStatus" />
+          <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+          <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+          <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+          <ScalarProperty Name="OrderId" ColumnName="OrderId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
