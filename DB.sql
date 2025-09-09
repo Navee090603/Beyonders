@@ -344,3 +344,9 @@ INSERT INTO Refunds (PaymentId, Amount, Reason, Status)
 VALUES
 (1, 814.99, 'Product damaged on delivery', 'Processed'),
 (2, 519.50, 'Order cancelled by user', 'Pending');
+
+
+
+select * from Payments
+select * from Monthly_EMI_Calc
+select * from Installment_Payments

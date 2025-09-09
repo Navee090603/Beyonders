@@ -285,13 +285,14 @@
     <Content Include="Views\Payment\Index.cshtml" />
     <Content Include="Views\ProductPayment\UserPaymentPageIndex.cshtml" />
     <Content Include="Views\ProductPayment\Details.cshtml" />
-    <Content Include="Views\Order\BuyNow.cshtml" />
     <Content Include="Views\Order\ChoosePayment.cshtml" />
-    <Content Include="Views\Order\PlaceOrder.cshtml" />
-    <Content Include="Views\Order\ShowUPISummary.cshtml" />
     <Content Include="Views\Shared\_UserSidebar.cshtml" />
     <Content Include="Views\Support\Index.cshtml" />
     <Content Include="Views\Support\IncidentStatus.cshtml" />
+    <Content Include="Views\Order\RazorpayPayment.cshtml" />
+    <Content Include="Views\Order\PaymentSuccess.cshtml" />
+    <Content Include="Views\Order\BuyNow.cshtml" />
+    <Content Include="Views\Order\ShowUPISummary.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
