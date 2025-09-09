@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Data.Entity;
 using IKart_ServerSide.Models;
@@ -21,20 +18,22 @@ namespace IKart_ServerSide.Controllers
         public IHttpActionResult GetAll()
         {
             var data = db.Products
-                .Include(p => p.Stock) // Include related Stock data
+                .Include(p => p.Stock)
                 .ToList()
                 .Select(p => new ProductDto
                 {
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
-                    Cost = p.Cost,
+                    Cost = (decimal)p.Cost,
                     ProductDetails = p.ProductDetails,
                     ProductImage = p.ProductImage,
-                    Stock_Id = p.Stock_Id,
-                    CreatedDate = p.CreatedDate,
-                    Category = p.Stock?.CategoryName,
-                    SubCategory = p.Stock?.SubCategoryName
-                }).ToList();
+                    Stock_Id = (int)p.Stock_Id,
+                    CreatedDate = (DateTime)p.CreatedDate,
+                    AvailableQuantity = p.Stock?.Available_Stocks ?? 0, // ✅ include stock availability
+                    CategoryName = p.Stock?.CategoryName,
+                    SubCategoryName = p.Stock?.SubCategoryName
+                })
+                .ToList();
 
             return Ok(data);
         }
@@ -54,13 +53,14 @@ namespace IKart_ServerSide.Controllers
             {
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
-                Cost = p.Cost,
+                Cost = (decimal)p.Cost,
                 ProductDetails = p.ProductDetails,
                 ProductImage = p.ProductImage,
-                Stock_Id = p.Stock_Id,
-                CreatedDate = p.CreatedDate,
-                Category = p.Stock?.CategoryName,
-                SubCategory = p.Stock?.SubCategoryName
+                Stock_Id = (int)p.Stock_Id,
+                CreatedDate = (DateTime)p.CreatedDate,
+                AvailableQuantity = p.Stock?.Available_Stocks ?? 0,
+                CategoryName = p.Stock?.CategoryName,
+                SubCategoryName = p.Stock?.SubCategoryName
             };
 
             return Ok(dto);
@@ -71,7 +71,11 @@ namespace IKart_ServerSide.Controllers
         [Route("")]
         public IHttpActionResult Add(ProductDto dto)
         {
-            Product p = new Product
+            // ✅ validate stock
+            var stock = db.Stocks.Find(dto.Stock_Id);
+            if (stock == null) return BadRequest("Invalid stock ID.");
+
+            var p = new Product
             {
                 ProductName = dto.ProductName,
                 Cost = dto.Cost,
@@ -85,12 +89,10 @@ namespace IKart_ServerSide.Controllers
             db.SaveChanges();
 
             dto.ProductId = p.ProductId;
-            dto.CreatedDate = p.CreatedDate;
-
-            // Optionally fetch category info after insert
-            var stock = db.Stocks.Find(p.Stock_Id);
-            dto.Category = stock?.CategoryName;
-            dto.SubCategory = stock?.SubCategoryName;
+            dto.CreatedDate = (DateTime)p.CreatedDate;
+            dto.AvailableQuantity = stock.Available_Stocks ?? 0;
+            dto.CategoryName = stock.CategoryName;
+            dto.SubCategoryName = stock.SubCategoryName;
 
             return Ok(dto);
         }
@@ -103,6 +105,10 @@ namespace IKart_ServerSide.Controllers
             var p = db.Products.Find(id);
             if (p == null) return NotFound();
 
+            // ✅ validate stock
+            var stock = db.Stocks.Find(dto.Stock_Id);
+            if (stock == null) return BadRequest("Invalid stock ID.");
+
             p.ProductName = dto.ProductName;
             p.Cost = dto.Cost;
             p.ProductDetails = dto.ProductDetails;
@@ -111,10 +117,9 @@ namespace IKart_ServerSide.Controllers
 
             db.SaveChanges();
 
-            // Optionally update category info
-            var stock = db.Stocks.Find(p.Stock_Id);
-            dto.Category = stock?.CategoryName;
-            dto.SubCategory = stock?.SubCategoryName;
+            dto.AvailableQuantity = stock.Available_Stocks ?? 0;
+            dto.CategoryName = stock.CategoryName;
+            dto.SubCategoryName = stock.SubCategoryName;
 
             return Ok(dto);
         }
