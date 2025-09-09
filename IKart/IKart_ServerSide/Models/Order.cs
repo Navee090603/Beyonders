@@ -30,11 +30,11 @@ namespace IKart_ServerSide.Models
         public string Region { get; set; }
         public string OrderStatus { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order_Cancellations> Order_Cancellations { get; set; }
         public virtual Payment Payment { get; set; }
         public virtual Product Product { get; set; }
         public virtual User User { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order_Cancellations> Order_Cancellations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Return> Returns { get; set; }
     }

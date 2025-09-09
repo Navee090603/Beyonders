@@ -17,8 +17,8 @@ namespace IKart_ServerSide.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Product()
         {
+            this.COD_UPI_Orders = new HashSet<COD_UPI_Orders>();
             this.FAQs = new HashSet<FAQ>();
-            this.Offers = new HashSet<Offer>();
             this.Orders = new HashSet<Order>();
             this.Payments = new HashSet<Payment>();
             this.Returns = new HashSet<Return>();
@@ -33,9 +33,9 @@ namespace IKart_ServerSide.Models
         public string ProductImage { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FAQ> FAQs { get; set; }
+        public virtual ICollection<COD_UPI_Orders> COD_UPI_Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Offer> Offers { get; set; }
+        public virtual ICollection<FAQ> FAQs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

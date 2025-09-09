@@ -19,14 +19,15 @@ namespace IKart_ServerSide.Models
         {
             this.Addresses = new HashSet<Address>();
             this.Card_Request = new HashSet<Card_Request>();
+            this.COD_UPI_Orders = new HashSet<COD_UPI_Orders>();
             this.EMI_Card = new HashSet<EMI_Card>();
             this.Monthly_EMI_Calc = new HashSet<Monthly_EMI_Calc>();
+            this.Order_Cancellations = new HashSet<Order_Cancellations>();
             this.Orders = new HashSet<Order>();
             this.Payments = new HashSet<Payment>();
             this.Penalties = new HashSet<Penalty>();
-            this.Support_Tickets = new HashSet<Support_Tickets>();
-            this.Order_Cancellations = new HashSet<Order_Cancellations>();
             this.Returns = new HashSet<Return>();
+            this.Support_Tickets = new HashSet<Support_Tickets>();
         }
     
         public int UserId { get; set; }
@@ -38,15 +39,21 @@ namespace IKart_ServerSide.Models
         public string OTP { get; set; }
         public string Status { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> OtpExpiry { get; set; }
+        public Nullable<bool> IsVerified { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Address> Addresses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Card_Request> Card_Request { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<COD_UPI_Orders> COD_UPI_Orders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EMI_Card> EMI_Card { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Monthly_EMI_Calc> Monthly_EMI_Calc { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order_Cancellations> Order_Cancellations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -54,10 +61,8 @@ namespace IKart_ServerSide.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Penalty> Penalties { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Support_Tickets> Support_Tickets { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order_Cancellations> Order_Cancellations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Return> Returns { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Support_Tickets> Support_Tickets { get; set; }
     }
 }
