@@ -86,5 +86,46 @@ namespace IKart_Client.Controllers.User
 
             return RedirectToAction("Index", "Payment");
         }
+        [HttpGet]
+        public JsonResult ValidateBankName(string bankName)
+        {
+            if (string.IsNullOrWhiteSpace(bankName) || !System.Text.RegularExpressions.Regex.IsMatch(bankName, @"^[A-Za-z\s]+$"))
+                return Json("Bank name must contain only alphabets", JsonRequestBehavior.AllowGet);
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ValidateAccountNumber(string accountNumber)
+        {
+            if (string.IsNullOrWhiteSpace(accountNumber) || !System.Text.RegularExpressions.Regex.IsMatch(accountNumber, @"^\d{9,18}$"))
+                return Json("Account number must be 9–18 digits", JsonRequestBehavior.AllowGet);
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ValidateIFSC(string IFSC_Code)
+        {
+            IFSC_Code = IFSC_Code?.Trim().ToUpper();
+
+            if (string.IsNullOrEmpty(IFSC_Code) || !System.Text.RegularExpressions.Regex.IsMatch(IFSC_Code, @"^[A-Z]{4}\d{7}$"))
+                return Json("Invalid IFSC format", JsonRequestBehavior.AllowGet);
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+        [HttpGet]
+        public JsonResult ValidateAadhaar(string aadhaarNumber)
+        {
+            if (string.IsNullOrWhiteSpace(aadhaarNumber) || !System.Text.RegularExpressions.Regex.IsMatch(aadhaarNumber, @"^\d{12}$"))
+                return Json("Aadhaar must be exactly 12 digits", JsonRequestBehavior.AllowGet);
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

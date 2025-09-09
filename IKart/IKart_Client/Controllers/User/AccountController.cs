@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using IKart_Shared.DTOs;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace IKart_Client.Controllers
 {
@@ -177,6 +178,14 @@ namespace IKart_Client.Controllers
                 }
             }
             return RedirectToAction("Addresses");
+        }
+        // ✅ Remote Validation for ZipCode
+        [HttpGet]
+        public JsonResult ValidateZipCode(string ZipCode)
+        {
+            // ✅ Replace this logic with your own rules or API/database check
+            bool isValid = ZipCode.All(char.IsDigit) && ZipCode.Length == 6;
+            return Json(isValid, JsonRequestBehavior.AllowGet);
         }
     }
 }

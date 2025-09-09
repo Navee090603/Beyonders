@@ -263,5 +263,45 @@ namespace IKart_ClientSide.Controllers.User
                 }
             }
         }
+        [HttpGet]
+        public async Task<JsonResult> ValidateEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email) || !email.EndsWith(".com"))
+                return Json("Email must end with '.com'", JsonRequestBehavior.AllowGet);
+
+            using (var client = new HttpClient())
+            {
+                var res = await client.GetAsync(apiBase + $"check-email?email={Uri.EscapeDataString(email)}");
+                if (res.IsSuccessStatusCode)
+                {
+                    bool exists = await res.Content.ReadAsAsync<bool>();
+                    if (exists)
+                        return Json("Email already exists", JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> ValidatePhone(string phoneNo)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNo) || !System.Text.RegularExpressions.Regex.IsMatch(phoneNo, @"^\d{10}$"))
+                return Json("Phone number must be exactly 10 digits", JsonRequestBehavior.AllowGet);
+
+            using (var client = new HttpClient())
+            {
+                var res = await client.GetAsync(apiBase + $"check-phone?phoneNo={Uri.EscapeDataString(phoneNo)}");
+                if (res.IsSuccessStatusCode)
+                {
+                    bool exists = await res.Content.ReadAsAsync<bool>();
+                    if (exists)
+                        return Json("Phone number already exists", JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

@@ -23,8 +23,10 @@ namespace IKart_Shared.DTOs
         [Required, StringLength(50)]
         public string State { get; set; }
 
-        [Required, StringLength(10)]
+        [Required]
+        [RegularExpression(@"^\d{6}$", ErrorMessage = "Zip Code must be exactly 6 digits.")]
         public string ZipCode { get; set; }
+
 
         [Required, StringLength(50)]
         public string Country { get; set; }

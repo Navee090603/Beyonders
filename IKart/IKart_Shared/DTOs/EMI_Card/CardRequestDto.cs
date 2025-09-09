@@ -20,15 +20,21 @@ namespace IKart_Shared.DTOs.EMI_Card
         public string CardType { get; set; }
 
         [Required, StringLength(50)]
+        
+        [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "Bank name must contain only alphabets")]
         public string BankName { get; set; }
 
-        [Required, RegularExpression(@"^[0-9]{6,18}$", ErrorMessage = "Account number must be 6–18 digits")]
+        [Required]
+        [RegularExpression(@"^\d{9,18}$", ErrorMessage = "Account number must be between 9 and 18 digits")]
         public string AccountNumber { get; set; }
 
-        [Required, RegularExpression(@"^[A-Za-z]{4}[0-9]{7}$", ErrorMessage = "Invalid IFSC code")]
+        [Required]
+        [RegularExpression(@"^[A-Z]{4}\d{7}$", ErrorMessage = "IFSC code must start with 4 capital letters followed by 7 digits")]
+
         public string IFSC_Code { get; set; }
 
-        [Required, RegularExpression(@"^[0-9]{12}$", ErrorMessage = "Aadhaar must be 12 digits")]
+        [Required]
+        [RegularExpression(@"^\d{12}$", ErrorMessage = "Aadhaar number must be exactly 12 digits")]
         public string AadhaarNumber { get; set; }
         public bool IsVerified { get; set; }
     }

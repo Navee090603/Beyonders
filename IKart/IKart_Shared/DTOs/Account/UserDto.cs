@@ -14,10 +14,13 @@ namespace IKart_Shared.DTOs
         [Required, StringLength(100)]
         public string FullName { get; set; }
 
-        [Required, EmailAddress]
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.(com)$", ErrorMessage = "Email must end with '.com'")]
         public string Email { get; set; }
 
-        [Required, RegularExpression(@"^[0-9]{10,15}$", ErrorMessage = "Phone number must be 10–15 digits")]
+        [Required]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits")]
         public string PhoneNo { get; set; }
 
         [Required, StringLength(50)]
