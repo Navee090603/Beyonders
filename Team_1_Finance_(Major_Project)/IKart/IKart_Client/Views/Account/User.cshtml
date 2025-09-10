@@ -1,0 +1,83 @@
+﻿@model IKart_Shared.DTOs.UserDto
+
+@{
+                Layout = "~/Views/Shared/_UserLayout.cshtml"; 
+
+                ViewBag.Title = "Edit Profile";
+
+}
+
+<div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+                <h2 class="text-center mb-4" style="color:#1e3a8a;">Edit Profile</h2>
+
+                @using (Html.BeginForm("User", "Account", FormMethod.Post))
+
+                {
+
+                    @Html.HiddenFor(m => m.UserId)
+
+                                    <div class="form-group mb-3">
+
+                                        @Html.LabelFor(m => m.FullName)
+
+                                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                                    </div>
+
+                                                    <div class="form-group mb-3">
+
+                                                        @Html.LabelFor(m => m.Email)
+
+                                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                                    </div>
+
+                                                                    <div class="form-group mb-3">
+
+                                                                        @Html.LabelFor(m => m.PhoneNo)
+
+                                                                        @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control" })
+                                                                    </div>
+
+                                                                                    <div class="form-group mb-3">
+
+                                                                                        @Html.LabelFor(m => m.Username)
+
+                                                                                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", @readonly = "readonly" })
+                                                                                    </div>
+
+                                                                                                    <div class="d-flex justify-content-between align-items-center mt-4">
+
+                                                                                                        @Html.ActionLink("Manage Addresses", "Addresses", "Account", new { userId = Model.UserId }, new { @class = "btn btn-link" })
+
+                                                                                                        <div class="d-flex gap-2">
+                                                                                                            <button type="submit" class="btn btn-primary">Update</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                                                            <a href="@Url.Action("Profile", "Account")" class="btn btn-secondary">Back</a>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .btn-link {
+        padding-left: 0;
+        font-size: 14px;
+        color: #1e3a8a;
+    }
+
+        .btn-link:hover {
+            text-decoration: underline;
+            color: #16307c;
+        }
+</style>
+

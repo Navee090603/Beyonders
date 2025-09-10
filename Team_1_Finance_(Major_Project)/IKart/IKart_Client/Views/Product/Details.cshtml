@@ -1,0 +1,62 @@
+﻿@model IKart_Shared.DTOs.ProductDto
+
+@{
+                Layout = "~/Views/Shared/_UserLayout.cshtml";
+
+                ViewBag.Title = "Product Details";
+
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm p-4">
+        <div class="row">
+            <div class="col-md-5 text-center">
+                <img src="~/Content/ProductImages/@Model.ProductImage" alt="@Model.ProductName" class="product-img" />
+            </div>
+
+            <div class="col-md-7">
+                <h2 class="mb-3">@Model.ProductName</h2>
+                <p>
+                    <strong>Price:</strong>
+                    <span style="color:#000; font-size:22px; font-weight:bold;">
+
+                        ₹@Model.Cost
+                    </span>
+                </p>
+                <p><strong>Description:</strong> @Model.ProductDetails</p>
+
+                @if (Session["UserId"] != null)
+                {
+                    <form method="post" action="/Order/BuyNow" class="d-inline">
+                        <input type="hidden" name="productId" value="@Model.ProductId" />
+                        <button type="submit" class="btn btn-theme btn-lg">Buy Now</button>
+                    </form>
+                }
+                else
+                {
+                    <a href="@Url.Action("Login", "Auth")" class="btn btn-theme btn-lg">Buy Now</a>
+                    <p class="alert alert-warning mt-2">Please log in to place an order.</p>
+                }
+
+                <a href="@Url.Action("ProductFAQs", "FAQ", new { productId = Model.ProductId })"
+                   class="btn btn-info btn-lg ms-2">View FAQs</a>
+                <a href="@Url.Action("Index", "Product")" class="btn btn-secondary btn-lg ms-2">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .btn-theme {
+        background-color: #1e3a8a;
+        border-color: #1e3a8a;
+        color: #fff;
+    }
+
+        .btn-theme:hover {
+            background-color: #16307c;
+            border-color: #16307c;
+            color: #fff;
+        }
+</style>

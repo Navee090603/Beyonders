@@ -1,0 +1,53 @@
+﻿<header class="admin-topbar navbar navbar-expand border-bottom">
+    <div class="container-fluid d-flex justify-content-end">
+        <!-- Admin with dropdown -->
+        <ul class="nav align-items-center">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white p-2"
+                   href="#" id="adminDropdown" data-toggle="dropdown">
+                    <i class="fa fa-user-circle"></i> Admin
+                </a>
+                <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm"
+                     aria-labelledby="adminDropdown">
+                    <a class="dropdown-item" href="@Url.Action("Logout","AdminAuth", new { area = "" })">
+                        <i class="fa fa-sign-out-alt"></i> Sign out
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<style>
+
+    .admin-topbar {
+        background: linear-gradient(90deg, #8b5e3c, #d2b48c); /* Brown → Biscuit */
+
+        color: #fff;
+        padding: 10px 15px;
+    }
+
+        .admin-topbar .nav-link {
+            color: #fff;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+            .admin-topbar .nav-link:hover {
+                color: #000 !important;
+                background: rgba(255, 255, 255, 0.25);
+                border-radius: 6px;
+            }
+
+    .dropdown-menu {
+        font-size: 0.9rem;
+        border-radius: 8px;
+        padding: 5px 0;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f5deb3; /* soft biscuit shade */
+
+        color: #000;
+    }
+</style>

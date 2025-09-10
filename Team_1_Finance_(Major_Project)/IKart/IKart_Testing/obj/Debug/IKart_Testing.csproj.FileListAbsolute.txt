@@ -1,0 +1,5 @@
+C:\Naveen\IKART\IKart\IKart_Testing\obj\Debug\IKart_Testing.csproj.AssemblyReference.cache
+C:\Naveen\IKART\IKart\IKart_Testing\obj\Debug\IKart_Testing.GeneratedMSBuildEditorConfig.editorconfig
+C:\Naveen\IKART\IKart\IKart_Testing\obj\Debug\IKart_Testing.gentestingplatformentrypointinputcache.cache
+C:\Naveen\IKART\IKart\IKart_Testing\obj\Debug\IKart_Testing.genautoregisteredextensionsinputcache.cache
+C:\Naveen\IKART\IKart\IKart_Testing\obj\Debug\IKart_Testing.csproj.CoreCompileInputs.cache

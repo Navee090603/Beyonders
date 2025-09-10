@@ -1,0 +1,63 @@
+﻿@model IKart_Shared.DTOs.Admin.StocksDto
+
+@{
+                Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+                ViewBag.Title = "Add Stock";
+
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h2 class="text-center mb-4">@ViewBag.Title</h2>
+
+            @using (Html.BeginForm("Create", "Stocks", FormMethod.Post))
+
+            {
+<div class="form-group mb-3">
+
+    @Html.LabelFor(m => m.Category, new { @class = "form-label fw-bold" })
+
+    @Html.TextBoxFor(m => m.Category, new { @class = "form-control" })
+
+    @Html.ValidationMessageFor(m => m.Category)
+</div>
+
+                <div class="form-group mb-3">
+
+                    @Html.LabelFor(m => m.SubCategory, new { @class = "form-label fw-bold" })
+
+                    @Html.TextBoxFor(m => m.SubCategory, new { @class = "form-control" })
+
+                    @Html.ValidationMessageFor(m => m.SubCategory)
+                </div>
+
+                                <div class="form-group mb-3">
+
+                                    @Html.LabelFor(m => m.TotalStocks, new { @class = "form-label fw-bold" })
+
+                                    @Html.TextBoxFor(m => m.TotalStocks, new { @class = "form-control", type = "number", min = "0" })
+
+                                    @Html.ValidationMessageFor(m => m.TotalStocks)
+                                </div>
+
+                                                <div class="form-group mb-3">
+
+                                                    @Html.LabelFor(m => m.AvailableStocks, new { @class = "form-label fw-bold" })
+
+                                                    @Html.TextBoxFor(m => m.AvailableStocks, new { @class = "form-control", type = "number", min = "0" })
+
+                                                    @Html.ValidationMessageFor(m => m.AvailableStocks)
+                                                </div>
+
+                                                                <div class="d-flex justify-content-center gap-3 mt-4">
+                                                                    <button type="submit" class="btn btn-success px-4">Save</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <a href="@Url.Action("Index", "Stocks")" class="btn btn-outline-secondary px-4">Cancel</a>
+                                                                </div>
+                                                                            }
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,54 @@
+﻿@{
+                ViewBag.Title = "Payment Success";
+
+                Layout = "~/Views/Shared/_UserLayout.cshtml";
+
+}
+
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="card shadow-lg border-0 text-center p-4" style="max-width: 500px; width: 100%;">
+        <div class="card-body">
+            <h2 class="text-success mb-3">
+                <i class="bi bi-check-circle-fill"></i> Payment Successful!
+            </h2>
+            <p class="mb-3">Your payment and order are complete.</p>
+
+            @if (ViewBag.Message != null)
+
+            {
+<div class="alert alert-success">@ViewBag.Message</div>
+            }
+
+            <a href="@Url.Action("Index", "Product")" class="btn btn-primary mt-3">
+
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .card {
+        border-radius: 16px;
+        background-color: #f8fafc;
+    }
+
+    h2 {
+        color: #1e3a8a;
+    }
+
+    .btn-primary {
+        background-color: #1e3a8a;
+        border-color: #1e3a8a;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
+        .btn-primary:hover {
+            background-color: #16307c;
+            border-color: #16307c;
+        }
+</style>
+

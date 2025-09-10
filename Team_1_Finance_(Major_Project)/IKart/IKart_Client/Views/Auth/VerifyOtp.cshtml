@@ -1,0 +1,24 @@
+﻿@{
+        Layout = "~/Views/Shared/_UserLogin.cshtml";
+    }
+    @{
+        ViewBag.Title = "Verify OTP";
+    }
+
+    <h2>Verify OTP</h2>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @using (Html.BeginForm("VerifyOtp", "Auth", FormMethod.Post))
+    {
+        <input type="hidden" name="userId" value="@ViewBag.UserId" />
+
+        <div class="form-group mb-3">
+            <label>Enter OTP</label>
+            <input type="text" name="otp" class="form-control" maxlength="6" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">Verify</button>
+    }
+
+

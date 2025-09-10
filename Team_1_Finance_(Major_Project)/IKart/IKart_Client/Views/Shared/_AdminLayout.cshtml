@@ -1,0 +1,164 @@
+﻿@{ ViewBag.Title = "_AdminLayout"; }
+@{ var appRoot = Url.Content("~"); }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title - Admin</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --primary: #d2b48c;
+            --secondary: #8b5e3c;
+            --bg: #f5f2ef;
+            --text: #2e2e2e;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        /* Sidebar */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: #fff;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.15);
+            padding: 20px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+
+            #sidebar a {
+                display: block;
+                padding: 10px 12px;
+                margin: 4px 0;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 6px;
+                transition: background 0.2s, color 0.2s;
+            }
+
+                #sidebar a:hover {
+                    background: #deb887; 
+                    color: #000 !important;
+                }
+
+
+        #main {
+            flex: 1;
+            transition: margin-left 0.3s ease;
+            margin-left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+            #main.shifted {
+                margin-left: var(--sidebar-width);
+            }
+
+        #topbar {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            color: #fff;
+        }
+
+        #menuBtn {
+            background: transparent;
+            border: none;
+            font-size: 1.3rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #content {
+            padding: 20px;
+            flex: 1;
+        }
+
+        footer.footer {
+            text-align: center;
+            padding: 12px;
+            color: #fff;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            font-weight: 500;
+            margin-top: auto;
+        }
+    </style>
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <nav id="sidebar">
+        @Html.Partial("~/Views/Shared/_AdminSidebar.cshtml")
+    </nav>
+
+
+    <div id="main">
+        <div id="topbar">
+            <button id="menuBtn"><i class="fas fa-bars"></i></button>
+            <h5 class="mb-0">IKart Admin</h5>
+            @Html.Partial("~/Views/Shared/_AdminTopbar.cshtml")
+        </div>
+
+        <div id="content" class="container-fluid">
+            @RenderBody()
+        </div>
+
+        <footer class="footer">
+            &copy; @DateTime.Now.Year - IKart Admin
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("main");
+        const menuBtn = document.getElementById("menuBtn");
+
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            main.classList.toggle("shifted");
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                sidebar.classList.remove("open");
+                main.classList.remove("shifted");
+            }
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

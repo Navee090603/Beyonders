@@ -1,0 +1,48 @@
+﻿@{ ViewBag.Title = "Pay with Razorpay"; }
+
+<h2>Pay with Razorpay</h2>
+<p>Product: @ViewBag.ProductName</p>
+<p>Amount: ₹@((decimal)ViewBag.Amount / 100)</p>
+
+<form id="razorpayForm">
+    <input type="hidden" id="orderId" value="@ViewBag.OrderId" />
+    <input type="hidden" id="productId" value="@ViewBag.ProductId" />
+    <input type="hidden" id="addressId" value="@ViewBag.AddressId" />
+    <input type="hidden" id="userId" value="@ViewBag.UserId" />
+    <button type="button" id="payBtn" class="btn btn-success">Pay Now</button>
+    <a href="@Url.Action("ChoosePayment", "Order", new { productId = ViewBag.ProductId, addressId = ViewBag.AddressId })" class="btn btn-secondary btn-lg ms-2">Back</a>
+</form>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById("payBtn").onclick = function () {
+    var options = {
+        "key": "rzp_test_REOSbBMiZHhMMR",
+        "amount": "@ViewBag.Amount",
+        "currency": "@ViewBag.Currency",
+        "name": "@ViewBag.ProductName",
+        "order_id": "@ViewBag.OrderId",
+        "handler": function (response){
+            fetch("/Order/VerifyRazorpayPayment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    RazorpayOrderId: response.razorpay_order_id,
+                    RazorpayPaymentId: response.razorpay_payment_id,
+                    RazorpaySignature: response.razorpay_signature,
+                    UserId: document.getElementById("userId").value,
+                    ProductId: document.getElementById("productId").value,
+                    Amount: parseFloat("@((decimal)ViewBag.Amount / 100)")
+                })
+            })
+            .then(res => res.text())
+            .then(data => {
+                window.location = "/Order/PaymentSuccess";
+            });
+        },
+        "theme": { "color": "#F37254" }
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
+};
+</script>

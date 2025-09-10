@@ -1,0 +1,138 @@
+﻿@model IKart_Shared.DTOs.Admin.RefundDto
+
+@{
+                Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+                ViewBag.Title = "Refund Details";
+
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Refund Details</h2>
+
+    <table class="table table-bordered align-middle">
+        <tr>
+            <th>Refund ID</th>
+            <td>@Model.RefundId</td>
+        </tr>
+        <tr>
+            <th>Payment ID</th>
+            <td>@Model.PaymentId</td>
+        </tr>
+        <tr>
+            <th>Amount</th>
+            <td>₹@Model.Amount</td>
+        </tr>
+        <tr>
+            <th>Reason</th>
+            <td>@Model.Reason</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>
+                <span style="
+
+                    display: inline-block;
+
+                    padding: 4px 10px;
+
+                    border-radius: 12px;
+
+                    background-color:@(
+
+                        Model.Status == "Completed" ? "#d4edda" :
+
+                        Model.Status == "Processed" ? "#fff3cd" :
+
+                        Model.Status == "Pending" ? "#f8d7da" : "#e2e3e5");
+
+                    color:@(
+
+                        Model.Status == "Completed" ? "#155724" :
+
+                        Model.Status == "Processed" ? "#856404" :
+
+                        Model.Status == "Pending" ? "#721c24" : "#6c757d");
+
+                    font-weight:600;
+
+                    font-size: 0.9rem;
+
+                    min-width: 70px;
+
+                    text-align: center;
+
+                ">
+
+                    @Model.Status
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th>Refund Date</th>
+            <td>@Model.RefundDate.ToString("dd-MM-yyyy")</td>
+        </tr>
+        <tr>
+            <th>User Name</th>
+            <td>@Model.UserName</td>
+        </tr>
+        <tr>
+            <th>User Email</th>
+            <td>@Model.UserEmail</td>
+        </tr>
+        <tr>
+            <th>Product Name</th>
+            <td>@Model.ProductName</td>
+        </tr>
+        <tr>
+            <th>Total Payment Amount</th>
+            <td>₹@Model.TotalAmount</td>
+        </tr>
+        <tr>
+            <th>Payment Status</th>
+            <td>
+                <span style="
+
+            display: inline-block;
+
+            padding: 4px 10px;
+
+            border-radius: 12px;
+
+            background-color:@(
+
+                Model.PaymentStatus == "Paid" ? "#d4edda" :
+
+                Model.PaymentStatus == "Failed" ? "#f8d7da" :
+
+                Model.PaymentStatus == "Pending" ? "#fff3cd" : "#e2e3e5");
+
+            color:@(
+
+                Model.PaymentStatus == "Paid" ? "#155724" :
+
+                Model.PaymentStatus == "Failed" ? "#721c24" :
+
+                Model.PaymentStatus == "Pending" ? "#856404" : "#6c757d");
+
+            font-weight:600;
+
+            font-size: 0.9rem;
+
+            min-width: 70px;
+
+            text-align: center;
+
+        ">
+
+                    @Model.PaymentStatus
+                </span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="mt-3">
+        <button type="button" class="btn btn-secondary" onclick="history.back()">⬅ Back</button>
+    </div>
+</div>
+
