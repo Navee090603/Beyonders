@@ -242,5 +242,35 @@
     </script>
 
     @RenderSection("Scripts", required: false)
+    <!-- Global Pop-up Modal -->
+    <div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="popupModalLabel">Alert</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="popupMessageBody">
+                    <!-- Message will be injected here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ajaxComplete(function (event, xhr, settings) {
+            var popupMessage = xhr.getResponseHeader("X-Popup-Message");
+            if (popupMessage) {
+                $('#popupMessageBody').text(popupMessage);
+                $('#popupModal').modal('show');
+            }
+        });
+    </script>
+
 </body>
 </html>

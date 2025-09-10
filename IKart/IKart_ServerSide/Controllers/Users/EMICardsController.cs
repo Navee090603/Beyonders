@@ -30,7 +30,9 @@ namespace IKart_ServerSide.Controllers.Users
                 return BadRequest("User does not exist");
 
             if (db.Card_Request.Any(r => r.UserId == dto.UserId && r.IsVerified == false))
+            {
                 return BadRequest("You already have a pending request");
+            }
 
             var request = new Card_Request
             {

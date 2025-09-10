@@ -228,6 +228,7 @@
     <Compile Include="Controllers\User\ProductPaymentController.cs" />
     <Compile Include="Controllers\User\ProductSearchController.cs" />
     <Compile Include="Controllers\User\SupportController.cs" />
+    <Compile Include="Controllers\User\UserOrdersController.cs" />
     <Compile Include="Filters\AdminAuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -309,6 +310,7 @@
     <Content Include="Views\AdminDashboard\Index.cshtml" />
     <Content Include="Views\Shared\_AdminLogin.cshtml" />
     <Content Include="Views\ProductPayment\InstallmentRazorpayPayment.cshtml" />
+    <Content Include="Views\UserOrders\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

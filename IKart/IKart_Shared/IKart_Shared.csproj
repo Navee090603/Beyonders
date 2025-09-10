@@ -73,6 +73,7 @@
     <Compile Include="DTOs\Admin\SupportTicketDto.cs" />
     <Compile Include="DTOs\Admin\UserDto.cs" />
     <Compile Include="DTOs\Authentication\AdminLoginDto.cs" />
+    <Compile Include="DTOs\Authentication\LoginResponseDto.cs" />
     <Compile Include="DTOs\Authentication\ResetPasswordDto.cs" />
     <Compile Include="DTOs\Authentication\UserLoginDto.cs" />
     <Compile Include="DTOs\Authentication\UserRegisterDto.cs" />

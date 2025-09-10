@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKart_Client", "IKart_Clien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKart_Shared", "IKart_Shared\IKart_Shared.csproj", "{F4AC81E9-889B-4D56-B848-E93E05467E6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKart_Testing", "IKart_Testing\IKart_Testing.csproj", "{0FF56707-62F4-42E9-A2DF-2D724AAACEFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F4AC81E9-889B-4D56-B848-E93E05467E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4AC81E9-889B-4D56-B848-E93E05467E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4AC81E9-889B-4D56-B848-E93E05467E6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FF56707-62F4-42E9-A2DF-2D724AAACEFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FF56707-62F4-42E9-A2DF-2D724AAACEFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FF56707-62F4-42E9-A2DF-2D724AAACEFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FF56707-62F4-42E9-A2DF-2D724AAACEFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

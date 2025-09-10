@@ -105,6 +105,32 @@
         </footer>
     </div>
 
+    <!-- Global Pop-up Modal -->
+    @if (TempData["PopupMessage"] != null)
+    {
+        <div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="popupModalLabel">Alert</h5>
+                    </div>
+                    <div class="modal-body">
+                        @TempData["PopupMessage"]
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(function () {
+                $('#popupModal').modal('show');
+            });
+        </script>
+    }
+
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 </body>

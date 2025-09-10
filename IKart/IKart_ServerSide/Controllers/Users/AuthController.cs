@@ -15,6 +15,14 @@ namespace IKart_ServerSide.Controllers.Users
     public class AuthController : ApiController
     {
         IKartEntities db = new IKartEntities();
+
+        public AuthController(IKartEntities context)
+        {
+            db = context;
+        }
+
+        public AuthController() : this(new IKartEntities()) { }
+
         private readonly EmailService _emailService = new EmailService();
 
         // ✅ Register
@@ -187,7 +195,15 @@ namespace IKart_ServerSide.Controllers.Users
                     new { message = "Please verify your account with OTP before login", user.UserId });
             }
 
-            return Ok(new { message = "Login successful", user.UserId, user.FullName, user.Username });
+            var response = new LoginResponseDto
+            {
+                Message = "Login successful",
+                UserId = user.UserId,
+                FullName = user.FullName,
+                Username = user.Username
+            };
+
+            return Ok(response);
         }
     }
 }
